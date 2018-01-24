@@ -1,0 +1,32 @@
+{
+    "name": "vendor/test-generator",
+    "description": "Description of project test-generator.",
+    "authors": [
+        {
+            "name": "BJ",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "php": "^5.3.3 || ^7.0.0",
+        "twig/twig": "^1.35.0",
+        "nikic/php-parser": "^1.4.1",
+        "symfony/finder": "^2.6.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "De\\Idrinth\\TestGenerator\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "De\\Idrinth\\TestGenerator\\Test\\": "test"
+        }
+    },
+    "bin": [
+        "bin/generate-tests.php"
+    ]
+}

@@ -1,0 +1,5 @@
+({% spaceless %}
+{% for param in function.params %}
+{% include 'type2value.twig' with {'type':param} only %}{% if not loop.last %}, {% endif %}
+{% endfor %}
+{% endspaceless %})
