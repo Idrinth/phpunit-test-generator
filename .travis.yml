@@ -18,12 +18,12 @@ before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpenv config-rm xdebug.ini || true ; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then composer require codacy/coverage:dev-master ; fi
 # no need to test formatting more than once and php_codesniffer does not work with old php
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer require squizlabs/php_codesniffer ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer ; fi
 install: composer update
 script:
 # unit tests
   - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpunit --testdox --bootstrap vendor/autoload.php test/; fi
 # check standards
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then vendor/bin/phpcs -p --standard=PSR2 src test ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then vendor/bin/phpcs -p --standard=PSR2 src test ; fi
 # unit tests + coverage
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --bootstrap vendor/autoload.php --whitelist src/ test/ && vendor/bin/codacycoverage clover build/logs/clover.xml ; fi

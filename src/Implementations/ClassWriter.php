@@ -40,7 +40,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
         if (!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
             return false;
         }
-        return file_put_contents(
+        return false !== file_put_contents(
             $file->getPathname(),
             $this->env->render(
                 'class.twig',
