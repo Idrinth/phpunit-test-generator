@@ -8,10 +8,19 @@ use PHPUnit\Framework\TestCase;
 class ClassWriterTest extends TestCase
 {
     private $filename;
+    private function getFileName() {
+        if(!$this->filename) {
+            $this->filename = sys_get_temp_dir()
+                .DIRECTORY_SEPARATOR
+                .str_replace('\\', '_', __CLASS__)
+                .'.'.md5(__FILE__)
+                .'.'.md5(time());
+        }
+        return $this->filename;
+    }
     private function getMockedNamespacePathMapper()
     {
-        $this->filename = $this->filename ?:
-            sys_get_temp_dir().DIRECTORY_SEPARATOR.str_replace('\\', '_', __CLASS__).'.tmp';
+        $this->filename = $this->getFileName();
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
@@ -64,7 +73,7 @@ class ClassWriterTest extends TestCase
      */
     public function testWrite()
     {
-        $writer = new ClassWriter($this->getMockedNamespacePathMapper());
+        $writer = @new ClassWriter($this->getMockedNamespacePathMapper());
         $this->assertTrue($writer->write($this->getMockedClassDescriptor()));
         include_once $this->filename;
         $this->assertTrue(class_exists('My\Tests\AbCdETest'));
@@ -73,6 +82,6 @@ class ClassWriterTest extends TestCase
         $lastModified = filemtime($this->filename);
         $writer->write($this->getMockedClassDescriptor());
         $this->assertEquals($lastModified, filemtime($this->filename));
-        unlink($this->filename);
+        @unlink($this->filename);
     }
 }

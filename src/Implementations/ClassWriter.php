@@ -1,8 +1,8 @@
 <?php
 namespace De\Idrinth\TestGenerator\Implementations;
 
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
 {
@@ -11,7 +11,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
     public function __construct(\De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces)
     {
         $this->namespaces = $namespaces;
-        $this->env = new Twig_Environment(new Twig_Loader_Filesystem(
+        $this->env = new Environment(new FilesystemLoader(
             dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'
         ));
         $this->env->addFilter(new \Twig_SimpleFilter('toUpperCamelCase', function ($string) {

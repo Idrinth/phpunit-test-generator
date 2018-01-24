@@ -18,7 +18,7 @@ before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpenv config-rm xdebug.ini || true ; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then composer require codacy/coverage:dev-master ; fi
 # no need to test formatting more than once and php_codesniffer does not work with old php
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer:^3.2.2 ; fi
 install: composer update
 script:
 # unit tests
