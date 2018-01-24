@@ -27,7 +27,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      * @return \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor
      */
     public function parse(SplFileInfo $file) {
-        $result = $this->parser->parse($file->openFile()->fread($file->getSize()));
+        $result = $this->parser->parse(file_get_contents($file->getPathname()));
         foreach($result as $node) {
             if($node instanceof Namespace_) {
                 $this->handleNamespaceTree($node);
