@@ -2,15 +2,15 @@ language: php
 dist: trusty
 php:
   - '5.4'
-  - '5.5'
-  - '5.6'
-  - '7.0'
-  - '7.1'
-  - '7.2'
-matrix:
-  include:
-    - php: "5.3"
-      dist: precise
+#  - '5.5'
+#  - '5.6'
+#  - '7.0'
+#  - '7.1'
+#  - '7.2'
+#matrix:
+#  include:
+#    - php: "5.3"
+#      dist: precise
 git:
   depth: 3
 before_install:
@@ -22,7 +22,8 @@ before_install:
 install: composer update
 script:
 # unit tests
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpunit --testdox --bootstrap vendor/autoload.php test/; fi
+#  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpunit --testdox --bootstrap vendor/autoload.php test/; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpunit --bootstrap vendor/autoload.php test/; fi
 # check standards
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then vendor/bin/phpcs -p --standard=PSR2 src test ; fi
 # unit tests + coverage
