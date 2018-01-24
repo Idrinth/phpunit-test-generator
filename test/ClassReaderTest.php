@@ -8,49 +8,22 @@ use PHPUnit\Framework\TestCase;
 class ClassReaderTest extends TestCase
 {
     /**
-     * @var ClassReader
+     * @test
      */
-    protected $object;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
+    public function testParseAndGetResults()
     {
-        $this->object = new ClassReader;
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-
-    }
-
-    /**
-     * @covers De\Idrinth\TestGenerator\ClassReader::parse
-     * @todo   Implement testParse().
-     */
-    public function testParse()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers De\Idrinth\TestGenerator\ClassReader::getResults
-     * @todo   Implement testGetResults().
-     */
-    public function testGetResults()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $object = new ClassReader;
+        $this->assertCount(0, $object->getResults());
+        $object->parse(new \SplFileInfo(__FILE__));
+        $this->assertCount(1, $object->getResults());
+        $object->parse(new \SplFileInfo(__FILE__));
+        $results = $object->getResults();
+        $this->assertCount(2, $results);
+        $this->assertEquals('ClassReaderTest', $results[0]->getName());
+        $this->assertEquals('De\Idrinth\TestGenerator\Test', $results[0]->getNamespace());
+        $methods = $results[0]->getMethods();
+        $this->assertCount(1, $methods);
+        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $results[0]->getConstructor());
+        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $methods[0]);
     }
 }

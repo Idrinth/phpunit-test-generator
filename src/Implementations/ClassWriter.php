@@ -24,11 +24,31 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
             return $result;
         }));
     }
+
+    /**
+     * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class
+     * @return boolean
+     */
     public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class)
     {
-        echo $this->env->render(
-            'class.twig',
-            array('class' => $class, 'config' => array('testcase' => 'PHPUnit\Framework\TestCase'))
+        $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
+        if(!$file || $file->isFile()) {
+            return false;
+        }
+        return file_put_contents(
+            $file->getPathname(),
+            $this->env->render(
+                'class.twig',
+                array(
+                    'class' => $class,
+                    'config' => array(
+                        'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace()),
+                        'testcase' => class_exists('PHPUnit\Framework\TestCase') ?
+                            'PHPUnit\Framework\TestCase' :
+                            'PHPUnit_Framework_TestCase'
+                    )
+                )
+            )
         );
     }
 }

@@ -10,10 +10,13 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     public function __construct(SplFileInfo $composer)
     {
         $data = json_decode(file_get_contents($composer->getPathname()), true);
-        $this->handleKey($data, 'autoload');
-        $this->handleKey($data, 'autoload-dev');
+        if(!$data) {
+            throw new \InvalidArgumentException("A parseable composer.json wasn't found.");
+        }
+        $this->handleKey($data, 'autoload', $composer->getPath());
+        $this->handleKey($data, 'autoload-dev', $composer->getPath());
     }
-    private function handleKey(array $data, $key) {
+    private function handleKey(array $data, $key, $rootDir) {
         if(!isset($data[$key]))
         {
             return;
@@ -23,7 +26,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
             if(isset($autoloaders[$method]))
             {
                 foreach ($autoloaders[$method] as $namespace => $folder) {
-                    $this->folders[trim($namespace, '\\')] = getcwd().DIRECTORY_SEPARATOR.$folder;
+                    $this->folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
                 }
             }
         }
@@ -36,27 +39,49 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     }
     private function splitIntoMain($namespace)
     {
-        return array();
+        $matches = array();
+        foreach($this->folders as $ns => $folder) {
+            if(preg_match('/^'.preg_quote($ns).'/', $namespace)) {
+                $matches[] = $ns;
+            }
+        }
+        usort($matches, function($a,$b){
+            return strlen($b)-strlen($a);
+        });
+        return array(
+            trim($matches[0], '\\'),
+            trim(str_replace($matches[0], '', $namespace), '\\')
+        );
     }
 
     public function getTestNamespaceForNamespace($namespace)
     {
-        $parts = explode("\\", trim($namespace, '\\'));
+        list($ns, $append) = $this->splitIntoMain($namespace);
+        $parts = explode("\\", trim($ns, '\\'));
         for($i = count($parts); $i >= 0; $i--) {
             $ns1 = $this->toNamespace($parts, 'Test', $i);
             if(isset($this->folders[$ns1])) {
-                return $ns1;
+                return trim($ns1.'\\'.$append, '\\');
             }
             $ns2 = $this->toNamespace($parts, 'Tests', $i);
             if(isset($this->folders[$ns2])) {
-                return $ns2;
+                return trim($ns2.'\\'.$append, '\\');
             }
         }
         return $namespace;
     }
-    public function getFileForNamespacedClass($class)
+    /**
+     * @param string $class
+     * @return SplFileInfo
+     */
+    public function getTestFileForNamespacedClass($class)
     {
-        
-        return '.php';
+        list($namespace, $append) = $this->splitIntoMain($this->getTestNamespaceForNamespace($class));
+        var_dump( $this->folders[$namespace],str_replace('\\', DIRECTORY_SEPARATOR, trim($append,'\\')));
+        return new \SplFileInfo(
+            $this->folders[$namespace].DIRECTORY_SEPARATOR
+            .str_replace('\\', DIRECTORY_SEPARATOR, trim($append,'\\'))
+            .'Test.php'
+        );
     }
 }

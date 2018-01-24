@@ -7,86 +7,73 @@ use PHPUnit\Framework\TestCase;
 
 class ClassDescriptorTest extends TestCase
 {
+    private static $method = 'De\Idrinth\TestGenerator\Interfaces\MethodDescriptor';
+    private function getConstructorMock() {
+        return $this->getMockBuilder(self::$method)
+            ->getMock();
+    }
     /**
-     * @var ClassDescriptor
+     * @return ClassDescriptor
      */
-    protected $object;
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
+    protected function getClass1()
     {
-        $this->object = new ClassDescriptor;
+        return new ClassDescriptor(
+            'ClassOne',
+            '',
+            array(),
+            $this->getConstructorMock()
+        );
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @return ClassDescriptor
      */
-    protected function tearDown()
+    protected function getClass2()
     {
-
+        return new ClassDescriptor(
+            'ClassTwo',
+            'My\Namespace',
+            array($this->getConstructorMock()),
+            $this->getConstructorMock()
+        );
     }
 
+
     /**
-     * @covers De\Idrinth\TestGenerator\ClassDescriptor::getName
-     * @todo   Implement testGetName().
+     * @test
      */
     public function testGetName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals('ClassOne', $this->getClass1()->getName());
+        $this->assertEquals('ClassTwo', $this->getClass2()->getName());
     }
 
     /**
-     * @covers De\Idrinth\TestGenerator\ClassDescriptor::getNamespace
-     * @todo   Implement testGetNamespace().
+     * @test
      */
     public function testGetNamespace()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals('', $this->getClass1()->getNamespace());
+        $this->assertEquals('My\Namespace', $this->getClass2()->getNamespace());
     }
 
     /**
-     * @covers De\Idrinth\TestGenerator\ClassDescriptor::getUsages
-     * @todo   Implement testGetUsages().
-     */
-    public function testGetUsages()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers De\Idrinth\TestGenerator\ClassDescriptor::getMethods
-     * @todo   Implement testGetMethods().
+     * @test
      */
     public function testGetMethods()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertCount(0, $this->getClass1()->getMethods());
+        $class2 = $this->getClass2()->getMethods();
+        $this->assertCount(1, $class2);
+        $this->assertInstanceOf(self::$method, $class2[0]);
     }
 
     /**
-     * @covers De\Idrinth\TestGenerator\ClassDescriptor::getConstructor
-     * @todo   Implement testGetConstructor().
+     * @test
      */
     public function testGetConstructor()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertInstanceOf(self::$method, $this->getClass1()->getConstructor());
+        $this->assertInstanceOf(self::$method, $this->getClass2()->getConstructor());
     }
 }

@@ -11,5 +11,5 @@ interface NamespacePathMapper
      * @param string $class
      * @return SplFileInfo
      */
-    public function getFileForNamespacedClass($class);
+    public function getTestFileForNamespacedClass($class);
 }

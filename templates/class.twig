@@ -1,11 +1,9 @@
 <?php
 
-namespace {{config.namespaces[class.namespace]}};
+namespace {{config.namespace}};
 
 use {{config.testcase}} as TestCaseImplementation;
-{% for useage in class.usages %}
-use {{useage}};
-{% endfor %}
+use {{class.namespace}}\{{class.name}};
 
 /**
  * this is an automatically generated skeleton for testing {{class.name}}

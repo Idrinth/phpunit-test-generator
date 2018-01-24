@@ -2,19 +2,27 @@
 
 namespace De\Idrinth\TestGenerator\Test;
 
-use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
+use De\Idrinth\TestGenerator\Implementations\MethodDescriptor;
 use PHPUnit\Framework\TestCase;
 
 class MethodDescriptorTest extends TestCase
 {
+    /**
+     * @return MethodDescriptor
+     */
     private function getTest1()
     {
         return new MethodDescriptor('test1', array('string', 'MyClass'), 'YourClass');
     }
+
+    /**
+     * @return MethodDescriptor
+     */
     private function getTest2()
     {
-        return new MethodDescriptor('test2', array('int', 'float|double','boolean'), 'bool');
+        return new MethodDescriptor('test2', array('int', 'float|double','boolean','int|double'), 'bool');
     }
+
     /**
      * @test
      */
@@ -29,8 +37,16 @@ class MethodDescriptorTest extends TestCase
      */
     public function testGetParams()
     {
-        $this->assertCount(2, $this->getTest1()->getParams());
-        $this->assertCount(3, $this->getTest2()->getParams());
+        $test1 = $this->getTest1()->getParams();
+        $this->assertCount(2, $test1);
+        $this->assertEquals('string', $test1[0]);
+        $this->assertEquals('object', $test1[1]);
+        $test2 = $this->getTest2()->getParams();
+        $this->assertCount(4, $test2);
+        $this->assertEquals('integer', $test2[0]);
+        $this->assertEquals('float', $test2[1]);
+        $this->assertEquals('boolean', $test2[2]);
+        $this->assertEquals('float', $test2[3]);
     }
 
     /**

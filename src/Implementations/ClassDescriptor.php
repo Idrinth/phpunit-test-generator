@@ -6,7 +6,6 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
 {
     private $name;
     private $namespace;
-    private $usages = array();
     private $methods = array();
     private $constructor;
     public function __construct(
@@ -17,9 +16,6 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
     ) {
         $this->name = $name;
         $this->namespace = $namespace;
-        $this->usages = array(
-            "$namespace\\$name"
-        );
         $this->methods = $methods;
         $this->constructor = $constructor;
     }
@@ -31,10 +27,6 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
     public function getNamespace()
     {
         return $this->namespace;
-    }
-    public function getUsages()
-    {
-        return $this->usages;
     }
     public function getMethods()
     {

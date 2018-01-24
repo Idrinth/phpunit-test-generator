@@ -1,6 +1,6 @@
 {
-    "name": "vendor/test-generator",
-    "description": "Description of project test-generator.",
+    "name": "idrinth/phpunit-test-generator",
+    "description": "Generates tests for use with PHPunit based on an existing composer.json",
     "authors": [
         {
             "name": "BJ",
