@@ -14,8 +14,7 @@ class ClassWriterTest extends TestCase
             $this->filename = sys_get_temp_dir()
                 .DIRECTORY_SEPARATOR
                 .str_replace('\\', '_', __CLASS__)
-                .'.'.md5(__FILE__)
-                .'.'.md5(time());
+                .'.'.md5(__FILE__.microtime().mt_rand().PHP_VERSION);
         }
         return $this->filename;
     }

@@ -3,6 +3,7 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use SplFileInfo;
 
 class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
 {
@@ -34,7 +35,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
     public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
-        if (!$file || $file->isFile()) {
+        if (!$file instanceof SplFileInfo || $file->isFile()) {
             return false;
         }
         if (!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
