@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 class ClassWriterTest extends TestCase
 {
     private $filename;
-    private function getFileName() {
-        if(!$this->filename) {
+    private function getFileName()
+    {
+        if (!$this->filename) {
             $this->filename = sys_get_temp_dir()
                 .DIRECTORY_SEPARATOR
                 .str_replace('\\', '_', __CLASS__)
