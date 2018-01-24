@@ -2,8 +2,6 @@
 
 namespace De\Idrinth\TestGenerator\Implementations;
 
-use phpDocumentor\Reflection\TypeResolver;
-
 class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDescriptor
 {
     private $name;
@@ -26,42 +24,32 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
     );
     public function __construct($name, $params, $return)
     {
-        $typeResolver = new TypeResolver();
         $this->name = $name;
-        $this->params = $this->processTypeList($typeResolver, $params);
-        try {
-            $this->return = $this->process($typeResolver, $return);
-        } catch (RuntimeException $ex) {
-            $this->return = 'null';
-        }
+        $this->params = $this->processTypeList($params);
+        $this->return = $this->process($return);
         if($this->return === 'object' && !strpos($return,'|')) {
             $this->returnClass = $return;
         }
     }
-    private function processTypeList(TypeResolver $typeResolver, array $types)
+    private function processTypeList(array $types)
     {
         $results = array();
         foreach($types as $type) {
-            try {
-                $results[] = $this->process($typeResolver, $type);
-            } catch (RuntimeException $ex) {
-                $results[] = 'mixed';
-            }
+            $results[] = $this->process($type);
         }
         return $results;
     }
 
-    private function process(TypeResolver $typeResolver, $type)
+    private function process($type)
     {
         if(is_null($type)) {
             return 'null';
         }
         if(strpos($type, '|')) {
-            $types = $this->simplifyTypeList($this->processTypeList($typeResolver, explode('|', $type)));
+            $types = $this->simplifyTypeList($this->processTypeList(explode('|', $type)));
             return count($types)==1?$types[0]:'mixed';
         }
-        $class = strtolower(trim(str_replace('phpDocumentor\Reflection\Types\\','',get_class($typeResolver->resolve($type))),'_'));
-        return isset(self::$replacements[$class]) ? self::$replacements[$class] : $class;
+        return isset(self::$replacements[$type]) ? self::$replacements[$type] : $type;
     }
     private function simplifyTypeList($list)
     {
