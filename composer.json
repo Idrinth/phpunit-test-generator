@@ -3,7 +3,6 @@
     "description": "Generates tests for use with PHPunit based on an existing composer.json",
     "homepage": "https://github.com/Idrinth/phpunit-test-generator/",
     "license": "MIT",
-    "type": "application", 
     "keywords": [
         "unittest",
         "phpunit",
