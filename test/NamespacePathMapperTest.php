@@ -24,9 +24,18 @@ class NamespacePathMapperTest extends TestCase
     public function testGetTestNamespaceForNamespace()
     {
         $object = new NamespacePathMapper(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json'));
-        $this->assertEquals('De\Idrinth\TestGenerator\Test', $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator'));
-        $this->assertEquals('De\Idrinth\TestGenerator\Test\Abc', $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Abc'));
-        $this->assertEquals('De\Idrinth\TestGenerator\Test\Abc', $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Test\Abc'));
+        $this->assertEquals(
+            'De\Idrinth\TestGenerator\Test',
+            $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator')
+        );
+        $this->assertEquals(
+            'De\Idrinth\TestGenerator\Test\Abc',
+            $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Abc')
+        );
+        $this->assertEquals(
+            'De\Idrinth\TestGenerator\Test\Abc',
+            $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Test\Abc')
+        );
     }
 
     /**

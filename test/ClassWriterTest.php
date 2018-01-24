@@ -10,7 +10,8 @@ class ClassWriterTest extends TestCase
     private $filename;
     private function getMockedNamespacePathMapper()
     {
-        $this->filename = $this->filename ?: sys_get_temp_dir().DIRECTORY_SEPARATOR.str_replace('\\', '_', __CLASS__).'.tmp';
+        $this->filename = $this->filename ?:
+            sys_get_temp_dir().DIRECTORY_SEPARATOR.str_replace('\\', '_', __CLASS__).'.tmp';
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
