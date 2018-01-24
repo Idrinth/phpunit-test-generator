@@ -13,5 +13,6 @@ php:
 #      dist: precise
 git:
   depth: 3
+install: composer update
 script:
   - phpunit --testdox --bootstrap vendor/autoload.php test/
