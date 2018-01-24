@@ -35,6 +35,9 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
         if(!$file || $file->isFile()) {
             return false;
         }
+        if(!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
+            return false;
+        }
         return file_put_contents(
             $file->getPathname(),
             $this->env->render(

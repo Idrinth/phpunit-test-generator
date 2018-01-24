@@ -17,14 +17,12 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
         $this->handleKey($data, 'autoload-dev', $composer->getPath());
     }
     private function handleKey(array $data, $key, $rootDir) {
-        if(!isset($data[$key]))
-        {
+        if(!isset($data[$key])) {
             return;
         }
         $autoloaders = $data[$key];
         foreach(array('psr-0', 'psr-4') as $method) {
-            if(isset($autoloaders[$method]))
-            {
+            if(isset($autoloaders[$method])) {
                 foreach ($autoloaders[$method] as $namespace => $folder) {
                     $this->folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
                 }
@@ -77,7 +75,6 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     public function getTestFileForNamespacedClass($class)
     {
         list($namespace, $append) = $this->splitIntoMain($this->getTestNamespaceForNamespace($class));
-        var_dump( $this->folders[$namespace],str_replace('\\', DIRECTORY_SEPARATOR, trim($append,'\\')));
         return new \SplFileInfo(
             $this->folders[$namespace].DIRECTORY_SEPARATOR
             .str_replace('\\', DIRECTORY_SEPARATOR, trim($append,'\\'))
