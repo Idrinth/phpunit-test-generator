@@ -6,7 +6,8 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
 {
     private static $endPattern = "[ ]*(?:@|\r\n|\n)";
 
-    private function pregMatchAll($key, $rawDocBlock, &$matches) {
+    private function pregMatchAll($key, $rawDocBlock, &$matches)
+    {
         return preg_match_all(
             "/@".preg_quote($key)." (.*)".self::$endPattern."/U",
             $rawDocBlock,
@@ -46,15 +47,17 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         return $originalValue;
     }
 
-    public function getReturn($rawDocBlock) {
-        if(!$rawDocBlock) {
+    public function getReturn($rawDocBlock)
+    {
+        if (!$rawDocBlock) {
             return 'null';
         }
         $return = $this->getVariableType('return', $rawDocBlock);
         return count($return) ? implode('|', $return) : 'null';
     }
-    public function getParams($rawDocBlock) {
-        if(!$rawDocBlock) {
+    public function getParams($rawDocBlock)
+    {
+        if (!$rawDocBlock) {
             return array();
         }
         return $this->getVariableType('param', $rawDocBlock);

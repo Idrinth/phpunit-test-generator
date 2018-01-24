@@ -11,13 +11,15 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
     public function __construct(\De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces)
     {
         $this->namespaces = $namespaces;
-        $this->env = new Twig_Environment(new Twig_Loader_Filesystem(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'));
-        $this->env->addFilter(new \Twig_SimpleFilter('toUpperCamelCase', function($string) {
+        $this->env = new Twig_Environment(new Twig_Loader_Filesystem(
+            dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'
+        ));
+        $this->env->addFilter(new \Twig_SimpleFilter('toUpperCamelCase', function ($string) {
             $parts = explode('_', preg_replace('/[^_A-Za-z0-9]+/', '_', $string));
             $result = '';
-            foreach($parts as $part) {
+            foreach ($parts as $part) {
                 $result.= strtoupper($part{0});
-                if(strlen($part)>1) {
+                if (strlen($part)>1) {
                     $result.= substr($part, 1);
                 }
             }
@@ -32,10 +34,10 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
     public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
-        if(!$file || $file->isFile()) {
+        if (!$file || $file->isFile()) {
             return false;
         }
-        if(!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
+        if (!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
             return false;
         }
         return file_put_contents(

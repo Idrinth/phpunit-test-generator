@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 class ClassWriterTest extends TestCase
 {
     private $filename;
-    private function getMockedNamespacePathMapper() {
-        $this->filename = $this->filename ?: __DIR__.DIRECTORY_SEPARATOR.'Test.tmp';
+    private function getMockedNamespacePathMapper()
+    {
+        $this->filename = $this->filename ?: sys_get_temp_dir().DIRECTORY_SEPARATOR.str_replace('\\', '_', __CLASS__).'.tmp';
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
@@ -38,7 +39,8 @@ class ClassWriterTest extends TestCase
             ->willReturn(null);
         return $method;
     }
-    private function getMockedClassDescriptor() {
+    private function getMockedClassDescriptor()
+    {
         $class = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')
             ->getMock();
         $class->expects($this->any())
@@ -62,7 +64,7 @@ class ClassWriterTest extends TestCase
     public function testWrite()
     {
         $writer = new ClassWriter($this->getMockedNamespacePathMapper());
-        $writer->write($this->getMockedClassDescriptor());
+        $this->assertTrue($writer->write($this->getMockedClassDescriptor()));
         include_once $this->filename;
         $this->assertTrue(class_exists('My\Tests\AbCdETest'));
         $test = new \My\Tests\AbCdETest();

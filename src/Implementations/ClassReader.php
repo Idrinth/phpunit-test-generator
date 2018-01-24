@@ -26,13 +26,13 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      * @param SplFileInfo $file
      * @return \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor
      */
-    public function parse(SplFileInfo $file) {
+    public function parse(SplFileInfo $file)
+    {
         $result = $this->parser->parse(file_get_contents($file->getPathname()));
-        foreach($result as $node) {
-            if($node instanceof Namespace_) {
+        foreach ($result as $node) {
+            if ($node instanceof Namespace_) {
                 $this->handleNamespaceTree($node);
-            } else if(
-                $node instanceof Class_ ||
+            } elseif ($node instanceof Class_ ||
                 $node instanceof Interface_
             ) {
                 $this->handleNamespaceTree(new Namespace_(new Name(array()), array($node)));
@@ -46,19 +46,19 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     private function handleNamespaceTree(Namespace_ $namespace)
     {
         $uses = array();
-        foreach($namespace->stmts as $node) {
-            if($node instanceof Use_) {
-                if($node->type == Use_::TYPE_NORMAL) {
-                    foreach($node->uses as $use) {
+        foreach ($namespace->stmts as $node) {
+            if ($node instanceof Use_) {
+                if ($node->type == Use_::TYPE_NORMAL) {
+                    foreach ($node->uses as $use) {
                         $uses[$use->alias] = $use->name->toString();
                     }
                 }
-            } elseif($node instanceof Class_) {
+            } elseif ($node instanceof Class_) {
                 $methods = array();
                 $constructor = new MethodDescriptor('__construct', array(), 'void');
-                foreach($node->stmts as $iNode) {
-                    if($iNode instanceof ClassMethod && $iNode->isPublic()) {
-                        if($iNode->name == '__construct' || $iNode->name == $node->name) {
+                foreach ($node->stmts as $iNode) {
+                    if ($iNode instanceof ClassMethod && $iNode->isPublic()) {
+                        if ($iNode->name == '__construct' || $iNode->name == $node->name) {
                             $constructor = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
                         } else {
                             $methods[] = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
@@ -105,29 +105,32 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             )
         );
     }
-    private function typeToTypeString($type, $doc, $uses, Namespace_ $namespace) {
-        if(!$type) {
-            if($doc) {
+    private function typeToTypeString($type, $doc, $uses, Namespace_ $namespace)
+    {
+        if (!$type) {
+            if ($doc) {
                 return $this->docStringToType($doc, $uses, $namespace);
             }
             return 'mixed';
         }
-        if($type instanceof Name) {
+        if ($type instanceof Name) {
             return $this->nameToTypeString($type, $uses, $namespace);
         }
         return $type;
     }
 
-    private function docStringToType($docString, $uses, Namespace_ $namespace) {
+    private function docStringToType($docString, $uses, Namespace_ $namespace)
+    {
         return strtolower($docString)==$docString ?
             $docString :
             $this->nameToTypeString(new Name($docString), $uses, $namespace);
     }
-    private function nameToTypeString(Name $name, $uses, Namespace_ $namespace) {
-        if($name->isFullyQualified()) {
+    private function nameToTypeString(Name $name, $uses, Namespace_ $namespace)
+    {
+        if ($name->isFullyQualified()) {
             return $name->toString();
         }
-        if(isset($uses[$name->toString()])) {
+        if (isset($uses[$name->toString()])) {
             return $uses[$name->toString()];
         }
         $name->prepend($namespace->name);
@@ -137,7 +140,8 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     /**
      * @return \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor[]
      */
-    public function getResults() {
+    public function getResults()
+    {
         return $this->classes;
     }
 }

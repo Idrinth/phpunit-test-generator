@@ -8,7 +8,8 @@ use PHPUnit\Framework\TestCase;
 class ClassDescriptorTest extends TestCase
 {
     private static $method = 'De\Idrinth\TestGenerator\Interfaces\MethodDescriptor';
-    private function getConstructorMock() {
+    private function getConstructorMock()
+    {
         return $this->getMockBuilder(self::$method)
             ->getMock();
     }

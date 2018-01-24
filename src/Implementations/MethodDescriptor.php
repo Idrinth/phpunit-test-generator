@@ -27,14 +27,14 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
         $this->name = $name;
         $this->params = $this->processTypeList($params);
         $this->return = $this->process($return);
-        if($this->return === 'object' && !strpos($return,'|')) {
+        if ($this->return === 'object' && !strpos($return, '|')) {
             $this->returnClass = $return;
         }
     }
     private function processTypeList(array $types)
     {
         $results = array();
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $results[] = $this->process($type);
         }
         return $results;
@@ -42,14 +42,14 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
 
     private function process($type)
     {
-        if(is_null($type)) {
+        if (is_null($type)) {
             return 'null';
         }
-        if(strpos($type, '|')) {
+        if (strpos($type, '|')) {
             $types = $this->simplifyTypeList($this->processTypeList(explode('|', $type)));
             return count($types)==1?$types[0]:'mixed';
         }
-        if($type{0} === strtoupper($type{0})) {
+        if ($type{0} === strtoupper($type{0})) {
             return 'object';
         }
         return isset(self::$replacements[$type]) ? self::$replacements[$type] : $type;
@@ -57,7 +57,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
     private function simplifyTypeList($list)
     {
         $types = array_unique($list);
-        if(in_array('integer', $types) && in_array('float', $types)) {
+        if (in_array('integer', $types) && in_array('float', $types)) {
             unset($types[array_search('integer', $types)]);
         }
         return array_values($types);
