@@ -20,7 +20,12 @@ class MethodDescriptorTest extends TestCase
      */
     private function getTest2()
     {
-        return new MethodDescriptor('test2', array('int', 'float|double','boolean','int|double'), 'bool', array('AClass'));
+        return new MethodDescriptor(
+            'test2',
+            array('int', 'float|double','boolean','int|double'),
+            'bool',
+            array('AClass')
+        );
     }
 
     /**
