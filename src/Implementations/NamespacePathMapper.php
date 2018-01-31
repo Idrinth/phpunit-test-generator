@@ -3,19 +3,36 @@
 namespace De\Idrinth\TestGenerator\Implementations;
 
 use SplFileInfo;
+use InvalidArgumentException;
 
 class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper
 {
+    /**
+     * Mapping Namespace => Folder
+     * @var string[]
+     */
     private $folders = array();
+
+    /**
+     * @param SplFileInfo $composer
+     * @throws InvalidArgumentException
+     */
     public function __construct(SplFileInfo $composer)
     {
         $data = json_decode(file_get_contents($composer->getPathname()), true);
         if (!$data) {
-            throw new \InvalidArgumentException("A parseable composer.json wasn't found.");
+            throw new InvalidArgumentException("A parseable composer.json wasn't found.");
         }
         $this->handleKey($data, 'autoload', $composer->getPath());
         $this->handleKey($data, 'autoload-dev', $composer->getPath());
     }
+
+    /**
+     * @param array $data
+     * @param string $key
+     * @param string $rootDir
+     * @return void
+     */
     private function handleKey(array $data, $key, $rootDir)
     {
         if (!isset($data[$key])) {
@@ -30,6 +47,14 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
             }
         }
     }
+
+    /**
+     * Builds a Namespace by inserting a new part
+     * @param string[] $parts
+     * @param string $part
+     * @param int $position
+     * @return string
+     */
     private function toNamespace($parts, $part, $position)
     {
         $original = array();
@@ -37,16 +62,21 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
         array_splice($original, $position, 0, array($part));
         return implode("\\", $original);
     }
+
+    /**
+     * @param string $namespace
+     * @return string[] known part, unknown part
+     */
     private function splitIntoMain($namespace)
     {
         $matches = array();
-        foreach ($this->folders as $ns => $folder) {
-            if (preg_match('/^'.preg_quote($ns).'/', $namespace)) {
-                $matches[] = $ns;
+        foreach ($this->folders as $nsKey => $folder) {
+            if (preg_match('/^'.preg_quote($nsKey).'/', $namespace)) {
+                $matches[] = $nsKey;
             }
         }
-        usort($matches, function ($a, $b) {
-            return strlen($b)-strlen($a);
+        usort($matches, function ($first, $second) {
+            return strlen($first)-strlen($second);
         });
         return array(
             trim($matches[0], '\\'),
@@ -54,22 +84,27 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
         );
     }
 
+    /**
+     * @param string $namespace
+     * @return string
+     */
     public function getTestNamespaceForNamespace($namespace)
     {
-        list($ns, $append) = $this->splitIntoMain($namespace);
-        $parts = explode("\\", trim($ns, '\\'));
-        for ($i = count($parts); $i >= 0; $i--) {
-            $ns1 = $this->toNamespace($parts, 'Test', $i);
+        list($prepend, $append) = $this->splitIntoMain($namespace);
+        $parts = explode("\\", trim($prepend, '\\'));
+        for ($counter = count($parts); $counter >= 0; $counter--) {
+            $ns1 = $this->toNamespace($parts, 'Test', $counter);
             if (isset($this->folders[$ns1])) {
                 return trim($ns1.'\\'.$append, '\\');
             }
-            $ns2 = $this->toNamespace($parts, 'Tests', $i);
+            $ns2 = $this->toNamespace($parts, 'Tests', $counter);
             if (isset($this->folders[$ns2])) {
                 return trim($ns2.'\\'.$append, '\\');
             }
         }
         return $namespace;
     }
+
     /**
      * @param string $class
      * @return SplFileInfo

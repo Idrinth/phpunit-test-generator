@@ -44,12 +44,12 @@ class NamespacePathMapperTest extends TestCase
     public function testGetTestFileForNamespacedClass()
     {
         $object = new NamespacePathMapper(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json'));
-        $ns = 'De\Idrinth\TestGenerator\NamespacePathMapper';
-        $this->assertInstanceOf('SplFileInfo', $object->getTestFileForNamespacedClass($ns));
-        $this->assertEquals(__FILE__, $object->getTestFileForNamespacedClass($ns)->getPathname());
+        $namespace = 'De\Idrinth\TestGenerator\NamespacePathMapper';
+        $this->assertInstanceOf('SplFileInfo', $object->getTestFileForNamespacedClass($namespace));
+        $this->assertEquals(__FILE__, $object->getTestFileForNamespacedClass($namespace)->getPathname());
         $this->assertEquals(
             __DIR__.DIRECTORY_SEPARATOR.'NamespacePathMapper'.DIRECTORY_SEPARATOR.'ExampleTest.php',
-            $object->getTestFileForNamespacedClass($ns.'\Example')->getPathname()
+            $object->getTestFileForNamespacedClass($namespace.'\Example')->getPathname()
         );
     }
 }

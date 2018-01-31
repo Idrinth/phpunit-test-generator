@@ -14,9 +14,24 @@ use SplFileInfo;
 
 class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
 {
+    /**
+     * @var Parser
+     */
     private $parser;
+
+    /**
+     * @var ClassDescriptor[]
+     */
     private $classes = array();
+
+    /**
+     * @var DocBlockParser
+     */
     private $doc;
+
+    /**
+     * @todo remove Initialization
+     */
     public function __construct()
     {
         $this->doc = new DocBlockParser();
@@ -25,7 +40,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
 
     /**
      * @param SplFileInfo $file
-     * @return \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor
+     * @return void
      */
     public function parse(SplFileInfo $file)
     {
@@ -116,6 +131,14 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             $docThrows
         );
     }
+
+    /**
+     * @param Name|string $type
+     * @param string $doc
+     * @param string[] $uses
+     * @param Namespace_ $namespace
+     * @return string
+     */
     private function typeToTypeString($type, $doc, $uses, Namespace_ $namespace)
     {
         if (!$type) {
@@ -130,6 +153,12 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         return $type;
     }
 
+    /**
+     * @param string $docString
+     * @param string[] $uses
+     * @param Namespace_ $namespace
+     * @return string
+     */
     private function docStringToType($docString, $uses, Namespace_ $namespace)
     {
         return strtolower($docString)==$docString?
@@ -140,6 +169,13 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
                 $namespace
             );
     }
+
+    /**
+     * @param Name $name
+     * @param string[] $uses
+     * @param Namespace_ $namespace
+     * @return string
+     */
     private function nameToTypeString(Name $name, $uses, Namespace_ $namespace)
     {
         if ($name->isFullyQualified()) {
