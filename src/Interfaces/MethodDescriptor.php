@@ -8,4 +8,5 @@ interface MethodDescriptor
     public function getParams();
     public function getReturn();
     public function getReturnClass();
+    public function getExceptions();
 }

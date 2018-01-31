@@ -3,6 +3,7 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 use PhpParser\Lexer;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Interface_;
@@ -86,10 +87,19 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $params = array();
         $doc = $method->getDocComment();
         $docParams = $this->doc->getParams($doc);
+        $docThrows = $this->doc->getExceptions($doc);
         foreach ($method->params as $pos => $param) {
             $params[] = $this->typeToTypeString(
                 $param->type,
                 isset($docParams[$pos])?$docParams[$pos]:null,
+                $uses,
+                $namespace
+            );
+        }
+        foreach ($docThrows as &$throws) {
+            $throws = $this->typeToTypeString(
+                '',
+                $throws,
                 $uses,
                 $namespace
             );
@@ -102,7 +112,8 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
                 $this->doc->getReturn($doc),
                 $uses,
                 $namespace
-            )
+            ),
+            $docThrows
         );
     }
     private function typeToTypeString($type, $doc, $uses, Namespace_ $namespace)
@@ -121,9 +132,13 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
 
     private function docStringToType($docString, $uses, Namespace_ $namespace)
     {
-        return strtolower($docString)==$docString ?
+        return strtolower($docString)==$docString?
             $docString :
-            $this->nameToTypeString(new Name($docString), $uses, $namespace);
+            $this->nameToTypeString(
+                $docString{0}==='\\'?new FullyQualified($docString):new Name($docString),
+                $uses,
+                $namespace
+            );
     }
     private function nameToTypeString(Name $name, $uses, Namespace_ $namespace)
     {

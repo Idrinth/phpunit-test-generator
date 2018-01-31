@@ -8,6 +8,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
     private $params = array();
     private $return;
     private $returnClass = null;
+    private $exceptions = array();
     protected static $replacements = array(
         'void' => 'null',
         'compound' => 'mixed',
@@ -22,7 +23,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
         'int' => 'integer',
         'double' => 'float'
     );
-    public function __construct($name, $params, $return)
+    public function __construct($name, $params, $return, $exceptions=array())
     {
         $this->name = $name;
         $this->params = $this->processTypeList($params);
@@ -30,6 +31,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
         if ($this->return === 'object' && !strpos($return, '|')) {
             $this->returnClass = $return;
         }
+        $this->exceptions = $exceptions;
     }
     private function processTypeList(array $types)
     {
@@ -81,5 +83,10 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
     public function getReturnClass()
     {
         return $this->returnClass;
+    }
+
+    public function getExceptions()
+    {
+        return $this->exceptions;
     }
 }

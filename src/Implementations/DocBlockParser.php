@@ -62,4 +62,12 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         }
         return $this->getVariableType('param', $rawDocBlock);
     }
+
+    public function getExceptions($rawDocBlock)
+    {
+        if (!$rawDocBlock) {
+            return array();
+        }
+        return $this->getVariableType('throws', $rawDocBlock);
+    }
 }

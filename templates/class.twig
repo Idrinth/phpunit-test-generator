@@ -41,5 +41,22 @@ class {{class.name}}Test extends TestCaseImplementation
             'This test has not been implemented yet.'
         );
     }
+{% for exception in function.exceptions %}
+
+    /**
+     * @test
+     * @todo replace with actual tests
+     * @expectedException {{exception}}
+     **/
+    public function test{{function.name|toUpperCamelCase}}Throws{{exception|toUpperCamelCase}} ()
+    {
+        $instance = new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
+        $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %};
+
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+{% endfor %}
 {% endfor %}
 }

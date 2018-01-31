@@ -20,7 +20,7 @@ class MethodDescriptorTest extends TestCase
      */
     private function getTest2()
     {
-        return new MethodDescriptor('test2', array('int', 'float|double','boolean','int|double'), 'bool');
+        return new MethodDescriptor('test2', array('int', 'float|double','boolean','int|double'), 'bool', array('AClass'));
     }
 
     /**
@@ -65,5 +65,14 @@ class MethodDescriptorTest extends TestCase
     {
         $this->assertEquals('YourClass', $this->getTest1()->getReturnClass());
         $this->assertNull($this->getTest2()->getReturnClass());
+    }
+
+    /**
+     * @test
+     */
+    public function testGetExceptions()
+    {
+        $this->assertEmpty($this->getTest1()->getExceptions());
+        $this->assertEquals(array('AClass'), $this->getTest2()->getExceptions());
     }
 }
