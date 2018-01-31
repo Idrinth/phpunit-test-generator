@@ -76,7 +76,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
             }
         }
         usort($matches, function ($first, $second) {
-            return strlen($first)-strlen($second);
+            return strlen($second)-strlen($first);
         });
         return array(
             trim($matches[0], '\\'),

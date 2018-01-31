@@ -82,7 +82,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $constructor = new MethodDescriptor('__construct', array(), 'void');
         foreach ($class->stmts as $iNode) {
             if ($iNode instanceof ClassMethod && $iNode->isPublic()) {
-                if ($iNode->name == '__construct' || $iNode->name == $node->name) {
+                if ($iNode->name == '__construct' || $iNode->name == $class->name) {
                     $constructor = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
                 } else {
                     $methods[] = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
@@ -90,7 +90,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             }
         }
         $this->classes[] = new ClassDescriptor(
-            $node->name,
+            $class->name,
             implode("\\", $namespace->name->parts),
             $methods,
             $constructor

@@ -23,7 +23,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
         'int' => 'integer',
         'double' => 'float'
     );
-    public function __construct($name, $params, $return, $exceptions=array())
+    public function __construct($name, $params, $return, $exceptions = array())
     {
         $this->name = $name;
         $this->params = $this->processTypeList($params);

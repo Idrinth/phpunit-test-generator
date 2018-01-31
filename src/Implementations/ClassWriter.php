@@ -16,7 +16,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
             dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'
         ));
         $this->env->addFilter(new \Twig_SimpleFilter('toUpperCamelCase', function ($string) {
-            $parts = explode('_', trim(preg_replace('/[^_A-Za-z0-9]+/', '_', $string),'_'));
+            $parts = explode('_', trim(preg_replace('/[^_A-Za-z0-9]+/', '_', $string), '_'));
             $result = '';
             foreach ($parts as $part) {
                 $result.= strtoupper($part{0});

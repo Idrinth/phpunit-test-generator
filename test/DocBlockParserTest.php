@@ -8,10 +8,20 @@ use PHPUnit\Framework\TestCase;
 class DocBlockParserTest extends TestCase
 {
     private static $case1 = "/**\n* @return string \n*/";
-    private static $case2 = "/**\n*@throws \Exception \n* @param \$a\n*@return string \n* @return void\n */";
-    private static $case3 = "/**\n * @param int \$z \n*@return A|B \n*/";
-    private static $case4 = "/**\n*@throws IException \n*@throws UException \n*@param int \$z\n*@param \$m\n @return string \n*/";
-    private static $case5 = "/**\n*@param boolean \$z\n*@param \$m Just a bit of text\n @return void \n*/";
+    private static $case2 = "/**\n*@throws \Exception \n"
+        . "* @param \$a\n"
+        . "*@return string \n"
+        . "* @return void\n */";
+    private static $case3 = "/**\n * @param int \$z \n"
+        . "*@return A|B \n*/";
+    private static $case4 = "/**\n*@throws IException \n"
+        . "*@throws UException \n"
+        . "*@param int \$z\n"
+        . "*@param \$m\n"
+        . " @return string \n*/";
+    private static $case5 = "/**\n*@param boolean \$z\n"
+        . "*@param \$m Just a bit of text\n"
+        . " @return void \n*/";
 
     /**
      * @test
