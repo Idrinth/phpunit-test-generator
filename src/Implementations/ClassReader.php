@@ -64,29 +64,48 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $uses = array();
         foreach ($namespace->stmts as $node) {
             if ($node instanceof Use_) {
-                if ($node->type == Use_::TYPE_NORMAL) {
-                    foreach ($node->uses as $use) {
-                        $uses[$use->alias] = $use->name->toString();
-                    }
-                }
+                $this->addUsesToList($node, $uses);
             } elseif ($node instanceof Class_) {
-                $methods = array();
-                $constructor = new MethodDescriptor('__construct', array(), 'void');
-                foreach ($node->stmts as $iNode) {
-                    if ($iNode instanceof ClassMethod && $iNode->isPublic()) {
-                        if ($iNode->name == '__construct' || $iNode->name == $node->name) {
-                            $constructor = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
-                        } else {
-                            $methods[] = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
-                        }
-                    }
+                $this->handleClassDefinition($node, $namespace, $uses);
+            }
+        }
+    }
+
+    /**
+     * @param Class_ $class
+     * @param Namespace_ $namespace
+     * @param string[] $uses
+     */
+    private function handleClassDefinition(Class_ $class, Namespace_ $namespace, $uses)
+    {
+        $methods = array();
+        $constructor = new MethodDescriptor('__construct', array(), 'void');
+        foreach ($class->stmts as $iNode) {
+            if ($iNode instanceof ClassMethod && $iNode->isPublic()) {
+                if ($iNode->name == '__construct' || $iNode->name == $node->name) {
+                    $constructor = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
+                } else {
+                    $methods[] = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
                 }
-                $this->classes[] = new ClassDescriptor(
-                    $node->name,
-                    implode("\\", $namespace->name->parts),
-                    $methods,
-                    $constructor
-                );
+            }
+        }
+        $this->classes[] = new ClassDescriptor(
+            $node->name,
+            implode("\\", $namespace->name->parts),
+            $methods,
+            $constructor
+        );
+    }
+
+    /**
+     * @param Use_ $uses
+     * @param string[] $list by reference
+     */
+    private function addUsesToList(Use_ $uses, &$list)
+    {
+        if ($uses->type == Use_::TYPE_NORMAL) {
+            foreach ($uses->uses as $use) {
+                $list[$use->alias] = $use->name->toString();
             }
         }
     }
