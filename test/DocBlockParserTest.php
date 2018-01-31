@@ -18,7 +18,7 @@ class DocBlockParserTest extends TestCase
             "/**\n*@throws \Exception \n* @param \$a\n*@return string \n* @return void\n */",
             "/**\n * @param int \$z \n*@return A|B \n*/",
             "/**\n*@throws IException \n*@throws UException \n*@param int \$z\n*@param \$m\n @return string \n*/",
-            "/**\n*@param boolean \$z\n*@param \$m Just a bit of text\n @return void \n*/"
+            "/**\n*@param boolean \$z\n*@param \$m Just a bit of text\n @return  \n*/"
         );
     }
 
@@ -34,7 +34,7 @@ class DocBlockParserTest extends TestCase
         $this->assertEquals('string|void', $instance->getReturn($cases[2]));
         $this->assertEquals('A|B', $instance->getReturn($cases[3]));
         $this->assertEquals('string', $instance->getReturn($cases[4]));
-        $this->assertEquals('void', $instance->getReturn($cases[5]));
+        $this->assertEquals('null', $instance->getReturn($cases[5]));
     }
 
     /**

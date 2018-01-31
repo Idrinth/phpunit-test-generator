@@ -14,7 +14,8 @@ class ClassWriterTest extends TestCase
             $this->filename = sys_get_temp_dir()
                 .DIRECTORY_SEPARATOR
                 .str_replace('\\', '_', __CLASS__)
-                .'.'.md5(__FILE__.microtime().mt_rand().PHP_VERSION);
+                .DIRECTORY_SEPARATOR
+                .'.'.md5(__FILE__.microtime().mt_rand().PHP_VERSION).'.php';
         }
         return $this->filename;
     }
@@ -73,7 +74,7 @@ class ClassWriterTest extends TestCase
      */
     public function testWrite()
     {
-        $writer = @new ClassWriter($this->getMockedNamespacePathMapper());
+        $writer = @new ClassWriter($this->getMockedNamespacePathMapper());//thanks to twig
         $this->assertTrue($writer->write($this->getMockedClassDescriptor()));
         include_once $this->filename;
         $this->assertTrue(class_exists('My\Tests\AbCdETest'));

@@ -70,7 +70,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     private function splitIntoMain($namespace)
     {
         $matches = array();
-        foreach ($this->folders as $nsKey => $folder) {
+        foreach (array_keys($this->folders) as $nsKey) {
             if (preg_match('/^'.preg_quote($nsKey).'/', $namespace)) {
                 $matches[] = $nsKey;
             }
@@ -112,7 +112,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     public function getTestFileForNamespacedClass($class)
     {
         list($namespace, $append) = $this->splitIntoMain($this->getTestNamespaceForNamespace($class));
-        return new \SplFileInfo(
+        return new SplFileInfo(
             $this->folders[$namespace].DIRECTORY_SEPARATOR
             .str_replace('\\', DIRECTORY_SEPARATOR, trim($append, '\\'))
             .'Test.php'

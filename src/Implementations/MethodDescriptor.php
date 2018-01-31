@@ -44,9 +44,6 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
 
     private function process($type)
     {
-        if (is_null($type)) {
-            return 'null';
-        }
         if (strpos($type, '|')) {
             $types = $this->simplifyTypeList($this->processTypeList(explode('|', $type)));
             return count($types)==1?$types[0]:'mixed';

@@ -38,7 +38,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
         if (!$file instanceof SplFileInfo || $file->isFile()) {
             return false;
         }
-        if (!is_dir($file->getPath()) && mkdir($file->getPath(), 0777, true)) {
+        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
             return false;
         }
         return false !== file_put_contents(
