@@ -81,9 +81,8 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $methods = array();
         $constructor = new MethodDescriptor('__construct', array(), 'void');
         foreach ($class->stmts as $iNode) {
-            if (
-                $iNode instanceof ClassMethod 
-                && $iNode->isPublic() 
+            if ($iNode instanceof ClassMethod
+                && $iNode->isPublic()
                 && !$iNode->isAbstract()
             ) {
                 $this->addMethod(
@@ -113,10 +112,10 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      */
     private function addMethod(&$constructor, &$methods, MethodDescriptor $function, $className)
     {
-            if ($function->getName() == '__construct' || $function->getName() == $className) {
-                $constructor = $function;
-                return;
-            }
+        if ($function->getName() == '__construct' || $function->getName() == $className) {
+            $constructor = $function;
+            return;
+        }
             $methods[] = $function;
     }
 

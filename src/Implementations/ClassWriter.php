@@ -46,8 +46,8 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
         if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
             return false;
         }
-        if($file->isFile()) {
-            if(!$replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
+        if ($file->isFile()) {
+            if (!$replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
                 return false;
             }
         }
