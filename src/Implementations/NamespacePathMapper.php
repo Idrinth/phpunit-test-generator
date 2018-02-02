@@ -75,6 +75,9 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
                 $matches[] = $nsKey;
             }
         }
+        if (!count($matches)) {
+            throw new \UnexpectedValueException("$namespace can't be found.");
+        }
         usort($matches, function ($first, $second) {
             return strlen($second)-strlen($first);
         });

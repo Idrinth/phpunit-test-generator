@@ -1,0 +1,52 @@
+{% for function in class.methods %}
+
+    /**
+     * From {{class.name}}
+     * @test
+     * @todo replace with actual tests
+     **/
+    public function test{{function.name|toUpperCamelCase}} ()
+    {
+        $instance = $this->getInstance();
+    {% if function.return != 'mixed' %}
+
+        $this->assertInternalType(
+            '{{function.return}}',
+            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
+            'Return didn\'t match expected type {{function.return}}'
+        );
+    {% endif %}
+    {% if function.return == 'object' %}
+
+        $this->assertInstanceOf(
+            '{{function.returnClass}}',
+            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
+            'Return didn\'t match expected instance {{function.returnClass}}'
+        );
+    {% endif %}
+
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+{% for exception in function.exceptions %}
+
+    /**
+     * From {{class.name}}
+     * @test
+     * @todo replace with actual tests
+     * @expectedException {{exception}}
+     **/
+    public function test{{function.name|toUpperCamelCase}}Throws{{exception|toUpperCamelCase}} ()
+    {
+        $this->getInstance()->{{function.name}}{% include 'function.twig' with {'function': function} only %};
+
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+{% endfor %}
+{% endfor %}
+{% if class.extends and classes[class.extends] is defined %}
+    {% include 'test-functions.twig' with {'class': classes[class.extends], 'classes': classes} only %}
+{% endif %}

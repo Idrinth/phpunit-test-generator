@@ -8,4 +8,6 @@ interface ClassDescriptor
     public function getNamespace();
     public function getMethods();
     public function getConstructor();
+    public function isAbstract();
+    public function getExtends();
 }

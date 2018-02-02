@@ -68,6 +68,7 @@ class ClassWriterTest extends TestCase
             ->willReturn($this->getMockedMethod());
         return $class;
     }
+
     /**
      * @test
      * @todo properly test
@@ -75,14 +76,15 @@ class ClassWriterTest extends TestCase
     public function testWrite()
     {
         $writer = @new ClassWriter($this->getMockedNamespacePathMapper());//thanks to twig
-        $this->assertTrue($writer->write($this->getMockedClassDescriptor()));
+        $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
         include_once $this->filename;
         $this->assertTrue(class_exists('My\Tests\AbCdETest'));
         $test = new \My\Tests\AbCdETest();
         $this->assertTrue(method_exists($test, 'testMethod'));
-        $lastModified = filemtime($this->filename);
-        $writer->write($this->getMockedClassDescriptor());
-        $this->assertEquals($lastModified, filemtime($this->filename));
+        $writer->write($this->getMockedClassDescriptor(), array());
+        $this->assertFileExists($this->filename.'.'.date('YmdHi').'.old');
+        @unlink($this->filename.'.'.date('YmdHi').'.old');
+        $this->assertFileExists($this->filename);
         @unlink($this->filename);
     }
 }

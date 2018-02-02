@@ -30,16 +30,26 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
 
     /**
      * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class
+     * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor[] $classes
+     * @param boolean $replace
      * @return boolean
      */
-    public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class)
+    public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class, $classes, $replace = false)
     {
+        if ($class->isAbstract()) {
+            return false;
+        }
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
-        if (!$file instanceof SplFileInfo || $file->isFile()) {
+        if (!$file instanceof SplFileInfo) {
             return false;
         }
         if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
             return false;
+        }
+        if($file->isFile()) {
+            if(!$replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
+                return false;
+            }
         }
         return false !== file_put_contents(
             $file->getPathname(),
@@ -47,11 +57,12 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
                 'class.twig',
                 array(
                     'class' => $class,
+                    'classes' => $classes,
                     'config' => array(
                         'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace()),
                         'testcase' => class_exists('PHPUnit\Framework\TestCase') ?
-                            'PHPUnit\Framework\TestCase' :
-                            'PHPUnit_Framework_TestCase'
+                                'PHPUnit\Framework\TestCase' :
+                                'PHPUnit_Framework_TestCase'
                     )
                 )
             )

@@ -5,7 +5,8 @@ interface ClassWriter
 {
     /**
      * @param ClassDescriptor $class
+     * @param ClassDescriptor[] $classes
      * @return boolean
      */
-    public function write(ClassDescriptor $class);
+    public function write(ClassDescriptor $class, $classes);
 }

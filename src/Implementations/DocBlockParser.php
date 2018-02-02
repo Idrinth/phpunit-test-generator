@@ -36,7 +36,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
     private function parseVariableType($declaration)
     {
         list($type) = explode(" ", $declaration);
-        return isset($type) && $type{0} !== '$' ? $type : 'string';
+        return isset($type) && $type && $type{0} !== '$' ? $type : 'string';
     }
 
     private function parseValue($originalValue)

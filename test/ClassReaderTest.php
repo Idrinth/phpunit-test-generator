@@ -17,7 +17,9 @@ class ClassReaderTest extends TestCase
         $object->parse(new \SplFileInfo(__FILE__));
         $this->assertCount(1, $object->getResults());
         $object->parse(new \SplFileInfo(__FILE__));
-        $results = $object->getResults();
+        $this->assertCount(1, $object->getResults());
+        $object->parse(new \SplFileInfo(__DIR__.DIRECTORY_SEPARATOR.'DocBlockParserTest.php'));
+        $results = array_values($object->getResults());
         $this->assertCount(2, $results);
         $this->assertEquals('ClassReaderTest', $results[0]->getName());
         $this->assertEquals('De\Idrinth\TestGenerator\Test', $results[0]->getNamespace());

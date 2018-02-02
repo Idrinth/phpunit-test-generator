@@ -22,7 +22,9 @@ class ClassDescriptorTest extends TestCase
             'ClassOne',
             '',
             array(),
-            $this->getConstructorMock()
+            $this->getConstructorMock(),
+            false,
+            'My\Namespace\ClassTwo'
         );
     }
 
@@ -35,10 +37,10 @@ class ClassDescriptorTest extends TestCase
             'ClassTwo',
             'My\Namespace',
             array($this->getConstructorMock()),
-            $this->getConstructorMock()
+            $this->getConstructorMock(),
+            true
         );
     }
-
 
     /**
      * @test
@@ -76,5 +78,23 @@ class ClassDescriptorTest extends TestCase
     {
         $this->assertInstanceOf(self::$method, $this->getClass1()->getConstructor());
         $this->assertInstanceOf(self::$method, $this->getClass2()->getConstructor());
+    }
+
+    /**
+     * @test
+     */
+    public function testIsAbstract()
+    {
+        $this->assertFalse($this->getClass1()->isAbstract());
+        $this->assertTrue($this->getClass2()->isAbstract());
+    }
+
+    /**
+     * @test
+     */
+    public function testGetExtends()
+    {
+        $this->assertEquals('My\Namespace\ClassTwo', $this->getClass1()->getExtends());
+        $this->assertNull($this->getClass2()->getExtends());
     }
 }

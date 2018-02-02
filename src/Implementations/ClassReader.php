@@ -81,20 +81,43 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $methods = array();
         $constructor = new MethodDescriptor('__construct', array(), 'void');
         foreach ($class->stmts as $iNode) {
-            if ($iNode instanceof ClassMethod && $iNode->isPublic()) {
-                if ($iNode->name == '__construct' || $iNode->name == $class->name) {
-                    $constructor = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
-                } else {
-                    $methods[] = $this->buildFunctionDescriptor($namespace, $iNode, $uses);
-                }
+            if (
+                $iNode instanceof ClassMethod 
+                && $iNode->isPublic() 
+                && !$iNode->isAbstract()
+            ) {
+                $this->addMethod(
+                    $constructor,
+                    $methods,
+                    $this->buildFunctionDescriptor($namespace, $iNode, $uses),
+                    $uses
+                );
             }
         }
-        $this->classes[] = new ClassDescriptor(
+        $this->classes[trim(implode("\\", $namespace->name->parts).'\\'.$class->name, '\\')] = new ClassDescriptor(
             $class->name,
             implode("\\", $namespace->name->parts),
             $methods,
-            $constructor
+            $constructor,
+            $class->isAbstract(),
+            $class->extends ? $this->nameToTypeString($class->extends, $uses, $namespace) : null
         );
+    }
+
+    /**
+     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor $constructor by reference
+     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor[] $methods by reference
+     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor $function
+     * @param string $className
+     * @return void
+     */
+    private function addMethod(&$constructor, &$methods, MethodDescriptor $function, $className)
+    {
+            if ($function->getName() == '__construct' || $function->getName() == $className) {
+                $constructor = $function;
+                return;
+            }
+            $methods[] = $function;
     }
 
     /**
@@ -114,7 +137,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      * @param Namespace_ $namespace
      * @param ClassMethod $method
      * @param array $uses
-     * @return FunctionDescriptor
+     * @return MethodDescriptor
      */
     private function buildFunctionDescriptor(Namespace_ $namespace, ClassMethod $method, array $uses)
     {
@@ -180,7 +203,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      */
     private function docStringToType($docString, $uses, Namespace_ $namespace)
     {
-        return strtolower($docString)==$docString?
+        return strtolower($docString)==$docString && false===strpos('\\', $docString)?
             $docString :
             $this->nameToTypeString(
                 $docString{0}==='\\'?new FullyQualified($docString):new Name($docString),

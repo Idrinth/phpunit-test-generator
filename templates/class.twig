@@ -9,54 +9,19 @@ use {{class.namespace}}\{{class.name}};
  * this is an automatically generated skeleton for testing {{class.name}}
  * @todo actually test
  **/
-class {{class.name}}Test extends TestCaseImplementation
+{% if class.abstract %}abstract {% endif %}class {{class.name}}Test extends TestCaseImplementation
 {
-{% for function in class.methods %}
-
     /**
-     * @test
-     * @todo replace with actual tests
+     * @return {{class.name}}
+     * @todo make sure the construction works as expected
      **/
-    public function test{{function.name|toUpperCamelCase}} ()
+{% if class.abstract %}
+    abstract protected function getInstance ();
+{% else %}
+    protected function getInstance ()
     {
-        $instance = new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
-    {% if function.return != 'mixed' %}
-
-        $this->assertInternalType(
-            '{{function.return}}',
-            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
-            'Return didn\'t match expected type {{function.return}}'
-        );
-    {% endif %}
-    {% if function.return == 'object' %}
-
-        $this->assertInstanceOf(
-            '{{function.returnClass}}',
-            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
-            'Return didn\'t match expected instance {{function.returnClass}}'
-        );
-    {% endif %}
-
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        return new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
     }
-{% for exception in function.exceptions %}
-
-    /**
-     * @test
-     * @todo replace with actual tests
-     * @expectedException {{exception}}
-     **/
-    public function test{{function.name|toUpperCamelCase}}Throws{{exception|toUpperCamelCase}} ()
-    {
-        $instance = new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
-        $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %};
-
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-{% endfor %}
-{% endfor %}
+{% endif %}
+{% include 'test-functions.twig' with {'class': class, 'classes': classes} only %}
 }

@@ -48,7 +48,7 @@ class MethodDescriptor implements \De\Idrinth\TestGenerator\Interfaces\MethodDes
             $types = $this->simplifyTypeList($this->processTypeList(explode('|', $type)));
             return count($types)==1?$types[0]:'mixed';
         }
-        if ($type{0} === strtoupper($type{0})) {
+        if ($type{0} === strtoupper($type{0}) || false!==strpos($type, '\\')) {
             return 'object';
         }
         return isset(self::$replacements[$type]) ? self::$replacements[$type] : $type;

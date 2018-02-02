@@ -8,16 +8,22 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
     private $namespace;
     private $methods = array();
     private $constructor;
+    private $abstract;
+    private $extends;
     public function __construct(
         $name,
         $namespace,
         array $methods,
-        \De\Idrinth\TestGenerator\Interfaces\MethodDescriptor $constructor
+        \De\Idrinth\TestGenerator\Interfaces\MethodDescriptor $constructor,
+        $abstract,
+        $extends = null
     ) {
         $this->name = $name;
         $this->namespace = $namespace;
         $this->methods = $methods;
         $this->constructor = $constructor;
+        $this->abstract = $abstract;
+        $this->extends = $extends;
     }
 
     public function getName()
@@ -35,5 +41,13 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
     public function getConstructor()
     {
         return $this->constructor;
+    }
+    public function isAbstract()
+    {
+        return $this->abstract;
+    }
+    public function getExtends()
+    {
+        return $this->extends;
     }
 }
