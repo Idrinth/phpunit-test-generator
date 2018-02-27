@@ -9,14 +9,19 @@ use {{class.namespace}}\{{class.name}};
  * this is an automatically generated skeleton for testing {{class.name}}
  * @todo actually test
  **/
-{% if class.abstract %}abstract {% endif %}class {{class.name}}Test extends TestCaseImplementation
+class {{class.name}}Test extends TestCaseImplementation
 {
     /**
      * @return {{class.name}}
      * @todo make sure the construction works as expected
      **/
 {% if class.abstract %}
-    abstract protected function getInstance ();
+    protected function getInstance ()
+    {
+        return $this->getMockBuilder('{{class.namespace}}\{{class.name}}')
+            ->setConstructorArgs(array{% include 'function.twig' with {'function': class.constructor} only %})
+            ->getMockForAbstractClass();
+    }
 {% else %}
     protected function getInstance ()
     {
