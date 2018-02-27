@@ -95,14 +95,13 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     {
         list($prepend, $append) = $this->splitIntoMain($namespace);
         $parts = explode("\\", trim($prepend, '\\'));
+        $tests = array('Test','test','Tests','tests');
         for ($counter = count($parts); $counter >= 0; $counter--) {
-            $ns1 = $this->toNamespace($parts, 'Test', $counter);
-            if (isset($this->folders[$ns1])) {
-                return trim($ns1.'\\'.$append, '\\');
-            }
-            $ns2 = $this->toNamespace($parts, 'Tests', $counter);
-            if (isset($this->folders[$ns2])) {
-                return trim($ns2.'\\'.$append, '\\');
+            foreach($tests as $test) {
+                $ns1 = $this->toNamespace($parts, $test, $counter);
+                if (isset($this->folders[$ns1])) {
+                    return trim($ns1.'\\'.$append, '\\');
+                }
             }
         }
         return $namespace;
