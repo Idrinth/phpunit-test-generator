@@ -15,7 +15,7 @@ class ControllerTest extends TestCaseImplementation
      * @return Controller
      * @todo make sure the construction works as expected
      **/
-    protected function getInstance ()
+    protected function getInstance()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
@@ -28,7 +28,7 @@ class ControllerTest extends TestCaseImplementation
      * @test
      * @todo replace with actual tests
      **/
-    public function testInit ()
+    public function testInit()
     {
         $instance = $this->getInstance();
     
@@ -48,7 +48,7 @@ class ControllerTest extends TestCaseImplementation
      * @test
      * @todo replace with actual tests
      **/
-    public function testRun ()
+    public function testRun()
     {
         $instance = $this->getInstance();
     

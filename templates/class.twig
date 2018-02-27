@@ -15,18 +15,17 @@ class {{class.name}}Test extends TestCaseImplementation
      * @return {{class.name}}
      * @todo make sure the construction works as expected
      **/
-{% if class.abstract %}
-    protected function getInstance ()
+    protected function getInstance()
     {
-        return $this->getMockBuilder('{{class.namespace}}\{{class.name}}')
+{% if class.abstract %}
+        return $this
+            ->getMockBuilder('{{class.namespace}}\{{class.name}}')
             ->setConstructorArgs(array{% include 'function.twig' with {'function': class.constructor} only %})
             ->getMockForAbstractClass();
-    }
 {% else %}
-    protected function getInstance ()
-    {
         return new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
-    }
 {% endif %}
+    }
 {% include 'test-functions.twig' with {'class': class, 'classes': classes} only %}
 }
+{{''}}

@@ -16,8 +16,13 @@ class Controller
     private $rootDir;
     private $replace;
     private $writer;
-    public function __construct(Finder $finder, ClassReader $reader, ClassWriter $writer, SplFileInfo $rootDir, $replace)
-    {
+    public function __construct(
+        Finder $finder,
+        ClassReader $reader,
+        ClassWriter $writer,
+        SplFileInfo $rootDir,
+        $replace
+    ) {
         $this->finder = $finder;
         $this->reader = $reader;
         $this->rootDir = $rootDir;
@@ -27,7 +32,11 @@ class Controller
     public static function init()
     {
         $opts = getopt('', array('dir:','replace'));
-        $dir = new SplFileInfo(isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], DIRECTORY_SEPARATOR) : getcwd());
+        $dir = new SplFileInfo(
+            isset($opts['dir']) && $opts['dir'] ?
+                rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
+                getcwd()
+        );
         return new self(
             new Finder(),
             new ClassReader2(),
@@ -36,7 +45,8 @@ class Controller
             isset($opts['replace'])
         );
     }
-    public function run() {
+    public function run()
+    {
         foreach ($this->finder
             ->files()
             ->name('/\\.php[0-9]?$/i')
