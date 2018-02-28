@@ -18,10 +18,10 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
      */
     public function __construct(ComposerInterface $composer)
     {
-        foreach($composer->getDevelopmentNamespacesToFolders() as $namespace => $folder) {
+        foreach ($composer->getDevelopmentNamespacesToFolders() as $namespace => $folder) {
             $this->folders[$namespace] = $folder;
         }
-        foreach($composer->getProductionNamespacesToFolders() as $namespace => $folder) {
+        foreach ($composer->getProductionNamespacesToFolders() as $namespace => $folder) {
             $this->folders[$namespace] = $folder;
         }
     }

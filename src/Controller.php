@@ -39,8 +39,7 @@ class Controller
                 isset($opts['dir']) && $opts['dir'] ?
                     rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
                     getcwd()
-                ).DIRECTORY_SEPARATOR.'composer.json'
-            )
+                ).DIRECTORY_SEPARATOR.'composer.json')
         );
         return new self(
             new Finder(),

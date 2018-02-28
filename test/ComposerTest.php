@@ -22,7 +22,7 @@ class ComposerTest extends TestCaseImplementation
      * @test
      * @todo replace with actual tests
      **/
-    public function testGetProductionNamespacesToFolders ()
+    public function testGetProductionNamespacesToFolders()
     {
         $instance = $this->getInstance(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');
     
@@ -42,7 +42,7 @@ class ComposerTest extends TestCaseImplementation
      * @test
      * @todo replace with actual tests
      **/
-    public function testGetDevelopmentNamespacesToFolders ()
+    public function testGetDevelopmentNamespacesToFolders()
     {
         $instance = $this->getInstance(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');
     

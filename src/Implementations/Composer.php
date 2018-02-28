@@ -22,7 +22,7 @@ class Composer implements \De\Idrinth\TestGenerator\Interfaces\Composer
      */
     public function __construct(SplFileInfo $file)
     {
-        if(!$file->isFile() || !$file->isReadable()) {
+        if (!$file->isFile() || !$file->isReadable()) {
             throw new InvalidArgumentException("File $file doesn't exist or isn't readable.");
         }
         $data = json_decode(file_get_contents($file->getPathname()), true);
