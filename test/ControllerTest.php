@@ -2,13 +2,13 @@
 
 namespace De\Idrinth\TestGenerator\Test;
 
-use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use De\Idrinth\TestGenerator\Controller;
+use De\Idrinth\TestGenerator\Test\Mock\GetCwd;
+use PHPUnit\Framework\TestCase as TestCaseImplementation;
+use Symfony\Component\Finder\Finder;
 
-/**
- * this is an automatically generated skeleton for testing Controller
- * @todo actually test
- **/
+require_once(__DIR__.DIRECTORY_SEPARATOR.'Mock'.DIRECTORY_SEPARATOR.'getcwd_function.php');
+
 class ControllerTest extends TestCaseImplementation
 {
     /**
@@ -17,49 +17,59 @@ class ControllerTest extends TestCaseImplementation
      **/
     protected function getInstance()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
+        $composer->expects($this->once())->method('getProductionNamespacesToFolders')->willReturn(array(__DIR__));
+        $reader = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassReader')->getMock();
+        $reader->expects($this->once())->method('getResults')->willReturn(array());
+        return new Controller(
+            new Finder(),
+            $reader,
+            $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock(),
+            $composer,
+            false
         );
-        return new Controller(null, null, null, null, null);
     }
 
     /**
      * From Controller
      * @test
-     * @todo replace with actual tests
+     * @expectedException \InvalidArgumentException
+     **/
+    public function testInitThrowsInvalidArgumentException()
+    {
+        $this->assertInstanceOf(
+            'De\Idrinth\TestGenerator\Controller',
+            Controller::init(),
+            'Return didn\'t match expected type null'
+        );
+    }
+
+    /**
+     * From Controller
+     * @test
      **/
     public function testInit()
     {
-        $instance = $this->getInstance();
-    
-        $this->assertInternalType(
-            'null',
-            $instance->init(),
-            'Return didn\'t match expected type null'
+        $cwd = new GetCwd(dirname(__DIR__));
+        $this->assertInstanceOf(
+            'De\Idrinth\TestGenerator\Controller',
+            Controller::init(),
+            'Return didn\'t match expected Controller'
         );
-        
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        unset($cwd);
     }
 
     /**
      * From Controller
      * @test
-     * @todo replace with actual tests
      **/
     public function testRun()
     {
         $instance = $this->getInstance();
-    
         $this->assertInternalType(
             'null',
             $instance->run(),
             'Return didn\'t match expected type null'
-        );
-        
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
         );
     }
 }

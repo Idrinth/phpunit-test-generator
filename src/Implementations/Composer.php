@@ -2,9 +2,11 @@
 
 namespace De\Idrinth\TestGenerator\Implementations;
 
+use De\Idrinth\TestGenerator\Interfaces\Composer as ComposerInterface;
+use InvalidArgumentException;
 use SplFileInfo;
 
-class Composer implements \De\Idrinth\TestGenerator\Interfaces\Composer
+class Composer implements ComposerInterface
 {
     /**
      * @var string[] namespace => folder

@@ -20,40 +20,40 @@ class ComposerTest extends TestCaseImplementation
     /**
      * From Composer
      * @test
-     * @todo replace with actual tests
      **/
     public function testGetProductionNamespacesToFolders()
     {
-        $instance = $this->getInstance(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');
-    
+        $base = dirname(__DIR__).DIRECTORY_SEPARATOR;
+        $instance = $this->getInstance($base.'composer.json');
         $this->assertInternalType(
             'array',
             $instance->getProductionNamespacesToFolders(),
             'Return didn\'t match expected type array'
         );
-        
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $this->assertEquals(
+            array("De\\Idrinth\\TestGenerator" => "{$base}src"),
+            $instance->getProductionNamespacesToFolders(),
+            'Return didn\'t match expected array'
         );
     }
 
     /**
      * From Composer
      * @test
-     * @todo replace with actual tests
      **/
     public function testGetDevelopmentNamespacesToFolders()
     {
-        $instance = $this->getInstance(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');
-    
+        $base = dirname(__DIR__).DIRECTORY_SEPARATOR;
+        $instance = $this->getInstance($base.'composer.json');
         $this->assertInternalType(
             'array',
             $instance->getDevelopmentNamespacesToFolders(),
             'Return didn\'t match expected type array'
         );
-        
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $this->assertEquals(
+            array("De\\Idrinth\\TestGenerator\\Test" => "{$base}test"),
+            $instance->getDevelopmentNamespacesToFolders(),
+            'Return didn\'t match expected array'
         );
     }
 }
