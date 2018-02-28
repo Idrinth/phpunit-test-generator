@@ -7,15 +7,13 @@ class GetCwd
     public function __construct($value)
     {
         self::$value = $value;
-        echo "c";
     }
     public function __destruct()
     {
-        echo "d";
         self::$value = null;
     }
-    public static function getcwd() {
-        echo "hi";
+    public static function getcwd()
+    {
         return self::$value?:\getcwd();
     }
 }
