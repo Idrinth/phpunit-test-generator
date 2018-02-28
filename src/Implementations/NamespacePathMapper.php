@@ -3,7 +3,7 @@
 namespace De\Idrinth\TestGenerator\Implementations;
 
 use SplFileInfo;
-use InvalidArgumentException;
+use De\Idrinth\TestGenerator\Interfaces\Composer as ComposerInterface;
 
 class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper
 {
@@ -14,37 +14,15 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     private $folders = array();
 
     /**
-     * @param SplFileInfo $composer
-     * @throws InvalidArgumentException
+     * @param ComposerInterface $composer
      */
-    public function __construct(SplFileInfo $composer)
+    public function __construct(ComposerInterface $composer)
     {
-        $data = json_decode(file_get_contents($composer->getPathname()), true);
-        if (!$data) {
-            throw new InvalidArgumentException("A parseable composer.json wasn't found.");
+        foreach($composer->getDevelopmentNamespacesToFolders() as $namespace => $folder) {
+            $this->folders[$namespace] = $folder;
         }
-        $this->handleKey($data, 'autoload', $composer->getPath());
-        $this->handleKey($data, 'autoload-dev', $composer->getPath());
-    }
-
-    /**
-     * @param array $data
-     * @param string $key
-     * @param string $rootDir
-     * @return void
-     */
-    private function handleKey(array $data, $key, $rootDir)
-    {
-        if (!isset($data[$key])) {
-            return;
-        }
-        $autoloaders = $data[$key];
-        foreach (array('psr-0', 'psr-4') as $method) {
-            if (isset($autoloaders[$method])) {
-                foreach ($autoloaders[$method] as $namespace => $folder) {
-                    $this->folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
-                }
-            }
+        foreach($composer->getProductionNamespacesToFolders() as $namespace => $folder) {
+            $this->folders[$namespace] = $folder;
         }
     }
 

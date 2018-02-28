@@ -36,6 +36,9 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
      */
     public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class, $classes, $replace = false)
     {
+        if($class->getName() === 'Controller') {
+            return;
+        }
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
         if (!$file instanceof SplFileInfo) {
             return false;
