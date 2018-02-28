@@ -37,11 +37,9 @@ class ControllerTest extends TestCaseImplementation
      **/
     public function testInitThrowsInvalidArgumentException()
     {
-        $this->assertInstanceOf(
-            'De\Idrinth\TestGenerator\Controller',
-            Controller::init(),
-            'Return didn\'t match expected type null'
-        );
+        $cwd = new GetCwd(__DIR__);
+        Controller::init();
+        unset($cwd);
     }
 
     /**
