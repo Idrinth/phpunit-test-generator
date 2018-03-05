@@ -8,7 +8,7 @@ use De\Idrinth\TestGenerator\Interfaces\Type;
 class ArrayType implements ATI
 {
     /**
-     * @var string
+     * @var Type
      */
     private $type;
 
