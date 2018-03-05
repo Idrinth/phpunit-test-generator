@@ -49,7 +49,8 @@ class TypeResolver
     /**
      * @param Use_ $use
      */
-    public function addUse(Use_ $use) {
+    public function addUse(Use_ $use)
+    {
         $this->uses[$use->alias] = $use->name->toString();
     }
 
@@ -58,25 +59,26 @@ class TypeResolver
      * @param string $doc
      * @return Type
      */
-    public function toType($type, $doc) {
+    public function toType($type, $doc)
+    {
         if($type) {
             if ($type instanceof Name) {
                 return new ClassType($this->nameToFQString($type));
             }
-            if(isset(self::$primitives[$type])) {
+            if (isset(self::$primitives[$type])) {
                 return new SimpleType(self::$primitives[$type]);
             }
-            if(isset(self::$keywords[$type])) {
+            if (isset(self::$keywords[$type])) {
                 return new SimpleType(self::$keywords[$type]);
             }
         }
         if (!$doc) {
             return new UnknownType();
         }
-        if(isset(self::$primitives[$doc])) {
+        if (isset(self::$primitives[$doc])) {
             return new SimpleType(self::$primitives[$doc]);
         }
-        if(isset(self::$keywords[$doc])) {
+        if (isset(self::$keywords[$doc])) {
             return new SimpleType(self::$keywords[$doc]);
         }
         return $this->typeListToType(explode('|', $doc));
@@ -88,7 +90,7 @@ class TypeResolver
      */
     private function typeListToType(array $types)
     {
-        if(count($types) === 0) {
+        if (count($types) === 0) {
             return new UnknownType();
         }
         $isArray = true;
@@ -96,11 +98,11 @@ class TypeResolver
         $simples = array();
         $arrayTypes = array();
         $this->simplifyList($types, $simples, $arrayTypes, $isObject, $isArray);
-        if($isArray) {
+        if ($isArray) {
             $inner = $this->typeListToType($arrayTypes);
             return $inner->getType()==='unknown'?new SimpleType('array'):new ArrayType($inner);
         }
-        if($isObject) {
+        if ($isObject) {
             return count($types)===1?new ClassType($types[0]):new SimpleType('object');
         }
         $simples = array_unique($simples);
@@ -118,15 +120,15 @@ class TypeResolver
     private function simplifyList(array $types, array &$simples, array &$arrayTypes, &$isObject, &$isArray)
     {
         foreach ($types as $type) {
-            if(isset(self::$keywords[$type])) {
+            if (isset(self::$keywords[$type])) {
                 $simples[] = self::$keywords[$type];
                 $isArray = $isArray && self::$keywords[$type] === 'array';
                 $isObject = $isObject && self::$keywords[$type] === 'object';
-            } elseif(isset(self::$primitives[$type])) {
+            } elseif (isset(self::$primitives[$type])) {
                 $simples[] = self::$primitives[$type];
                 $isArray = $isArray && self::$primitives[$type] === 'array';
                 $isObject = $isObject && self::$primitives[$type] === 'object';
-            } elseif(preg_match('/\\[\\]$/', $type)) {
+            } elseif (preg_match('/\\[\\]$/', $type)) {
                 $simples[] = 'array';
                 $arrayTypes[] = substr($type, 0, strlen($type) -2);
                 $isObject = false;
@@ -141,11 +143,12 @@ class TypeResolver
      * @param Name $name
      * @return string
      */
-    private function nameToFQString(Name $name) {
-        if($name->isFullyQualified()) {
+    private function nameToFQString(Name $name)
+    {
+        if ($name->isFullyQualified()) {
             return $name;
         }
-        if(!$name->isQualified() && isset($this->uses[$name.''])) {
+        if (!$name->isQualified() && isset($this->uses[$name.''])) {
             return $this->uses[$name.''];
         }
         return $name->prepend($this->namespace->name).'';
