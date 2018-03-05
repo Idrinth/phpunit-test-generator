@@ -51,7 +51,9 @@ class TypeResolver
      */
     public function addUse(Use_ $use)
     {
-        $this->uses[$use->alias] = $use->name->toString();
+        foreach($use->uses as $realUse) {
+            $this->uses[$realUse->alias] = $realUse->name->toString();
+        }
     }
 
     /**
@@ -103,7 +105,7 @@ class TypeResolver
             return $inner->getType()==='unknown'?new SimpleType('array'):new ArrayType($inner);
         }
         if ($isObject) {
-            return count($types)===1?new ClassType($types[0]):new SimpleType('object');
+            return count($types)===1?new ClassType($this->stringToFQString($types[0])):new SimpleType('object');
         }
         $simples = array_unique($simples);
         return count($simples)>1?new UnknownType():new SimpleType($simples[0]);
@@ -152,5 +154,20 @@ class TypeResolver
             return $this->uses[$name.''];
         }
         return $name->prepend($this->namespace->name).'';
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function stringToFQString($name)
+    {
+        if ($name{0} === '\\') {
+            return trim($name, '\\');
+        }
+        if (isset($this->uses[$name])) {
+            return $this->uses[$name];
+        }
+        return trim($this->namespace->name.'\\'.$name, '\\');
     }
 }
