@@ -44,6 +44,6 @@ class TypeResolverTest extends TestCase
         $this->assertEquals(
             'NoBase\MyClass',
             $object3->toType(null, 'MyClass[]')->getItemType()->getClassName()
-       );
+        );
     }
 }

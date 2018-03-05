@@ -51,7 +51,7 @@ class TypeResolver
      */
     public function addUse(Use_ $use)
     {
-        foreach($use->uses as $realUse) {
+        foreach ($use->uses as $realUse) {
             $this->uses[$realUse->alias] = $realUse->name->toString();
         }
     }
@@ -63,7 +63,7 @@ class TypeResolver
      */
     public function toType($type, $doc)
     {
-        if($type) {
+        if ($type) {
             if ($type instanceof Name) {
                 return new ClassType($this->nameToFQString($type));
             }
