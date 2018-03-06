@@ -43,7 +43,7 @@ class TypeResolverTest extends TestCase
         $object->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
         $this->assertClassType($object->toType(null, 'MyClass'), 'NoBase\MyClass');
         $this->assertClassType($object->toType(null, '\MyClass'), 'MyClass');
-        $this->assertClassArrayType($object->toType(null, 'YourClass[]'), 'NoBase\YourClass');
+        $this->assertClassArrayType($object->toType(null, 'YourClass[]'), 'Base\YourClass');
     }
 
     /**
