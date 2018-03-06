@@ -3,7 +3,9 @@
 namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
+use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 
 class ClassWriterTest extends TestCase
 {
@@ -29,7 +31,7 @@ class ClassWriterTest extends TestCase
             ->willReturn('My\Tests');
         $namespaces->expects($this->any())
             ->method('getTestFileForNamespacedClass')
-            ->willReturn(new \SplFileInfo($this->filename));
+            ->willReturn(new SplFileInfo($this->filename));
         return $namespaces;
     }
     private function getMockedMethod()
@@ -44,10 +46,7 @@ class ClassWriterTest extends TestCase
             ->willReturn(array());
         $method->expects($this->any())
             ->method('getReturn')
-            ->willReturn('null');
-        $method->expects($this->any())
-            ->method('getReturnClass')
-            ->willReturn(null);
+            ->willReturn(new UnknownType());
         return $method;
     }
     private function getMockedClassDescriptor()
