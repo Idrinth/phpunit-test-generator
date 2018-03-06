@@ -7,8 +7,19 @@ use SplFileInfo;
 
 class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
 {
+    /**
+     * @var Environment
+     */
     private $env;
+
+    /**
+     * @var \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces
+     */
     private $namespaces;
+
+    /**
+     * @param \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces
+     */
     public function __construct(\De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces)
     {
         $this->namespaces = $namespaces;

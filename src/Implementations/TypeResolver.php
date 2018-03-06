@@ -13,8 +13,19 @@ use PhpParser\Node\Stmt\Use_;
 
 class TypeResolver
 {
+    /**
+     * @var string[]
+     */
     private $uses = array();
+
+    /**
+     * @var Namespace_
+     */
     private $namespace;
+
+    /**
+     * @var string[]
+     */
     private static $primitives = array(
         'string' => 'string',
         'integer' => 'integer',
@@ -27,6 +38,10 @@ class TypeResolver
         'null' => 'null',
         'callable' => 'unknown'
     );
+
+    /**
+     * @var string[]
+     */
     private static $keywords = array(
         'mixed' => 'unknown',
         'void' => 'null',
@@ -136,8 +151,7 @@ class TypeResolver
         if ($isObject) {
             return count($types)===1?new ClassType($this->stringToFQString($types[0])):new SimpleType('object');
         }
-        $simples = array_unique($simples);
-        return count($simples)>1?new UnknownType():new SimpleType($simples[0]);
+        return count(array_unique($simples))>1?new UnknownType():new SimpleType($simples[0]);
     }
 
     /**
@@ -199,6 +213,10 @@ class TypeResolver
         }
         return trim($this->namespace->name.'\\'.$name, '\\');
     }
+
+    /**
+     * @return string
+     */
     public function getNamespace()
     {
         return $this->namespace->name.'';

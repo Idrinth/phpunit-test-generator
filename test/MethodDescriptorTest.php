@@ -78,6 +78,7 @@ class MethodDescriptorTest extends TestCase
         $this->assertEmpty($this->getTest1()->getExceptions());
         $exceptions = $this->getTest2()->getExceptions();
         $this->assertCount(1, $exceptions);
-        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\ClassType', $exceptions[0]);
+        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\Type', $exceptions[0]);
+        $this->assertTrue($exceptions[0]->isComplex());
     }
 }

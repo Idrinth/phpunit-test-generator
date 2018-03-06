@@ -4,8 +4,17 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockParser
 {
+    /**
+     * @var string
+     */
     private static $endPattern = "[ ]*(?:@|\r\n|\n)";
 
+    /**
+     * @param string $key
+     * @param string $rawDocBlock
+     * @param string[] $matches
+     * @return boolean
+     */
     private function pregMatchAll($key, $rawDocBlock, &$matches)
     {
         return preg_match_all(
@@ -14,6 +23,12 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
             $matches
         );
     }
+
+    /**
+     * @param string $key
+     * @param string $rawDocBlock
+     * @return string[]
+     */
     private function getParameter($key, $rawDocBlock)
     {
         $this->pregMatchAll($key, $rawDocBlock, $matches);
@@ -24,6 +39,11 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         return $parameters;
     }
 
+    /**
+     * @param string $name
+     * @param string $rawDocBlock
+     * @return string[]
+     */
     private function getVariableType($name, $rawDocBlock)
     {
         $declarations = array();
@@ -33,12 +53,20 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         return $declarations;
     }
 
+    /**
+     * @param string $declaration
+     * @return string
+     */
     private function parseVariableType($declaration)
     {
         list($type) = explode(" ", $declaration);
         return isset($type) && $type && $type{0} !== '$' ? $type : 'string';
     }
 
+    /**
+     * @param string $originalValue
+     * @return string
+     */
     private function parseValue($originalValue)
     {
         if (!$originalValue || $originalValue === 'null') {
@@ -47,6 +75,10 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         return $originalValue;
     }
 
+    /**
+     * @param string $rawDocBlock
+     * @return string
+     */
     public function getReturn($rawDocBlock)
     {
         if (!$rawDocBlock) {
@@ -55,6 +87,11 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         $return = $this->getVariableType('return', $rawDocBlock);
         return count($return) ? implode('|', $return) : 'null';
     }
+
+    /**
+     * @param string $rawDocBlock
+     * @return string[]
+     */
     public function getParams($rawDocBlock)
     {
         if (!$rawDocBlock) {
@@ -63,6 +100,10 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
         return $this->getVariableType('param', $rawDocBlock);
     }
 
+    /**
+     * @param string $rawDocBlock
+     * @return string[]
+     */
     public function getExceptions($rawDocBlock)
     {
         if (!$rawDocBlock) {

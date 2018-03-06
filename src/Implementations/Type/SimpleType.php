@@ -2,28 +2,13 @@
 
 namespace De\Idrinth\TestGenerator\Implementations\Type;
 
-use De\Idrinth\TestGenerator\Interfaces\Type;
-
-class SimpleType implements Type
+class SimpleType extends BaseType
 {
     /**
-     * @var string
+     * @param string $simple
      */
-    private $type;
-
-    /**
-     * @param string $type
-     */
-    public function __construct($type)
+    public function __construct($simple)
     {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        parent::__construct($simple);
     }
 }

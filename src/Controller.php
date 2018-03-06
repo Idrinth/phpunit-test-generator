@@ -13,11 +13,38 @@ use Symfony\Component\Finder\Finder;
 
 class Controller
 {
+    /**
+     * @var Finder
+     */
     private $finder;
+
+    /**
+     * @var ClassReader
+     */
     private $reader;
+
+    /**
+     * @var Composer
+     */
     private $composer;
+
+    /**
+     * @var boolean
+     */
     private $replace;
+
+    /**
+     * @var ClassWriter
+     */
     private $writer;
+
+    /**
+     * @param Finder $finder
+     * @param ClassReader $reader
+     * @param ClassWriter $writer
+     * @param Composer $composer
+     * @param boolean $replace
+     */
     public function __construct(
         Finder $finder,
         ClassReader $reader,
@@ -31,6 +58,10 @@ class Controller
         $this->replace = (bool) $replace;
         $this->writer = $writer;
     }
+
+    /**
+     * @return self
+     */
     public static function init()
     {
         $opts = getopt('', array('dir:','replace'));
@@ -49,6 +80,10 @@ class Controller
             isset($opts['replace'])
         );
     }
+
+    /**
+     * @return void
+     */
     public function run()
     {
         foreach ($this->finder

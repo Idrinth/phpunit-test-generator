@@ -2,36 +2,15 @@
 
 namespace De\Idrinth\TestGenerator\Implementations\Type;
 
-use De\Idrinth\TestGenerator\Interfaces\ClassType as CTI;
 
-class ClassType implements CTI
+class ClassType extends BaseType
 {
-    /**
-     * @var string
-     */
-    private $type;
-
     /**
      * @param string $type
      */
     public function __construct($type)
     {
-        $this->type = $type;
+        parent::__construct('object', $type);
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'object';
-    }
-
-    /**
-     * @return string
-     */
-    public function getClassName()
-    {
-        return $this->type;
-    }
 }

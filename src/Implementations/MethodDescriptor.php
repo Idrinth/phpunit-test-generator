@@ -8,9 +8,24 @@ use De\Idrinth\TestGenerator\Interfaces\Type;
 
 class MethodDescriptor implements MDI
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var Type[]
+     */
     private $params = array();
+
+    /**
+     * @var Type
+     */
     private $return;
+
+    /**
+     * @var Type[]
+     */
     private $exceptions = array();
 
     /**
