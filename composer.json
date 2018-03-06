@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "De\\Idrinth\\TestGenerator\\Test\\": "test/gen"
+            "De\\Idrinth\\TestGenerator\\Test\\": "test"
         }
     },
     "suggest": {

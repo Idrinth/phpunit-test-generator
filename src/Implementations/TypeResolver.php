@@ -65,16 +65,16 @@ class TypeResolver
     {
         $parsedType = $this->typeToType($type);
         $parsedDoc = $this->docToType($doc);
-        if(!$parsedDoc && !$parsedType) {
+        if (!$parsedDoc && !$parsedType) {
             return new UnknownType();
         }
-        if($parsedType) {
-            if($parsedType->getType() === 'array' && $parsedDoc instanceof ArrayType) {
-                return $parsedDoc;
-            }
-            return $parsedType;
+        if (!$parsedType) {
+            return $parsedDoc;
         }
-        return $parsedDoc;
+        if ($parsedType->getType() === 'array' && $parsedDoc instanceof ArrayType) {
+            return $parsedDoc;
+        }
+        return $parsedType;
     }
 
     /**
