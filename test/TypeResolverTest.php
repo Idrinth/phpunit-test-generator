@@ -26,9 +26,11 @@ class TypeResolverTest extends TestCase
         $this->assertSimpleType($object->toType(null, 'self'), 'object');
         $this->assertSimpleType($object->toType(null, 'float|int'), 'unknown');
         $this->assertSimpleType($object->toType(null, 'integer|int'), 'integer');
+        $this->assertSimpleType($object->toType(null, 'self|static|$this'), 'object');
         $this->assertSimpleArrayType($object->toType(null, 'string[]'), 'string');
         $this->assertSimpleArrayType($object->toType(null, 'integer[]|int[]'), 'integer');
         $this->assertSimpleArrayType($object->toType('array', 'integer[]|int[]'), 'integer');
+        $this->assertSimpleArrayType($object->toType('array', 'AClass[]|BClass[]'), 'object');
     }
 
     /**

@@ -123,9 +123,6 @@ class TypeResolver
             if (isset(self::$primitives[$type])) {
                 return new SimpleType(self::$primitives[$type]);
             }
-            if (isset(self::$keywords[$type])) {
-                return new SimpleType(self::$keywords[$type]);
-            }
         }
         return null;
     }
