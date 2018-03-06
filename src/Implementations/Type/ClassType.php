@@ -2,7 +2,6 @@
 
 namespace De\Idrinth\TestGenerator\Implementations\Type;
 
-
 class ClassType extends BaseType
 {
     /**
@@ -12,5 +11,4 @@ class ClassType extends BaseType
     {
         parent::__construct('object', $type);
     }
-
 }

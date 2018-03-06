@@ -31,7 +31,7 @@ abstract class BaseType implements Type
      * @param string $class
      * @param Type $item
      */
-    protected function __construct($simple, $class = '', Type $item=null)
+    protected function __construct($simple, $class = '', Type $item = null)
     {
         $this->simple = $simple;
         $this->class = $class;
