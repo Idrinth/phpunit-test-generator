@@ -63,6 +63,44 @@ class TypeResolver
      */
     public function toType($type, $doc)
     {
+        $parsedType = $this->typeToType($type);
+        $parsedDoc = $this->docToType($doc);
+        if(!$parsedDoc && !$parsedType) {
+            return new UnknownType();
+        }
+        if($parsedType) {
+            if($parsedType->getType() === 'array' && $parsedDoc instanceof ArrayType) {
+                return $parsedDoc;
+            }
+            return $parsedType;
+        }
+        return $parsedDoc;
+    }
+
+    /**
+     * @param string $doc
+     * @return Type
+     */
+    private function docToType($doc)
+    {
+        if ($doc) {
+            if (isset(self::$primitives[$doc])) {
+                return new SimpleType(self::$primitives[$doc]);
+            }
+            if (isset(self::$keywords[$doc])) {
+                return new SimpleType(self::$keywords[$doc]);
+            }
+            return $this->typeListToType(explode('|', $doc));
+        }
+        return null;
+    }
+
+    /**
+     * @param Name|string $type
+     * @return Type|null
+     */
+    private function typeToType($type)
+    {
         if ($type) {
             if ($type instanceof Name) {
                 return new ClassType($this->nameToFQString($type));
@@ -74,16 +112,7 @@ class TypeResolver
                 return new SimpleType(self::$keywords[$type]);
             }
         }
-        if (!$doc) {
-            return new UnknownType();
-        }
-        if (isset(self::$primitives[$doc])) {
-            return new SimpleType(self::$primitives[$doc]);
-        }
-        if (isset(self::$keywords[$doc])) {
-            return new SimpleType(self::$keywords[$doc]);
-        }
-        return $this->typeListToType(explode('|', $doc));
+        return null;
     }
 
     /**
@@ -169,5 +198,9 @@ class TypeResolver
             return $this->uses[$name];
         }
         return trim($this->namespace->name.'\\'.$name, '\\');
+    }
+    public function getNamespace()
+    {
+        return $this->namespace->name.'';
     }
 }

@@ -1,0 +1,2 @@
+$return = $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %};
+{% include 'type-tests.twig' with {'return': function.return, 'variable': '$return'} only %}

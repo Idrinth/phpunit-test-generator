@@ -1,14 +1,14 @@
 {% spaceless %}
-    {% if type == 'int' %}
+    {% if type.type == 'int' %}
         0
-    {% elseif type == 'float' %}
+    {% elseif type.type == 'float' %}
         0.0
-    {% elseif type == 'double' %}
-        0.0
-    {% elseif type == 'string' %}
+    {% elseif type.type == 'string' %}
         ''
-    {% elseif type == 'array' %}
+    {% elseif type.type == 'array' %}
         array()
+    {% elseif type.type == 'object' and type.className is defined %}
+        $this->getMockBuilder('{{type.className}}')->getMock()
     {% else %}
         null
     {% endif %}

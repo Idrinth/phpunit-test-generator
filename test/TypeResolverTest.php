@@ -34,6 +34,15 @@ class TypeResolverTest extends TestCase
             'MyClass',
             $object->toType(null, 'MyClass[]')->getItemType()->getClassName()
         );
+        $this->assertEquals('array', $object->toType('array', 'MyClass[]')->getType());
+        $this->assertInstanceOf(
+            'De\Idrinth\TestGenerator\Implementations\Type\ArrayType',
+            $object->toType('array', 'MyClass[]')
+        );
+        $this->assertEquals(
+            'object',
+            $object->toType('array', 'MyClass[]')->getItemType()->getType()
+        );
         $object2 = new TypeResolver(new Namespace_(new Name('Base')));
         $this->assertEquals(
             'Base\MyClass',

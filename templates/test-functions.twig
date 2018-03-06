@@ -8,22 +8,7 @@
     public function test{{function.name|toUpperCamelCase}} ()
     {
         $instance = $this->getInstance();
-    {% if function.return != 'mixed' %}
-
-        $this->assertInternalType(
-            '{{function.return}}',
-            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
-            'Return didn\'t match expected type {{function.return}}'
-        );
-    {% endif %}
-    {% if function.return == 'object' %}
-
-        $this->assertInstanceOf(
-            '{{function.returnClass}}',
-            $instance->{{function.name}}{% include 'function.twig' with {'function': function} only %},
-            'Return didn\'t match expected instance {{function.returnClass}}'
-        );
-    {% endif %}
+        {% include "type-test-wrapper.twig" with {'function': function} only %}
 
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
@@ -35,9 +20,9 @@
      * From {{class.name}}
      * @test
      * @todo replace with actual tests
-     * @expectedException {{exception}}
+     * @expectedException {{exception.className}}
      **/
-    public function test{{function.name|toUpperCamelCase}}Throws{{exception|toUpperCamelCase}} ()
+    public function test{{function.name|toUpperCamelCase}}Throws{{exception.className|toUpperCamelCase}} ()
     {
         $this->getInstance()->{{function.name}}{% include 'function.twig' with {'function': function} only %};
 

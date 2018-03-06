@@ -3,14 +3,13 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 use PhpParser\Lexer;
 use PhpParser\Node\Name;
-use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Parser;
 use SplFileInfo;
+use De\Idrinth\TestGenerator\Implementations\Type\ClassType;
 
 class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
 {
@@ -48,9 +47,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         foreach ($result as $node) {
             if ($node instanceof Namespace_) {
                 $this->handleNamespaceTree($node);
-            } elseif ($node instanceof Class_ ||
-                $node instanceof Interface_
-            ) {
+            } else {
                 $this->handleNamespaceTree(new Namespace_(new Name(array()), array($node)));
             }
         }
@@ -61,25 +58,28 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
      */
     private function handleNamespaceTree(Namespace_ $namespace)
     {
-        $uses = array();
+        $resolver = new TypeResolver($namespace);
         foreach ($namespace->stmts as $node) {
             if ($node instanceof Use_) {
-                $this->addUsesToList($node, $uses);
+                $resolver->addUse($node);
             } elseif ($node instanceof Class_) {
-                $this->handleClassDefinition($node, $namespace, $uses);
+                $this->handleClassDefinition($node, $resolver);
             }
         }
     }
 
     /**
      * @param Class_ $class
-     * @param Namespace_ $namespace
-     * @param string[] $uses
+     * @param TypeResolver $resolver
      */
-    private function handleClassDefinition(Class_ $class, Namespace_ $namespace, $uses)
+    private function handleClassDefinition(Class_ $class, TypeResolver $resolver)
     {
         $methods = array();
-        $constructor = new MethodDescriptor('__construct', array(), 'void');
+        $constructor = new MethodDescriptor(
+            '__construct',
+            array(),
+            new ClassType(trim($resolver->getNamespace().'\\'.$class->name, '\\'))
+        );
         foreach ($class->stmts as $iNode) {
             if ($iNode instanceof ClassMethod
                 && $iNode->isPublic()
@@ -88,18 +88,18 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
                 $this->addMethod(
                     $constructor,
                     $methods,
-                    $this->buildFunctionDescriptor($namespace, $iNode, $uses),
-                    $uses
+                    $this->buildFunctionDescriptor($resolver, $iNode),
+                    $class->name
                 );
             }
         }
-        $this->classes[trim(implode("\\", $namespace->name->parts).'\\'.$class->name, '\\')] = new ClassDescriptor(
+        $this->classes[trim($resolver->getNamespace().'\\'.$class->name, '\\')] = new ClassDescriptor(
             $class->name,
-            implode("\\", $namespace->name->parts),
+            $resolver->getNamespace(),
             $methods,
             $constructor,
             $class->isAbstract(),
-            $class->extends ? $this->nameToTypeString($class->extends, $uses, $namespace) : null
+            $class->extends ? $resolver->toType($class->extends, '')->getClassName() : null
         );
     }
 
@@ -116,117 +116,41 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             $constructor = $function;
             return;
         }
-            $methods[] = $function;
+        $methods[] = $function;
     }
 
     /**
-     * @param Use_ $uses
-     * @param string[] $list by reference
-     */
-    private function addUsesToList(Use_ $uses, &$list)
-    {
-        if ($uses->type == Use_::TYPE_NORMAL) {
-            foreach ($uses->uses as $use) {
-                $list[$use->alias] = $use->name->toString();
-            }
-        }
-    }
-
-    /**
-     * @param Namespace_ $namespace
+     * @param TypeResolver $resolver
      * @param ClassMethod $method
-     * @param array $uses
      * @return MethodDescriptor
      */
-    private function buildFunctionDescriptor(Namespace_ $namespace, ClassMethod $method, array $uses)
+    private function buildFunctionDescriptor(TypeResolver $resolver, ClassMethod $method)
     {
         $params = array();
         $doc = $method->getDocComment();
         $docParams = $this->doc->getParams($doc);
         $docThrows = $this->doc->getExceptions($doc);
         foreach ($method->params as $pos => $param) {
-            $params[] = $this->typeToTypeString(
+            $params[] = $resolver->toType(
                 $param->type,
-                isset($docParams[$pos])?$docParams[$pos]:null,
-                $uses,
-                $namespace
+                isset($docParams[$pos])?$docParams[$pos]:null
             );
         }
         foreach ($docThrows as &$throws) {
-            $throws = $this->typeToTypeString(
+            $throws = $resolver->toType(
                 '',
-                $throws,
-                $uses,
-                $namespace
+                $throws
             );
         }
         return new MethodDescriptor(
             $method->name,
             $params,
-            $this->typeToTypeString(
+            $resolver->toType(
                 $method->returnType,
-                $this->doc->getReturn($doc),
-                $uses,
-                $namespace
+                $this->doc->getReturn($doc)
             ),
             $docThrows
         );
-    }
-
-    /**
-     * @param Name|string $type
-     * @param string $doc
-     * @param string[] $uses
-     * @param Namespace_ $namespace
-     * @return string
-     */
-    private function typeToTypeString($type, $doc, $uses, Namespace_ $namespace)
-    {
-        if (!$type) {
-            if ($doc) {
-                return $this->docStringToType($doc, $uses, $namespace);
-            }
-            return 'mixed';
-        }
-        if ($type instanceof Name) {
-            return $this->nameToTypeString($type, $uses, $namespace);
-        }
-        return $type;
-    }
-
-    /**
-     * @param string $docString
-     * @param string[] $uses
-     * @param Namespace_ $namespace
-     * @return string
-     */
-    private function docStringToType($docString, $uses, Namespace_ $namespace)
-    {
-        return strtolower($docString)==$docString && false===strpos('\\', $docString)?
-            $docString :
-            $this->nameToTypeString(
-                $docString{0}==='\\'?new FullyQualified($docString):new Name($docString),
-                $uses,
-                $namespace
-            );
-    }
-
-    /**
-     * @param Name $name
-     * @param string[] $uses
-     * @param Namespace_ $namespace
-     * @return string
-     */
-    private function nameToTypeString(Name $name, $uses, Namespace_ $namespace)
-    {
-        if ($name->isFullyQualified()) {
-            return $name->toString();
-        }
-        if (isset($uses[$name->toString()])) {
-            return $uses[$name->toString()];
-        }
-        $name->prepend($namespace->name);
-        return $name->toString();
     }
 
     /**
