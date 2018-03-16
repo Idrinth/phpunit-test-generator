@@ -26,7 +26,7 @@ class ClassReaderTest extends TestCase
      */
     public function provideParseAndGetResults()
     {
-        $factory = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\MethodFactory')->getMock();
+        $factory = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptorFactory')->getMock();
         $file = new SplFileInfo(__FILE__);
         return array(
             array(new ClassReader($factory, $this->getParserInstance()), $file, array())
