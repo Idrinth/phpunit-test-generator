@@ -91,7 +91,7 @@ class MethodFactoryTest extends TestCase
     {
         $this->assertInternalType('array', $actual);
         $this->assertCount(count($expected), $actual);
-        foreach($expected as $key => $value) {
+        foreach ($expected as $key => $value) {
             $this->assertTrue(isset($actual[$key]));
             $this->assertTypeEquals($value, $actual[$key]);
         }
