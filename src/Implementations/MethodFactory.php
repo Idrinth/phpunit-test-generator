@@ -49,7 +49,7 @@ class MethodFactory implements MFI
      */
     private function getThrows(TRI $resolver, $doc) {
         $throws = array();
-        foreach ($this->doc->getExceptions($doc) as &$throw) {
+        foreach ($this->doc->getExceptions($doc) as $throw) {
             $throws[] = $resolver->toType(
                 '',
                 $throw
