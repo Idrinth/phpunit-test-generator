@@ -63,7 +63,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             if ($node instanceof Use_) {
                 $resolver->addUse($node);
             } elseif ($node instanceof Class_) {
-                $this->classes[trim($resolver->getNamespace().'\\'.$class->name, '\\')] = $this->class->create(
+                $this->classes[trim($resolver->getNamespace().'\\'.$node->name, '\\')] = $this->class->create(
                     $node,
                     $resolver
                 );
