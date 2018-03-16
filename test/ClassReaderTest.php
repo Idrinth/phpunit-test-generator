@@ -29,7 +29,7 @@ class ClassReaderTest extends TestCase
         $docblock = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\DocBlockParser')->getMock();
         $file = new SplFileInfo(__FILE__);
         return array(
-            array(new ClassReader($docblock, $this->getParserInstance()), $file, [])
+            array(new ClassReader($docblock, $this->getParserInstance()), $file, array())
         );
     }
 
