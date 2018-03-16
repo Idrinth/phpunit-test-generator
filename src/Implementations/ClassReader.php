@@ -23,19 +23,19 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     private $classes = array();
 
     /**
-     * @var DocBlockParser
+     * @var MethodFactory
      */
-    private $doc;
+    private $method;
 
     /**
-     * @param \De\Idrinth\TestGenerator\Interfaces\DocBlockParser $docblock
+     * @param \De\Idrinth\TestGenerator\Interfaces\MethodFactory $method
      * @param Parser $parser
      */
     public function __construct(
-        \De\Idrinth\TestGenerator\Interfaces\DocBlockParser $docblock,
+        \De\Idrinth\TestGenerator\Interfaces\MethodFactory $method,
         Parser $parser
     ) {
-        $this->doc = $docblock;
+        $this->method = $method;
         $this->parser = $parser;
     }
 
@@ -90,7 +90,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
                 $this->addMethod(
                     $constructor,
                     $methods,
-                    $this->buildFunctionDescriptor($resolver, $iNode),
+                    $this->method->create($resolver, $iNode),
                     $class->name
                 );
             }
@@ -119,40 +119,6 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             return;
         }
         $methods[] = $function;
-    }
-
-    /**
-     * @param TypeResolver $resolver
-     * @param ClassMethod $method
-     * @return MethodDescriptor
-     */
-    private function buildFunctionDescriptor(TypeResolver $resolver, ClassMethod $method)
-    {
-        $params = array();
-        $doc = $method->getDocComment();
-        $docParams = $this->doc->getParams($doc);
-        $docThrows = $this->doc->getExceptions($doc);
-        foreach ($method->params as $pos => $param) {
-            $params[] = $resolver->toType(
-                $param->type,
-                isset($docParams[$pos])?$docParams[$pos]:null
-            );
-        }
-        foreach ($docThrows as &$throws) {
-            $throws = $resolver->toType(
-                '',
-                $throws
-            );
-        }
-        return new MethodDescriptor(
-            $method->name,
-            $params,
-            $resolver->toType(
-                $method->returnType,
-                $this->doc->getReturn($doc)
-            ),
-            $docThrows
-        );
     }
 
     /**
