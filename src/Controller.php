@@ -4,12 +4,15 @@ namespace De\Idrinth\TestGenerator;
 use De\Idrinth\TestGenerator\Implementations\ClassReader as ClassReader2;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter as ClassWriter2;
 use De\Idrinth\TestGenerator\Implementations\Composer as Composer2;
+use De\Idrinth\TestGenerator\Implementations\DocBlockParser;
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper as NamespacePathMapper2;
 use De\Idrinth\TestGenerator\Interfaces\ClassReader;
 use De\Idrinth\TestGenerator\Interfaces\ClassWriter;
 use De\Idrinth\TestGenerator\Interfaces\Composer;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
+use PhpParser\Lexer;
+use PhpParser\Parser;
 
 class Controller
 {
@@ -74,7 +77,7 @@ class Controller
         );
         return new self(
             new Finder(),
-            new ClassReader2(),
+            new ClassReader2(new DocBlockParser(), new Parser(new Lexer(), array('throwOnError'=>true))),
             new ClassWriter2(new NamespacePathMapper2($composer)),
             $composer,
             isset($opts['replace'])
