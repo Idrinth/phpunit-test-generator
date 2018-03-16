@@ -3,12 +3,12 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Parser;
 use SplFileInfo;
-use De\Idrinth\TestGenerator\Implementations\Type\ClassType;
+use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor as CDI;
+use De\Idrinth\TestGenerator\Interfaces\ClassDescriptorFactory as CDFI;
 
 class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
 {
@@ -18,24 +18,22 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     private $parser;
 
     /**
-     * @var ClassDescriptor[]
+     * @var CDI[]
      */
     private $classes = array();
 
     /**
-     * @var MethodFactory
+     * @var ClassDescriptorFactor
      */
-    private $method;
+    private $class;
 
     /**
-     * @param \De\Idrinth\TestGenerator\Interfaces\MethodFactory $method
+     * @param CDFI $class
      * @param Parser $parser
      */
-    public function __construct(
-        \De\Idrinth\TestGenerator\Interfaces\MethodFactory $method,
-        Parser $parser
-    ) {
-        $this->method = $method;
+    public function __construct(CDFI $class, Parser $parser)
+    {
+        $this->class = $class;
         $this->parser = $parser;
     }
 
@@ -65,64 +63,16 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
             if ($node instanceof Use_) {
                 $resolver->addUse($node);
             } elseif ($node instanceof Class_) {
-                $this->handleClassDefinition($node, $resolver);
-            }
-        }
-    }
-
-    /**
-     * @param Class_ $class
-     * @param TypeResolver $resolver
-     */
-    private function handleClassDefinition(Class_ $class, TypeResolver $resolver)
-    {
-        $methods = array();
-        $constructor = new MethodDescriptor(
-            '__construct',
-            array(),
-            new ClassType(trim($resolver->getNamespace().'\\'.$class->name, '\\'))
-        );
-        foreach ($class->stmts as $iNode) {
-            if ($iNode instanceof ClassMethod
-                && $iNode->isPublic()
-                && !$iNode->isAbstract()
-            ) {
-                $this->addMethod(
-                    $constructor,
-                    $methods,
-                    $this->method->create($resolver, $iNode),
-                    $class->name
+                $this->classes[trim($resolver->getNamespace().'\\'.$class->name, '\\')] = $this->class->create(
+                    $node,
+                    $resolver
                 );
             }
         }
-        $this->classes[trim($resolver->getNamespace().'\\'.$class->name, '\\')] = new ClassDescriptor(
-            $class->name,
-            $resolver->getNamespace(),
-            $methods,
-            $constructor,
-            $class->isAbstract(),
-            $class->extends ? $resolver->toType($class->extends, '')->getClassName() : null
-        );
     }
 
     /**
-     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor $constructor by reference
-     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor[] $methods by reference
-     * @param \De\Idrinth\TestGenerator\Implementations\MethodDescriptor $function
-     * @param string $className
-     * @return void
-     */
-    private function addMethod(&$constructor, &$methods, MethodDescriptor $function, $className)
-    {
-        if ($function->getName() == '__construct' || $function->getName() == $className) {
-            $constructor = $function;
-            return;
-        }
-        $methods[] = $function;
-    }
-
-    /**
-     * @return \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor[]
+     * @return CDI[]
      */
     public function getResults()
     {
