@@ -16,7 +16,9 @@ class ClassDescriptorFactoryTest extends TestCase
     {
         return array(
             array(
-                new ClassDescriptorFactory($this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\MethodFactory')->getMock()),
+                new ClassDescriptorFactory(
+                    $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\MethodFactory')->getMock()
+                ),
                 new Class_('class'),
                 'class',
                 '',
@@ -52,7 +54,7 @@ class ClassDescriptorFactoryTest extends TestCase
         $this->assertEquals($namespace, $result->getNamespace());
         $this->assertEquals($isAbstract, $result->isAbstract());
         $this->assertCount($methods, $result->getMethods());
-        foreach($result->getMethods() as $method) {
+        foreach ($result->getMethods() as $method) {
             $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $method);
         }
     }
