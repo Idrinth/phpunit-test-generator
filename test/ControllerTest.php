@@ -15,7 +15,6 @@ class ControllerTest extends TestCaseImplementation
 {
     /**
      * @return Controller
-     * @todo make sure the construction works as expected
      **/
     protected function getInstance()
     {

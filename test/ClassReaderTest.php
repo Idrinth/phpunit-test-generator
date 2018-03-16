@@ -4,28 +4,65 @@ namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\ClassReader;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 
 class ClassReaderTest extends TestCase
 {
+    private function getParserInstance(array $return = array())
+    {
+        $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs([
+                $this->getMockBuilder('PhpParser\Lexer')->getMock()
+            ])->getMock();
+        $parser->expects($this->once())
+            ->method('parse')
+            ->willReturn($return);
+        return $parser;
+    }
+
     /**
+     * @return array
+     */
+    public function provideParseAndGetResults()
+    {
+        $docblock = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\DocBlockParser')->getMock();
+        $file = new SplFileInfo(__FILE__);
+        return array(
+            array(new ClassReader($docblock, $this->getParserInstance()), $file, [])
+        );
+    }
+
+    /**
+     * @param ClassReader $reader
+     * @param array $result
+     * @dataProvider provideParseAndGetResults
      * @test
      */
-    public function testParseAndGetResults()
+    public function testParseAndGetResults(ClassReader $reader, SplFileInfo $file, array $result)
     {
-        $object = new ClassReader;
-        $this->assertCount(0, $object->getResults());
-        $object->parse(new \SplFileInfo(__FILE__));
-        $this->assertCount(1, $object->getResults());
-        $object->parse(new \SplFileInfo(__FILE__));
-        $this->assertCount(1, $object->getResults());
-        $object->parse(new \SplFileInfo(__DIR__.DIRECTORY_SEPARATOR.'DocBlockParserTest.php'));
-        $results = array_values($object->getResults());
-        $this->assertCount(2, $results);
-        $this->assertEquals('ClassReaderTest', $results[0]->getName());
-        $this->assertEquals('De\Idrinth\TestGenerator\Test', $results[0]->getNamespace());
-        $methods = $results[0]->getMethods();
-        $this->assertCount(1, $methods);
-        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $results[0]->getConstructor());
-        $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $methods[0]);
+        $this->assertCount(0, $reader->getResults());
+        $reader->parse($file);
+        $this->assertArrayValuesEqual($result, $reader->getResults());
+    }
+
+    /**
+     * @param array $expected
+     * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor[] $actual
+     */
+    private function assertArrayValuesEqual(array $expected, $actual)
+    {
+        $this->assertInternalType('array', $actual);
+        $this->assertEquals(count($expected), count($actual));
+        foreach($expected as $pos => $value) {
+            $this->assertInstanceOf('\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor', $actual[$pos]);
+            $this->assertEquals($value['name'], $actual[$pos]->getName());
+            $this->assertEquals($value['namespace'], $actual[$pos]->getNamespace());
+            $this->assertEquals($value['abstract'], $actual[$pos]->isAbstract());
+            $this->assertEquals($value['extends'], $actual[$pos]->getExtends());
+            $methods = $actual[$pos]->getMethods();
+            $this->assertCount($value['methods'], $methods);
+            foreach($methods as $method) {
+                $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $method);
+            }
+        }
     }
 }

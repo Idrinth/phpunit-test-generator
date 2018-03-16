@@ -3,9 +3,7 @@
 namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper;
-use De\Idrinth\TestGenerator\Implementations\Composer;
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class NamespacePathMapperTest extends TestCase
 {
@@ -14,15 +12,17 @@ class NamespacePathMapperTest extends TestCase
      */
     private function getInstance()
     {
-        return new NamespacePathMapper(
-            new Composer(
-                new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json')
-            )
-        );
+        $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
+        $composer->expects($this->once())
+            ->method('getDevelopmentNamespacesToFolders')
+            ->willReturn(array('De\Idrinth\TestGenerator\Test' => 'test'));
+        $composer->expects($this->once())
+            ->method('getProductionNamespacesToFolders')
+            ->willReturn(array('De\Idrinth\TestGenerator' => 'src'));
+        return new NamespacePathMapper($composer);
     }
 
     /**
-     * @todo mock Composer
      * @test
      */
     public function testGetTestNamespaceForNamespace()
@@ -43,7 +43,6 @@ class NamespacePathMapperTest extends TestCase
     }
 
     /**
-     * @todo mock Composer
      * @test
      */
     public function testGetTestFileForNamespacedClass()
@@ -51,9 +50,12 @@ class NamespacePathMapperTest extends TestCase
         $object = $this->getInstance();
         $namespace = 'De\Idrinth\TestGenerator\NamespacePathMapper';
         $this->assertInstanceOf('SplFileInfo', $object->getTestFileForNamespacedClass($namespace));
-        $this->assertEquals(__FILE__, $object->getTestFileForNamespacedClass($namespace)->getPathname());
         $this->assertEquals(
-            __DIR__.DIRECTORY_SEPARATOR.'NamespacePathMapper'.DIRECTORY_SEPARATOR.'ExampleTest.php',
+            implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapperTest.php')),
+            $object->getTestFileForNamespacedClass($namespace)->getPathname()
+        );
+        $this->assertEquals(
+            implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapper', 'ExampleTest.php')),
             $object->getTestFileForNamespacedClass($namespace.'\Example')->getPathname()
         );
     }

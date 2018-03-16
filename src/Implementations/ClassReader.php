@@ -1,7 +1,6 @@
 <?php
 namespace De\Idrinth\TestGenerator\Implementations;
 
-use PhpParser\Lexer;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -29,12 +28,15 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     private $doc;
 
     /**
-     * @todo remove Initialization
+     * @param \De\Idrinth\TestGenerator\Interfaces\DocBlockParser $docblock
+     * @param Parser $parser
      */
-    public function __construct()
-    {
-        $this->doc = new DocBlockParser();
-        $this->parser = new Parser(new Lexer(), array('throwOnError'=>true));
+    public function __construct(
+        \De\Idrinth\TestGenerator\Interfaces\DocBlockParser $docblock,
+        Parser $parser
+    ) {
+        $this->doc = $docblock;
+        $this->parser = $parser;
     }
 
     /**
