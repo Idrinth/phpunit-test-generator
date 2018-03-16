@@ -11,7 +11,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 
-class TypeResolver
+class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
 {
     /**
      * @var string[]

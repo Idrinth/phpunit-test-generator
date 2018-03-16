@@ -4,12 +4,22 @@ namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
+use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
+use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
+use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
 class ClassWriterTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private $filename;
+
+    /**
+     * @return string
+     */
     private function getFileName()
     {
         if (!$this->filename) {
@@ -21,6 +31,10 @@ class ClassWriterTest extends TestCase
         }
         return $this->filename;
     }
+
+    /**
+     * @return NamespacePathMapper
+     */
     private function getMockedNamespacePathMapper()
     {
         $this->filename = $this->getFileName();
@@ -34,6 +48,10 @@ class ClassWriterTest extends TestCase
             ->willReturn(new SplFileInfo($this->filename));
         return $namespaces;
     }
+
+    /**
+     * @return MethodDescriptor
+     */
     private function getMockedMethod()
     {
         $method = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor')
@@ -49,6 +67,10 @@ class ClassWriterTest extends TestCase
             ->willReturn(new UnknownType());
         return $method;
     }
+
+    /**
+     * @return ClassDescriptor
+     */
     private function getMockedClassDescriptor()
     {
         $class = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')
