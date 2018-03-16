@@ -1,6 +1,7 @@
 <?php
 namespace De\Idrinth\TestGenerator;
 
+use De\Idrinth\TestGenerator\Implementations\ClassDescriptorFactory;
 use De\Idrinth\TestGenerator\Implementations\ClassReader as ClassReader2;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter as ClassWriter2;
 use De\Idrinth\TestGenerator\Implementations\Composer as Composer2;
@@ -79,7 +80,7 @@ class Controller
         return new self(
             new Finder(),
             new ClassReader2(
-                new MethodFactory(new DocBlockParser()),
+                new ClassDescriptorFactory(new MethodFactory(new DocBlockParser())),
                 new Parser(new Lexer(), array('throwOnError'=>true))
             ),
             new ClassWriter2(new NamespacePathMapper2($composer)),
