@@ -10,9 +10,11 @@ class ClassReaderTest extends TestCase
 {
     private function getParserInstance(array $return = array())
     {
-        $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs([
+        $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs(
+            array(
                 $this->getMockBuilder('PhpParser\Lexer')->getMock()
-            ])->getMock();
+            )
+        )->getMock();
         $parser->expects($this->once())
             ->method('parse')
             ->willReturn($return);
@@ -52,7 +54,7 @@ class ClassReaderTest extends TestCase
     {
         $this->assertInternalType('array', $actual);
         $this->assertEquals(count($expected), count($actual));
-        foreach($expected as $pos => $value) {
+        foreach ($expected as $pos => $value) {
             $this->assertInstanceOf('\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor', $actual[$pos]);
             $this->assertEquals($value['name'], $actual[$pos]->getName());
             $this->assertEquals($value['namespace'], $actual[$pos]->getNamespace());
@@ -60,7 +62,7 @@ class ClassReaderTest extends TestCase
             $this->assertEquals($value['extends'], $actual[$pos]->getExtends());
             $methods = $actual[$pos]->getMethods();
             $this->assertCount($value['methods'], $methods);
-            foreach($methods as $method) {
+            foreach ($methods as $method) {
                 $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\MethodDescriptor', $method);
             }
         }

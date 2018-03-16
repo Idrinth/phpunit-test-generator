@@ -7,10 +7,6 @@ use De\Idrinth\TestGenerator\Test\Mock\GetCwd;
 use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use Symfony\Component\Finder\Finder;
 
-// phpcs:disable -- required for overwriting functions in namespace
-require_once(__DIR__.DIRECTORY_SEPARATOR.'Mock'.DIRECTORY_SEPARATOR.'getcwd_function.php');
-// phpcs:enable
-
 class ControllerTest extends TestCaseImplementation
 {
     /**

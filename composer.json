@@ -31,7 +31,8 @@
     "autoload-dev": {
         "psr-4": {
             "De\\Idrinth\\TestGenerator\\Test\\": "test"
-        }
+        },
+        "files": ["test/Mock/getcwd_function.php"]
     },
     "suggest": {
         "squizlabs/php_codesniffer": "For formatting according to PSR2"
