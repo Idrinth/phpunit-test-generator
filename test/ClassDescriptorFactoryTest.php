@@ -90,16 +90,16 @@ class ClassDescriptorFactoryTest extends TestCase
         $extends = ''
     ) {
         $data = array('stmts' => array());
-        for($pos = 0; $pos < $countMethods; $pos++) {
+        for ($pos = 0; $pos < $countMethods; $pos++) {
             $data['stmts'][] = new ClassMethod("method$pos");
         }
-        if($hasCurrentConstructor) {
+        if ($hasCurrentConstructor) {
             $data['stmts'][] = new ClassMethod("__construct");
         }
-        if($hasOldConstructor) {
+        if ($hasOldConstructor) {
             $data['stmts'][] = new ClassMethod("Example");
         }
-        if($extends) {
+        if ($extends) {
             $data['extends'] = $extends;
         }
         return new Class_('Example', $data);
@@ -132,7 +132,7 @@ class ClassDescriptorFactoryTest extends TestCase
             ->willReturn('HiWorld');
         $resolver->expects($this->any())
             ->method('toType')
-            ->willReturnCallback(function($name, $alternative) use($self) {
+            ->willReturnCallback(function ($name, $alternative) use ($self) {
                 $type = $self->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Type')->getMock();
                 $type->expects($self->once())->method('getClassName')->willReturn($name.$alternative);
                 return $type;

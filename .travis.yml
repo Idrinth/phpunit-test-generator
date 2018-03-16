@@ -11,6 +11,10 @@ matrix:
   include:
     - php: "5.3"
       dist: precise
+branches:
+  only:
+  - master
+  - /[0-9]+\.[0-9]+\.[0-9]+/
 git:
   depth: 3
 before_install:
