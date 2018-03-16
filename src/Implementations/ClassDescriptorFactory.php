@@ -45,6 +45,7 @@ class ClassDescriptorFactory implements CDFI
                 && !$iNode->isAbstract()
             ) {
                 $this->addMethod(
+                    $iNode->name,
                     $constructor,
                     $methods,
                     $this->method->create($resolver, $iNode),
@@ -63,15 +64,16 @@ class ClassDescriptorFactory implements CDFI
     }
 
     /**
+     * @param string $methodName
      * @param MDI $constructor by reference
      * @param MDI[] $methods by reference
      * @param MDI $function
      * @param string $className
      * @return void
      */
-    private function addMethod(MDI &$constructor, array &$methods, MDI $function, $className)
+    private function addMethod($methodName, MDI &$constructor, array &$methods, MDI $function, $className)
     {
-        if ($function->getName() == '__construct' || $function->getName() == $className) {
+        if ($methodName == '__construct' || $methodName == $className) {
             $constructor = $function;
             return;
         }
