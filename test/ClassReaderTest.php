@@ -93,7 +93,7 @@ class ClassReaderTest extends TestCase
                             new Class_('n2')
                         ),
                         1
-                     )
+                    )
                 ),
                 $file,
                 array('n1', 'n2')
