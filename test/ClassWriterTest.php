@@ -7,6 +7,7 @@ use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
+use De\Idrinth\TestGenerator\Interfaces\Renderer;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
@@ -91,17 +92,27 @@ class ClassWriterTest extends TestCase
     }
 
     /**
+     * @return Renderer
+     */
+    private function getMockedRenderer()
+    {
+        $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Renderer')
+            ->getMock();
+        $environment->expects($this->exactly(2))
+            ->method('render')
+            ->willReturn('rendered');
+        return $environment;
+    }
+
+    /**
      * @test
      * @todo properly test
      */
     public function testWrite()
     {
-        $writer = @new ClassWriter($this->getMockedNamespacePathMapper());//thanks to twig
+        $writer = @new ClassWriter($this->getMockedNamespacePathMapper(), $this->getMockedRenderer());//thanks to twig
         $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
-        include_once $this->filename;
-        $this->assertTrue(class_exists('My\Tests\AbCdETest'));
-        $test = new \My\Tests\AbCdETest();
-        $this->assertTrue(method_exists($test, 'testMethod'));
+        $this->assertEquals('rendered', file_get_contents($this->filename));
         $writer->write($this->getMockedClassDescriptor(), array());
         $this->assertFileExists($this->filename.'.'.date('YmdHi').'.old');
         @unlink($this->filename.'.'.date('YmdHi').'.old');
