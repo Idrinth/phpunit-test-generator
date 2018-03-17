@@ -5,6 +5,7 @@ namespace De\Idrinth\TestGenerator\Test;
 use De\Idrinth\TestGenerator\Implementations\TypeResolver;
 use De\Idrinth\TestGenerator\Interfaces\Type;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
@@ -13,39 +14,123 @@ use PHPUnit\Framework\TestCase;
 class TypeResolverTest extends TestCase
 {
     /**
-     * @test
+     * @return array
      */
-    public function testToTypeSimple()
+    public function provideSimpleArrayType()
     {
-        $object = new TypeResolver(new Namespace_());
-        $this->assertSimpleType($object->toType(null, 'int'), 'integer');
-        $this->assertSimpleType($object->toType('float', ''), 'float');
-        $this->assertSimpleType($object->toType('', ''), 'unknown');
-        $this->assertSimpleType($object->toType(null, 'array'), 'array');
-        $this->assertSimpleType($object->toType(null, 'MyClass[]|int[]'), 'array');
-        $this->assertSimpleType($object->toType(null, 'self'), 'object');
-        $this->assertSimpleType($object->toType(null, 'float|int'), 'unknown');
-        $this->assertSimpleType($object->toType(null, 'integer|int'), 'integer');
-        $this->assertSimpleType($object->toType(null, 'self|static|$this'), 'object');
-        $this->assertSimpleArrayType($object->toType(null, 'string[]'), 'string');
-        $this->assertSimpleArrayType($object->toType(null, 'integer[]|int[]'), 'integer');
-        $this->assertSimpleArrayType($object->toType('array', 'integer[]|int[]'), 'integer');
-        $this->assertSimpleArrayType($object->toType('array', 'AClass[]|BClass[]'), 'object');
+        $object = new TypeResolver(new Namespace_(new Name('Example')));
+        return array(
+            array($object, null, 'string[]', 'string'),
+            array($object, null, 'integer[]|int[]', 'integer'),
+            array($object, 'array', 'integer[]|int[]', 'integer'),
+            array($object, 'array', 'AClass[]|BClass[]', 'object')
+        );
     }
 
     /**
-     * @test
+     * @return array
      */
-    public function testToTypeClass()
+    public function provideSimpleType()
     {
-        $object = new TypeResolver(new Namespace_(new Name('Base')));
-        $this->assertClassType($object->toType(null, 'MyClass'), 'Base\MyClass');
-        $this->assertClassType($object->toType(null, '\MyClass'), 'MyClass');
-        $this->assertClassArrayType($object->toType(null, 'YourClass[]'), 'Base\YourClass');
-        $object->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
-        $this->assertClassType($object->toType(null, 'MyClass'), 'NoBase\MyClass');
-        $this->assertClassType($object->toType(null, '\MyClass'), 'MyClass');
-        $this->assertClassArrayType($object->toType(null, 'YourClass[]'), 'Base\YourClass');
+        $object = new TypeResolver(new Namespace_(new Name('Example')));
+        return array(
+            array($object, null, 'int', 'integer'),
+            array($object, 'float', '', 'float'),
+            array($object, '', '', 'unknown'),
+            array($object, null, 'array', 'array'),
+            array($object, null, 'MyClass[]|int[]', 'array'),
+            array($object, null, 'self', 'object'),
+            array($object, null, 'float|int', 'unknown'),
+            array($object, null, 'integer|int', 'integer'),
+            array($object, null, 'self|static|$this', 'object'),
+            array($object, 'string', 'string', 'string'),
+            array($object, new Name('string'), 'string', 'string'),
+            array($object, new Name('bool'), 'boolean', 'boolean')
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function provideClassType()
+    {
+        $object1 = new TypeResolver(new Namespace_(new Name('Base')));
+        $object2 = new TypeResolver(new Namespace_(new Name('Base')));
+        $object2->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
+        return array(
+            array($object1, null, 'MyClass', 'Base\MyClass'),
+            array($object1, null, '\MyClass', 'MyClass'),
+            array($object1, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'),
+            array($object2, new Name('MyClass'), 'MyClass', 'NoBase\\MyClass'),
+            array($object1, new FullyQualified('MyClass'), 'MyClass', 'MyClass'),
+            array($object2, null, 'MyClass', 'NoBase\MyClass'),
+            array($object2, null, '\MyClass', 'MyClass'),
+            array($object2, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function provideClassArrayType()
+    {
+        $object1 = new TypeResolver(new Namespace_(new Name('Base')));
+        $object2 = new TypeResolver(new Namespace_(new Name('Base')));
+        $object2->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
+        return array(
+            array($object1, null, 'YourClass[]', 'Base\YourClass'),
+            array($object2, null, 'YourClass[]', 'Base\YourClass'),
+            array($object1, null, 'MyClass[]', 'Base\MyClass'),
+            array($object2, null, 'MyClass[]', 'NoBase\MyClass')
+        );
+    }
+
+    /**
+     * @dataProvider provideSimpleType
+     * @param TypeResolver $instance
+     * @param mixed $parsed
+     * @param string $doc
+     * @param string $simple
+     */
+    public function testSimpleType(TypeResolver $instance, $parsed, $doc, $simple)
+    {
+        $this->assertSimpleType($instance->toType($parsed, $doc), $simple);
+    }
+
+    /**
+     * @dataProvider provideClassType
+     * @param TypeResolver $instance
+     * @param mixed $parsed
+     * @param string $doc
+     * @param string $class
+     */
+    public function testClassType(TypeResolver $instance, $parsed, $doc, $class)
+    {
+        $this->assertClassType($instance->toType($parsed, $doc), $class);
+    }
+
+    /**
+     * @dataProvider provideSimpleArrayType
+     * @param TypeResolver $instance
+     * @param mixed $parsed
+     * @param string $doc
+     * @param string $simple
+     */
+    public function testSimpleArrayType(TypeResolver $instance, $parsed, $doc, $simple)
+    {
+        $this->assertSimpleArrayType($instance->toType($parsed, $doc), $simple);
+    }
+
+    /**
+     * @dataProvider provideClassArrayType
+     * @param TypeResolver $instance
+     * @param mixed $parsed
+     * @param string $doc
+     * @param string $class
+     */
+    public function testClassArrayType(TypeResolver $instance, $parsed, $doc, $class)
+    {
+        $this->assertClassArrayType($instance->toType($parsed, $doc), $class);
     }
 
     /**

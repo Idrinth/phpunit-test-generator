@@ -117,11 +117,11 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     private function typeToType($type)
     {
         if ($type) {
+            if (isset(self::$primitives[$type.''])) {
+                return new SimpleType(self::$primitives[$type.'']);
+            }
             if ($type instanceof Name) {
                 return new ClassType($this->nameToFQString($type));
-            }
-            if (isset(self::$primitives[$type])) {
-                return new SimpleType(self::$primitives[$type]);
             }
         }
         return null;
@@ -188,12 +188,14 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     private function nameToFQString(Name $name)
     {
         if ($name->isFullyQualified()) {
-            return $name;
+            return $name.'';
         }
         if (!$name->isQualified() && isset($this->uses[$name.''])) {
             return $this->uses[$name.''];
         }
-        return $name->prepend($this->namespace->name).'';
+        $new = clone $name;
+        $new->prepend($this->namespace->name);
+        return $new.'';
     }
 
     /**
