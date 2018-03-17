@@ -4,10 +4,11 @@ namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\MethodFactory;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
+use De\Idrinth\TestGenerator\Interfaces\DocBlockParser;
+use De\Idrinth\TestGenerator\Interfaces\Type;
 use De\Idrinth\TestGenerator\Interfaces\TypeResolver;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPUnit\Framework\TestCase;
-use De\Idrinth\TestGenerator\Interfaces\Type;
 
 class MethodFactoryTest extends TestCase
 {
@@ -17,18 +18,39 @@ class MethodFactoryTest extends TestCase
     public function provideCreate()
     {
         return array(
-            array(new ClassMethod('name'), 'name', array(), new UnknownType(), array())
+            $this->getClassMethodSet(),
+            $this->getClassMethodSet(1),
+            $this->getClassMethodSet(0, 1),
+            $this->getClassMethodSet(1, 2),
+            $this->getClassMethodSet(2, 3),
+            $this->getClassMethodSet(3, 1),
+        );
+    }
+
+    private function getClassMethodSet($params = 0, $exceptions = 0)
+    {
+        $name = 'name'.time();
+        return array(
+            new ClassMethod(
+                $name,
+                array('params' => array_fill(0, $params, json_decode('{"type":"hi"}')))
+            ),
+            $this->getDocParserInstance($exceptions, $params),
+            $this->getTypeResolverInstance(1 + $exceptions + $params),
+            $name,
+            $params,
+            $exceptions
         );
     }
 
     /**
      * @return TypeResolver
      */
-    private function getTypeResolverInstance()
+    private function getTypeResolverInstance($calls = 0)
     {
         $resolver = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\TypeResolver')
             ->getMock();
-        $resolver->expects($this->once())
+        $resolver->expects($this->exactly($calls))
             ->method('toType')
             ->willReturn(new UnknownType());
         return $resolver;
@@ -37,63 +59,63 @@ class MethodFactoryTest extends TestCase
     /**
      * @return DocBlockParser
      */
-    private function getDocParserInstance()
+    private function getDocParserInstance($exceptions = 0, $params = 0)
     {
         $doc = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\DocBlockParser')
             ->getMock();
         $doc->expects($this->once())
             ->method('getExceptions')
-            ->willReturn(array());
+            ->willReturn(array_fill(0, $exceptions, json_decode('{"type":"hi"}')));
         $doc->expects($this->once())
             ->method('getParams')
-            ->willReturn(array());
+            ->willReturn(array_fill(0, $params, json_decode('{"type":"hi"}')));
         return $doc;
     }
 
     /**
      * @param ClassMethod $method
+     * @param DocBlockParser $parser
      * @param string $name
-     * @param Type[] $params
-     * @param Type $return
-     * @param Type[] $exceptions
+     * @param int $params
+     * @param int $exceptions
      * @test
      * @dataProvider provideCreate
      */
-    public function testCreate(ClassMethod $method, $name, array $params, Type $return, array $exceptions)
-    {
-        $factory = new MethodFactory($this->getDocParserInstance());
-        $result = $factory->create($this->getTypeResolverInstance(), $method);
+    public function testCreate(
+        ClassMethod $method,
+        DocBlockParser $parser,
+        TypeResolver $resolver,
+        $name,
+        $params,
+        $exceptions
+    ) {
+        $factory = new MethodFactory($parser);
+        $result = $factory->create($resolver, $method);
         $this->assertEquals($name, $result->getName());
-        $this->assertTypeEquals($return, $result->getReturn());
+        $this->assertTypeEquals($result->getReturn());
         $this->assertArrayEquals($exceptions, $result->getExceptions());
         $this->assertArrayEquals($params, $result->getParams());
     }
 
     /**
-     * @param Type $expected
      * @param Type $actual
      */
-    private function assertTypeEquals(Type $expected, $actual)
+    private function assertTypeEquals($actual)
     {
         $this->assertInternalType('object', $actual);
         $this->assertInstanceOf('De\Idrinth\TestGenerator\Interfaces\Type', $actual);
-        $this->assertEquals($expected->getClassName(), $actual->getClassName());
-        $this->assertEquals($expected->getItemType(), $actual->getItemType());
-        $this->assertEquals($expected->getType(), $actual->getType());
-        $this->assertEquals($expected->isComplex(), $actual->isComplex());
     }
 
     /**
-     * @param array $expected
+     * @param int $expected
      * @param Type[] $actual
      */
-    private function assertArrayEquals(array $expected, $actual)
+    private function assertArrayEquals($expected, $actual)
     {
         $this->assertInternalType('array', $actual);
-        $this->assertCount(count($expected), $actual);
-        foreach ($expected as $key => $value) {
-            $this->assertTrue(isset($actual[$key]));
-            $this->assertTypeEquals($value, $actual[$key]);
+        $this->assertCount($expected, $actual);
+        foreach ($actual as $value) {
+            $this->assertTypeEquals($value);
         }
     }
 }
