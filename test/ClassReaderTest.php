@@ -16,10 +16,9 @@ class ClassReaderTest extends TestCase
 {
     /**
      * @param array $return
-     * @param int $uses
      * @return Parser
      */
-    private function getParserInstance(array $return = array(), $uses = 0)
+    private function getParserInstance(array $return = array())
     {
         $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs(
             array(
@@ -91,8 +90,7 @@ class ClassReaderTest extends TestCase
                             new Use_(array()),
                             new Class_('n1'),
                             new Class_('n2')
-                        ),
-                        1
+                        )
                     )
                 ),
                 $file,
