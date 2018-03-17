@@ -33,7 +33,7 @@ class MethodFactoryTest extends TestCase
         return array(
             new ClassMethod(
                 $name,
-                array('params' => array_fill(0, $params, json_decode('{"type":"hi"}')))
+                array('params' => $this->fillArray($params, json_decode('{"type":"hi"}')))
             ),
             $this->getDocParserInstance($exceptions, $params),
             $this->getTypeResolverInstance(1 + $exceptions + $params),
@@ -65,10 +65,10 @@ class MethodFactoryTest extends TestCase
             ->getMock();
         $doc->expects($this->once())
             ->method('getExceptions')
-            ->willReturn(array_fill(0, $exceptions, json_decode('{"type":"hi"}')));
+            ->willReturn($this->fillArray($exceptions, json_decode('{"type":"hi"}')));
         $doc->expects($this->once())
             ->method('getParams')
-            ->willReturn(array_fill(0, $params, json_decode('{"type":"hi"}')));
+            ->willReturn($this->fillArray($params, json_decode('{"type":"hi"}')));
         return $doc;
     }
 
@@ -117,5 +117,18 @@ class MethodFactoryTest extends TestCase
         foreach ($actual as $value) {
             $this->assertTypeEquals($value);
         }
+    }
+
+    /**
+     * @param int $amount
+     * @param mixed $content
+     * @return array
+     */
+    private function fillArray($amount, $content)
+    {
+        if($amount > 0) {
+            return array_fill(0, $amount, $content);
+        }
+        return array();
     }
 }
