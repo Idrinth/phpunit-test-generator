@@ -78,14 +78,14 @@ class ClassDescriptorFactoryTest extends TestCase
 
     /**
      * @param int $countMethods
-     * @param boolean $hasCurrentConstructor
+     * @param boolean $hasCurConstructor
      * @param boolean $hasOldConstructor
      * @param string $extends
      * @return Class_
      */
     private function getClass(
         $countMethods,
-        $hasCurrentConstructor = false,
+        $hasCurConstructor = false,
         $hasOldConstructor = false,
         $extends = ''
     ) {
@@ -93,7 +93,7 @@ class ClassDescriptorFactoryTest extends TestCase
         for ($pos = 0; $pos < $countMethods; $pos++) {
             $data['stmts'][] = new ClassMethod("method$pos");
         }
-        if ($hasCurrentConstructor) {
+        if ($hasCurConstructor) {
             $data['stmts'][] = new ClassMethod("__construct");
         }
         if ($hasOldConstructor) {
