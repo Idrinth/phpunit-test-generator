@@ -3,7 +3,6 @@
 namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Implementations\ClassReader;
-use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptorFactory;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
@@ -17,9 +16,10 @@ class ClassReaderTest extends TestCase
 {
     /**
      * @param array $return
+     * @param int $uses
      * @return Parser
      */
-    private function getParserInstance(array $return = array())
+    private function getParserInstance(array $return = array(), $uses = 0)
     {
         $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs(
             array(
@@ -29,22 +29,21 @@ class ClassReaderTest extends TestCase
         $parser->expects($this->once())
             ->method('parse')
             ->willReturn($return);
+        $parser->expects($this->exactly($uses))
+            ->method('addUse');
         return $parser;
     }
 
     /**
      * @param int $create
-     * @param int $uses
      * @return ClassDescriptorFactory
      */
-    private function getFactory($create = 0, $uses = 0)
+    private function getFactory($create = 0)
     {
         $factory = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptorFactory')->getMock();
         $factory->expects($this->exactly($create))
             ->method('create')
             ->willReturn($this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock());
-        $factory->expects($this->exactly($uses))
-            ->method('addUse');
         return $factory;
     }
 
@@ -88,12 +87,15 @@ class ClassReaderTest extends TestCase
             ),
             array(
                 new ClassReader(
-                    $this->getFactory(2, 1),
-                    $this->getParserInstance(array(
-                        new Use_(array()),
-                        new Class_('n1'),
-                        new Class_('n2')
-                    ))
+                    $this->getFactory(2),
+                    $this->getParserInstance(
+                        array(
+                            new Use_(array()),
+                            new Class_('n1'),
+                            new Class_('n2')
+                        ),
+                        1
+                     )
                 ),
                 $file,
                 array('n1', 'n2')

@@ -126,7 +126,7 @@ class MethodFactoryTest extends TestCase
      */
     private function fillArray($amount, $content)
     {
-        if($amount > 0) {
+        if ($amount > 0) {
             return array_fill(0, $amount, $content);
         }
         return array();
