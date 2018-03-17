@@ -1,51 +1,41 @@
 <?php
 namespace De\Idrinth\TestGenerator\Implementations;
 
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor as CDI;
+use De\Idrinth\TestGenerator\Interfaces\ClassWriter as CWI;
+use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper as NPMI;
 use SplFileInfo;
+use De\Idrinth\TestGenerator\Interfaces\Renderer as RI;
 
-class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
+class ClassWriter implements CWI
 {
     /**
-     * @var Environment
+     * @var RI
      */
-    private $env;
+    private $renderer;
 
     /**
-     * @var \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces
+     * @var NPMI
      */
     private $namespaces;
 
     /**
-     * @param \De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces
+     * @param NPMI $namespaces
+     * @param RI $renderer
      */
-    public function __construct(\De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper $namespaces)
+    public function __construct(NPMI $namespaces, RI $renderer)
     {
         $this->namespaces = $namespaces;
-        $this->env = new Environment(new FilesystemLoader(
-            dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'
-        ));
-        $this->env->addFilter(new \Twig_SimpleFilter('toUpperCamelCase', function ($string) {
-            $parts = explode('_', trim(preg_replace('/[^_A-Za-z0-9]+/', '_', $string), '_'));
-            $result = '';
-            foreach ($parts as $part) {
-                $result.= strtoupper($part{0});
-                if (strlen($part)>1) {
-                    $result.= substr($part, 1);
-                }
-            }
-            return $result;
-        }));
+        $this->renderer = $renderer;
     }
 
     /**
-     * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class
-     * @param \De\Idrinth\TestGenerator\Interfaces\ClassDescriptor[] $classes
+     * @param CDI $class
+     * @param CDI[] $classes
      * @param boolean $replace
      * @return boolean
      */
-    public function write(\De\Idrinth\TestGenerator\Interfaces\ClassDescriptor $class, $classes, $replace = false)
+    public function write(CDI $class, $classes, $replace = false)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
         if (!$file instanceof SplFileInfo) {
@@ -61,7 +51,7 @@ class ClassWriter implements \De\Idrinth\TestGenerator\Interfaces\ClassWriter
         }
         return false !== file_put_contents(
             $file->getPathname(),
-            $this->env->render(
+            $this->renderer->render(
                 'class.twig',
                 array(
                     'class' => $class,

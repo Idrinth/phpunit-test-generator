@@ -8,6 +8,7 @@ use De\Idrinth\TestGenerator\Implementations\Composer as Composer2;
 use De\Idrinth\TestGenerator\Implementations\DocBlockParser;
 use De\Idrinth\TestGenerator\Implementations\MethodFactory;
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper as NamespacePathMapper2;
+use De\Idrinth\TestGenerator\Implementations\Renderer;
 use De\Idrinth\TestGenerator\Interfaces\ClassReader;
 use De\Idrinth\TestGenerator\Interfaces\ClassWriter;
 use De\Idrinth\TestGenerator\Interfaces\Composer;
@@ -65,7 +66,7 @@ class Controller
     }
 
     /**
-     * @return self
+     * @return Controller
      */
     public static function init()
     {
@@ -77,13 +78,16 @@ class Controller
                     getcwd()
                 ).DIRECTORY_SEPARATOR.'composer.json')
         );
-        return new self(
+        return new Controller(
             new Finder(),
             new ClassReader2(
                 new ClassDescriptorFactory(new MethodFactory(new DocBlockParser())),
                 new Parser(new Lexer(), array('throwOnError'=>true))
             ),
-            new ClassWriter2(new NamespacePathMapper2($composer)),
+            new ClassWriter2(
+                new NamespacePathMapper2($composer),
+                new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'))
+            ),
             $composer,
             isset($opts['replace'])
         );
