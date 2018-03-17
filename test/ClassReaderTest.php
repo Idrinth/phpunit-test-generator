@@ -29,8 +29,6 @@ class ClassReaderTest extends TestCase
         $parser->expects($this->once())
             ->method('parse')
             ->willReturn($return);
-        $parser->expects($this->exactly($uses))
-            ->method('addUse');
         return $parser;
     }
 
