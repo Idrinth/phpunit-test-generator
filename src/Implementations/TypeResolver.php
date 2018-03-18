@@ -167,14 +167,15 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     }
 
     /**
-     * @param type $type
+     * @param string $type
      * @param string[] $simples
      * @param string[] $arrayTypes
      * @param boolean $isObject
      * @param boolean $isArray
-     * @return type
+     * @return void
      */
-    private function simplifyListItem($type, array &$simples, array &$arrayTypes, &$isObject, &$isArray) {
+    private function simplifyListItem($type, array &$simples, array &$arrayTypes, &$isObject, &$isArray)
+    {
         if (isset(self::$keywords[$type])) {
             $simples[] = self::$keywords[$type];
             $isArray = $isArray && self::$keywords[$type] === 'array';
