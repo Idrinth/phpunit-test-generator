@@ -179,7 +179,7 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
         if (isset(self::$keywords[$type])) {
             return $this->addTypeToSimpleList(self::$keywords[$type], $simples, $isObject, $isArray);
         }
-        if (isset(self::$primitives[$type])) {            
+        if (isset(self::$primitives[$type])) {
             return $this->addTypeToSimpleList(self::$primitives[$type], $simples, $isObject, $isArray);
         }
         if (preg_match('/\\[\\]$/', $type)) {
