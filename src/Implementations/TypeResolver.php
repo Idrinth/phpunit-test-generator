@@ -162,23 +162,39 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     private function simplifyList(array $types, array &$simples, array &$arrayTypes, &$isObject, &$isArray)
     {
         foreach ($types as $type) {
-            if (isset(self::$keywords[$type])) {
-                $simples[] = self::$keywords[$type];
-                $isArray = $isArray && self::$keywords[$type] === 'array';
-                $isObject = $isObject && self::$keywords[$type] === 'object';
-            } elseif (isset(self::$primitives[$type])) {
-                $simples[] = self::$primitives[$type];
-                $isArray = $isArray && self::$primitives[$type] === 'array';
-                $isObject = $isObject && self::$primitives[$type] === 'object';
-            } elseif (preg_match('/\\[\\]$/', $type)) {
-                $simples[] = 'array';
-                $arrayTypes[] = substr($type, 0, strlen($type) -2);
-                $isObject = false;
-            } else {
-                $simples[] = 'object';
-                $isArray = false;
-            }
+            $this->simplifyListItem($type, $simples, $arrayTypes, $isObject, $isArray);
         }
+    }
+
+    /**
+     * @param type $type
+     * @param string[] $simples
+     * @param string[] $arrayTypes
+     * @param boolean $isObject
+     * @param boolean $isArray
+     * @return type
+     */
+    private function simplifyListItem($type, array &$simples, array &$arrayTypes, &$isObject, &$isArray) {
+        if (isset(self::$keywords[$type])) {
+            $simples[] = self::$keywords[$type];
+            $isArray = $isArray && self::$keywords[$type] === 'array';
+            $isObject = $isObject && self::$keywords[$type] === 'object';
+            return;
+        }
+        if (isset(self::$primitives[$type])) {
+            $simples[] = self::$primitives[$type];
+            $isArray = $isArray && self::$primitives[$type] === 'array';
+            $isObject = $isObject && self::$primitives[$type] === 'object';
+            return;
+        }
+        if (preg_match('/\\[\\]$/', $type)) {
+            $simples[] = 'array';
+            $arrayTypes[] = substr($type, 0, strlen($type) -2);
+            $isObject = false;
+            return;
+        }
+        $simples[] = 'object';
+        $isArray = false;
     }
 
     /**
