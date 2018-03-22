@@ -96,8 +96,13 @@ class ComposerTest extends TestCaseImplementation
      * @param string $return
      * @throws \ReflectionException
      */
-    public function testGetTestClass(Composer $instance, ReflectionMethod $method, $constraint, $willThrow, $return = '')
-    {
+    public function testGetTestClass(
+        Composer $instance,
+        ReflectionMethod $method,
+        $constraint,
+        $willThrow,
+        $return = ''
+    ) {
         if ($willThrow) {
             $this->setExpectedException(
                 'InvalidArgumentException',

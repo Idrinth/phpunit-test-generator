@@ -82,6 +82,7 @@ class Composer implements ComposerInterface
     /**
      * @param null|string $constraints
      * @return string the class name
+     * @throws InvalidArgumentException if constraints are unusable
      */
     private function findTestClass($constraints)
     {
@@ -89,17 +90,17 @@ class Composer implements ComposerInterface
         $old = 0;
         $new = 0;
         $amount = count($orLessConstraints);
-        foreach($orLessConstraints as $constraint) {
+        foreach ($orLessConstraints as $constraint) {
             $old += Semver::satisfiedBy(self::$oldVersions, $constraint)?1:0;
             $new += Semver::satisfiedBy(self::$newVersions, $constraint)?1:0;
         }
-        if($new === $amount) {
+        if ($new === $amount) {
             return 'PHPUnit\Framework\TestCase';
         }
-        if($old === $amount) {
+        if ($old === $amount) {
             return 'PHPUnit_Framework_TestCase';
         }
-        throw new \UnexpectedValueException("No possibility to determine PHPunit TestCase class found");
+        throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
     }
 
     /**
