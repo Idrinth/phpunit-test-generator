@@ -4,6 +4,8 @@ namespace De\Idrinth\TestGenerator\Test;
 
 use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use De\Idrinth\TestGenerator\Implementations\Composer;
+use ReflectionClass;
+use ReflectionMethod;
 use SplFileInfo;
 
 class ComposerTest extends TestCaseImplementation
@@ -59,35 +61,42 @@ class ComposerTest extends TestCaseImplementation
 
     /**
      * @return array
+     * @throws \ReflectionException
      */
     public function provideGetTestClass()
     {
         $old = 'PHPUnit_Framework_TestCase';
         $new = 'PHPUnit\Framework\TestCase';
+        $instance = new Composer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json'));
+        $class = new ReflectionClass($instance);
+        $method = $class->getMethod('findTestClass');
+        $method->setAccessible(true);
         return array(
-            array('^1', false, $old),
-            array('^2', false, $old),
-            array('^3', false, $old),
-            array('^4', false, $new),
-            array('^5', false, $new),
-            array('^6', false, $new),
-            array('^7', false, $new),
-            array('^3|^4|^5|^6', true),
-            array('^1|^7', true),
-            array('4.5.6|^7', true),
-            array('^4|^7', false, $new),
+            array($instance, $method, '^1', false, $old),
+            array($instance, $method, '^2', false, $old),
+            array($instance, $method, '^3', false, $old),
+            array($instance, $method, '^4', false, $new),
+            array($instance, $method, '^5', false, $new),
+            array($instance, $method, '^6', false, $new),
+            array($instance, $method, '^7', false, $new),
+            array($instance, $method, '^3|^4|^5|^6', true),
+            array($instance, $method, '^1|^7', true),
+            array($instance, $method, '4.5.6|^7', true),
+            array($instance, $method, '^4|^7', false, $new),
         );
     }
 
     /**
      * @test
      * @dataProvider provideGetTestClass
+     * @param Composer $instance
+     * @param ReflectionMethod $method
      * @param string $constraint
      * @param boolean $willThrow
      * @param string $return
      * @throws \ReflectionException
      */
-    public function testGetTestClass($constraint, $willThrow, $return = '')
+    public function testGetTestClass(Composer $instance, ReflectionMethod $method, $constraint, $willThrow, $return = '')
     {
         if ($willThrow) {
             $this->setExpectedException(
@@ -95,9 +104,6 @@ class ComposerTest extends TestCaseImplementation
                 'No possibility to determine PHPunit TestCase class found'
             );
         }
-        $instance = new Composer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json'));
-        $class = new \ReflectionClass($instance);
-        $method = $class->getMethod('findTestClass');
         $result = $method->invoke($instance, $constraint);
         if (!$willThrow) {
             $this->assertEquals($return, $result);
