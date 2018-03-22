@@ -13,4 +13,9 @@ interface Composer
      * @return string[] namespace => folder
      */
     public function getDevelopmentNamespacesToFolders();
+
+    /**
+     * @return string
+     */
+    public function getTestClass();
 }
