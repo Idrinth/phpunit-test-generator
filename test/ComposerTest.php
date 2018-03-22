@@ -94,7 +94,6 @@ class ComposerTest extends TestCaseImplementation
      * @param string $constraint
      * @param boolean $willThrow
      * @param string $return
-     * @throws \ReflectionException
      */
     public function testGetTestClass(
         Composer $instance,
@@ -104,7 +103,7 @@ class ComposerTest extends TestCaseImplementation
         $return = ''
     ) {
         if ($willThrow) {
-            $this->setExpectedException(
+            $this->exceptionIsExpected(
                 'InvalidArgumentException',
                 'No possibility to determine PHPunit TestCase class found'
             );
@@ -113,5 +112,20 @@ class ComposerTest extends TestCaseImplementation
         if (!$willThrow) {
             $this->assertEquals($return, $result);
         }
+    }
+
+    /**
+     * Wraps the changes to exception testing to cover all supported phpunit-versions
+     * @param string $class
+     * @param string $message
+     * @return void
+     */
+    private function exceptionIsExpected($class, $message) {
+        if (method_exists($this, 'expectException')) {
+            $this->expectException($class);
+            $this->expectExceptionMessage($message);
+            return;
+        }
+        $this->setExpectedException($class, $message);
     }
 }
