@@ -16,13 +16,13 @@ class NamespacePathMapperTest extends TestCase
         $composer->expects($this->once())
             ->method('getDevelopmentNamespacesToFolders')
             ->willReturn(array(
-                'De\Idrinth\TestGenerator\Test' => 'test'
+                'De\Idrinth\TestGenerator\Test' => 'test',
                 'De\Test\Idrinth\AnyTestGenerator' => 'test'
             ));
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
             ->willReturn(array(
-                'De\Idrinth\TestGenerator' => 'src'
+                'De\Idrinth\TestGenerator' => 'src',
                 'De\Idrinth\AnyTestGenerator' => 'src'
             ));
         return new NamespacePathMapper($composer);
@@ -50,6 +50,15 @@ class NamespacePathMapperTest extends TestCase
             'De\Idrinth\AnyTestGenerator\Abc',
             $object->getTestNamespaceForNamespace('De\Test\Idrinth\TestGenerator\Abc')
         );
+    }
+
+    /**
+     * @test
+     * @expectedException \UnexpectedValueException
+     */
+    public function testGetTestNamespaceForNamespaceThrowsUnexpectedValueException()
+    {
+        $this->getInstance()->getTestNamespaceForNamespace('Der\Idrinth\hat\einen\Test-Generator');
     }
 
     /**
