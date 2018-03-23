@@ -15,10 +15,16 @@ class NamespacePathMapperTest extends TestCase
         $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
         $composer->expects($this->once())
             ->method('getDevelopmentNamespacesToFolders')
-            ->willReturn(array('De\Idrinth\TestGenerator\Test' => 'test'));
+            ->willReturn(array(
+                'De\Idrinth\TestGenerator\Test' => 'test'
+                'De\Test\Idrinth\AnyTestGenerator' => 'test'
+            ));
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
-            ->willReturn(array('De\Idrinth\TestGenerator' => 'src'));
+            ->willReturn(array(
+                'De\Idrinth\TestGenerator' => 'src'
+                'De\Idrinth\AnyTestGenerator' => 'src'
+            ));
         return new NamespacePathMapper($composer);
     }
 
@@ -39,6 +45,10 @@ class NamespacePathMapperTest extends TestCase
         $this->assertEquals(
             'De\Idrinth\TestGenerator\Test\Abc',
             $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Test\Abc')
+        );
+        $this->assertEquals(
+            'De\Idrinth\AnyTestGenerator\Abc',
+            $object->getTestNamespaceForNamespace('De\Test\Idrinth\TestGenerator\Abc')
         );
     }
 
