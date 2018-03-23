@@ -5,6 +5,7 @@ namespace De\Idrinth\TestGenerator\Test;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
+use De\Idrinth\TestGenerator\Interfaces\Composer;
 use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
 use De\Idrinth\TestGenerator\Interfaces\Renderer;
@@ -105,12 +106,29 @@ class ClassWriterTest extends TestCase
     }
 
     /**
+     * @return Composer
+     */
+    private function getMockedComposer()
+    {
+        $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')
+            ->getMock();
+        $environment->expects($this->exactly(2))
+            ->method('getTestClass')
+            ->willReturn('None');
+        return $environment;
+    }
+
+    /**
      * @test
      * @todo properly test
      */
     public function testWrite()
     {
-        $writer = @new ClassWriter($this->getMockedNamespacePathMapper(), $this->getMockedRenderer());//thanks to twig
+        $writer = @new ClassWriter(
+            $this->getMockedNamespacePathMapper(),
+            $this->getMockedRenderer(),
+            $this->getMockedComposer()
+        );//thanks to twig
         $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
         $this->assertEquals('rendered', file_get_contents($this->filename));
         $writer->write($this->getMockedClassDescriptor(), array());
