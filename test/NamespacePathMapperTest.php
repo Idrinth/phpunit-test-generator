@@ -47,8 +47,8 @@ class NamespacePathMapperTest extends TestCase
             $object->getTestNamespaceForNamespace('De\Idrinth\TestGenerator\Test\Abc')
         );
         $this->assertEquals(
-            'De\Idrinth\AnyTestGenerator\Abc',
-            $object->getTestNamespaceForNamespace('De\Test\Idrinth\TestGenerator\Abc')
+            'De\Test\Idrinth\AnyTestGenerator\Abc',
+            $object->getTestNamespaceForNamespace('De\Idrinth\AnyTestGenerator\Abc')
         );
     }
 
