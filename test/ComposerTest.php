@@ -123,7 +123,7 @@ class ComposerTest extends TestCaseImplementation
     private function exceptionIsExpected($class, $message)
     {
         if (!method_exists($this, 'expectException')) {
-            return $this->setExpectedException($class, $message);;
+            return $this->setExpectedException($class, $message);
         }
         $this->expectException($class);
         $this->expectExceptionMessage($message);
