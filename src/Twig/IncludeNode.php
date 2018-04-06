@@ -39,7 +39,7 @@ class IncludeNode extends TIN
     public function compile(Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
-        if($this->colnum) {
+        if ($this->colnum) {
             $compiler->raw("ob_start();\n");
         }
         if ($this->getAttribute('ignore_missing')) {
@@ -60,7 +60,7 @@ class IncludeNode extends TIN
                 ->outdent()
                 ->write("}\n\n");
         }
-        if($this->colnum) {
+        if ($this->colnum) {
             $compiler->raw("echo preg_replace(\n")
                 ->raw("'/\n\s+($|\n)/',\n")
                 ->raw("\"\\n\\$1\",\n")
