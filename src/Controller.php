@@ -86,7 +86,8 @@ class Controller
             ),
             new ClassWriter2(
                 new NamespacePathMapper2($composer),
-                new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'))
+                new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')),
+                $composer
             ),
             $composer,
             isset($opts['replace'])
