@@ -27,8 +27,8 @@ class RendererTest extends TestCase
             array('test-functions', ""),
             array(
                 'type-tests',
-                "\n        \$this->assertInternalType(\n            '',\n            ,"
-                . "\n            'Return didn\'t match expected type '\n        );\n"
+                "\n\$this->assertInternalType(\n    '',\n    ,"
+                . "\n    'Return didn\'t match expected type '\n);\n"
             ),
             array('type2value', 'null')
         );
