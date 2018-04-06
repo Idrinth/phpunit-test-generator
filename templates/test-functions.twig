@@ -1,37 +1,37 @@
 {% for function in class.methods %}
 
-    /**
-     * From {{class.name}}
-     * @test
-     * @todo replace with actual tests
-     **/
-    public function test{{function.name|toUpperCamelCase}} ()
-    {
-        $instance = $this->getInstance();
-        {% include "type-test-wrapper.twig" with {'function': function} only %}
+/**
+ * From {{class.name}}
+ * @test
+ * @todo replace with actual tests
+ **/
+public function test{{function.name|toUpperCamelCase}} ()
+{
+    $instance = $this->getInstance();
+    {% include "type-test-wrapper.twig" with {'function': function} only %}
 
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
+    $this->markTestIncomplete(
+        'This test has not been implemented yet.'
+    );
+}
 {% for exception in function.exceptions %}
 
-    /**
-     * From {{class.name}}
-     * @test
-     * @todo replace with actual tests
-     * @expectedException {{exception.className}}
-     **/
-    public function test{{function.name|toUpperCamelCase}}Throws{{exception.className|toUpperCamelCase}} ()
-    {
-        $this->getInstance()->{{function.name}}{% include 'function.twig' with {'function': function} only %};
+/**
+ * From {{class.name}}
+ * @test
+ * @todo replace with actual tests
+ * @expectedException {{exception.className}}
+ **/
+public function test{{function.name|toUpperCamelCase}}Throws{{exception.className|toUpperCamelCase}} ()
+{
+    $this->getInstance()->{{function.name}}{% include 'function.twig' with {'function': function} only %};
 
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
+    $this->markTestIncomplete(
+        'This test has not been implemented yet.'
+    );
+}
 {% endfor %}
 {% endfor %}
 {% if class.extends and classes[class.extends] is defined %}
-    {% include 'test-functions.twig' with {'class': classes[class.extends], 'classes': classes} only %}
+{% include 'test-functions.twig' with {'class': classes[class.extends], 'classes': classes} only %}
 {% endif %}

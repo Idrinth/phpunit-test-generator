@@ -3,6 +3,8 @@
 namespace De\Idrinth\TestGenerator\Implementations;
 
 use De\Idrinth\TestGenerator\Interfaces\Renderer as RI;
+use De\Idrinth\TestGenerator\Twig\IncludeParser;
+use De\Idrinth\TestGenerator\Twig\Lexer;
 use SplFileInfo;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -16,7 +18,9 @@ class Renderer extends Environment implements RI
     public function __construct(SplFileInfo $templates)
     {
         parent::__construct(new FilesystemLoader($templates->getPathname()));
+        $this->addTokenParser(new IncludeParser());
         $this->filterToUpperCamelCase();
+        $this->setLexer(new Lexer($this));
     }
 
     /**

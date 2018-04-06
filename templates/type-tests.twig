@@ -1,24 +1,24 @@
 {% if return.type != 'unknown' %}
 
-        $this->assertInternalType(
-            '{{return.type}}',
-            {{variable}},
-            'Return didn\'t match expected type {{return.type}}'
-        );
+$this->assertInternalType(
+    '{{return.type}}',
+    {{variable}},
+    'Return didn\'t match expected type {{return.type}}'
+);
 {% endif %}
 {% if return.complex %}
     {% if return.type == 'object' %}
 
-        $this->assertInstanceOf(
-            '{{return.className}}',
-            {{variable}},
-            'Return didn\'t match expected instance {{return.className}}'
-        );
+$this->assertInstanceOf(
+    '{{return.className}}',
+    {{variable}},
+    'Return didn\'t match expected instance {{return.className}}'
+);
     {% elseif return.type == 'array' %}
 
         {% set next = variable ~ '_' %}
-        foreach({{variable}} as {{next}}) {
-            {% include 'type-tests.twig' with {'return': return.itemType, 'variable': next} only %}
-        }
+foreach({{variable}} as {{next}}) {
+    {% include 'type-tests.twig' with {'return': return.itemType, 'variable': next} only %}
+}
     {% endif %}
 {% endif %}
