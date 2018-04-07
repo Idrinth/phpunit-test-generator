@@ -66,7 +66,8 @@ class LexerTest extends TestCaseImplementation
      * @param ReflectionProperty $property
      * @param type $value
      */
-    private function setInObj(Lexer $instance, ReflectionProperty $property, $value) {
+    private function setInObj(Lexer $instance, ReflectionProperty $property, $value)
+    {
         $property->setAccessible(true);
         $property->setValue($instance, $value);
     }
@@ -76,7 +77,7 @@ class LexerTest extends TestCaseImplementation
      * @param ReflectionProperty $property
      * @return Token
      */
-    private function getInstanceTokenList(Lexer $instance,ReflectionProperty $property)
+    private function getInstanceTokenList(Lexer $instance, ReflectionProperty $property)
     {
         list($return) = $property->getValue($instance);
         return $return;

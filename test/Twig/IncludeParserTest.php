@@ -19,7 +19,7 @@ class IncludeParserTest extends TestCaseImplementation
      * From IncludeParser
      * @test
      **/
-    public function testParse ()
+    public function testParse()
     {
         $instance = $this->getInstance();
         $parser = $this->getMockBuilder('Twig_Parser')->disableOriginalConstructor()->getMock();

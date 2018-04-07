@@ -24,7 +24,7 @@ class TokenTest extends TestCaseImplementation
      * From Token
      * @test
      **/
-    public function testGetColumn ()
+    public function testGetColumn()
     {
         $instance = $this->getInstance();
         $return = $instance->getColumn();

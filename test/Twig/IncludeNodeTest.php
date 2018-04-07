@@ -22,7 +22,7 @@ class IncludeNodeTest extends TestCaseImplementation
      * From IncludeNode
      * @test
      **/
-    public function testCompile ()
+    public function testCompile()
     {
         $instance = $this->getInstance();
         $compiler = $this->getMockBuilder('Twig\Compiler')->disableOriginalConstructor()->getMock();
