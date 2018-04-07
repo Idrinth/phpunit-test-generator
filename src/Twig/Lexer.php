@@ -31,7 +31,6 @@ class Lexer extends TL
         if (!isset($lines[$this->lineno]) || empty($lines[$this->lineno])) {
             return 0;
         }
-        $length = strlen(preg_replace('/^( *).*$/', '$1', $lines[$this->lineno]));
-        return $lines[$this->lineno][$length] === '{'?$length:$length+4;
+        return strlen(preg_replace('/^( *).*$/', '$1', $lines[$this->lineno]))+4;
     }
 }
