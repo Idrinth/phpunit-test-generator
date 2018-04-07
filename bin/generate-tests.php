@@ -15,7 +15,7 @@ require_once implode(
     )
 );
 
-(new Application('echo', '1.0.0'))
+(new Application('PHPUnit-Test-Generator', '1.0.0'))
     ->register('generate-tests')
     ->addOption('mode', 'm', InputArgument::OPTIONAL, "Replace | Skip | Move")
     ->addOption('dir', 'd', InputArgument::OPTIONAL, 'Directory which contains composer.json', null)
