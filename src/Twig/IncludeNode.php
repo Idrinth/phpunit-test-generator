@@ -11,7 +11,7 @@ class IncludeNode extends TIN
     /**
      * @var int
      */
-    private $colnum;
+    private $prepend;
 
     /**
      * @param Twig_Node_Expression $expr
@@ -19,7 +19,7 @@ class IncludeNode extends TIN
      * @param boolean $only
      * @param boolean $ignoreMissing
      * @param int $lineno
-     * @param int $colnum
+     * @param int $prepend
      */
     public function __construct(
         Twig_Node_Expression $expr,
@@ -27,10 +27,10 @@ class IncludeNode extends TIN
         $only = false,
         $ignoreMissing = false,
         $lineno = 0,
-        $colnum = 0
+        $prepend = 0
     ) {
         parent::__construct($expr, $variables, $only, $ignoreMissing, $lineno, 'include');
-        $this->colnum = $colnum;
+        $this->prepend = $prepend;
     }
 
     /**
@@ -38,41 +38,22 @@ class IncludeNode extends TIN
      */
     public function compile(Compiler $compiler)
     {
-        $compiler->addDebugInfo($this);
-        if ($this->colnum) {
-            $compiler->raw("ob_start();\n");
+        if ($this->prepend) {
+            return parent::compile($compiler);
         }
-        if ($this->getAttribute('ignore_missing')) {
-            $compiler
-                ->write("try {\n")
-                ->indent();
-        }
-        $this->addGetTemplate($compiler);
-        $compiler->raw('->display(');
-        $this->addTemplateArguments($compiler);
-        $compiler->raw(");\n");
-        if ($this->getAttribute('ignore_missing')) {
-            $compiler
-                ->outdent()
-                ->write("} catch (Twig_Error_Loader \$e) {\n")
-                ->indent()
-                ->write("// ignore missing template\n")
-                ->outdent()
-                ->write("}\n\n");
-        }
-        if ($this->colnum) {
-            $compiler->raw("echo preg_replace(\n")
-                ->raw("'/\n\s+($|\n)/',\n")
-                ->raw("\"\\n\\$1\",\n")
-                ->raw("str_replace(\n")
-                ->indent()
-                ->raw("\"\\n\",")
-                ->raw("\"\\n\".")
-                ->raw("str_repeat(' ', {$this->colnum}),\n")
-                ->raw("ob_get_clean()")
-                ->outdent()
-                ->raw(")")
-                ->raw(");\n\n");
-        }
+        $compiler->raw("ob_start();\n");
+        parent::compile($compiler);
+        $compiler->raw("echo preg_replace(\n")
+            ->raw("'/\n\s+($|\n)/',\n")
+            ->raw("\"\\n\\$1\",\n")
+            ->raw("str_replace(\n")
+            ->indent()
+            ->raw("\"\\n\",")
+            ->raw("\"\\n\".")
+            ->raw("str_repeat(' ', {$this->prepend}),\n")
+            ->raw("ob_get_clean()")
+            ->outdent()
+            ->raw(")")
+            ->raw(");\n\n");
     }
 }

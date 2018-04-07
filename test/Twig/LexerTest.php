@@ -58,7 +58,7 @@ class LexerTest extends TestCaseImplementation
         $method->invoke($instance, $type, $value);
         $return = $this->getInstanceTokenList($instance, $property);
         $this->assertInstanceOf('De\Idrinth\TestGenerator\Twig\Token', $return);
-        $this->assertEquals($column, $return->getColumn());
+        $this->assertEquals($column, $return->getPrepend());
     }
 
     /**

@@ -32,11 +32,17 @@ class IncludeNodeTest extends TestCaseImplementation
         $compiler->expects($this->exactly(2))
             ->method('subcompile')
             ->willReturnSelf();
-        $compiler->expects($this->exactly(7))
+        $compiler->expects($this->exactly(18))
             ->method('raw')
             ->willReturnSelf();
         $compiler->expects($this->exactly(2))
             ->method('repr')
+            ->willReturnSelf();
+        $compiler->expects($this->exactly(1))
+            ->method('indent')
+            ->willReturnSelf();
+        $compiler->expects($this->exactly(1))
+            ->method('outdent')
             ->willReturnSelf();
         $return = $instance->compile($compiler);
 

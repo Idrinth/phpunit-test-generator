@@ -9,25 +9,26 @@ class Token extends TT
     /**
      * @var int
      */
-    private $column;
+    private $prepend;
 
     /**
      * @param int $type
      * @param string $value
      * @param int $lineno
-     * @param int $colnum
+     * @param int $prepend
      */
-    public function __construct($type, $value, $lineno, $colnum)
+    public function __construct($type, $value, $lineno, $prepend)
     {
         parent::__construct($type, $value, $lineno);
-        $this->column = $colnum;
+        $this->prepend = $prepend;
     }
 
     /**
+     * Whitespace to prepend to new lines
      * @return int
      */
-    public function getColumn()
+    public function getPrepend()
     {
-        return $this->column;
+        return $this->prepend;
     }
 }

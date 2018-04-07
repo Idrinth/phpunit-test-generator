@@ -27,7 +27,7 @@ class TokenTest extends TestCaseImplementation
     public function testGetColumn()
     {
         $instance = $this->getInstance();
-        $return = $instance->getColumn();
+        $return = $instance->getPrepend();
         $this->assertInternalType(
             'int',
             $return,

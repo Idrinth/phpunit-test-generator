@@ -3,6 +3,7 @@
 namespace De\Idrinth\TestGenerator\Twig;
 
 use Twig\TokenParser\IncludeTokenParser;
+use Twig_Token;
 
 class IncludeParser extends IncludeTokenParser
 {
@@ -10,7 +11,7 @@ class IncludeParser extends IncludeTokenParser
      * @param Token $token
      * @return IncludeNode
      */
-    public function parse(\Twig_Token $token)
+    public function parse(Twig_Token $token)
     {
         $expr = $this->parser->getExpressionParser()->parseExpression();
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
@@ -20,7 +21,7 @@ class IncludeParser extends IncludeTokenParser
             $only,
             $ignoreMissing,
             $token->getLine(),
-            $token->getColumn()
+            $token->getPrepend()
         );
     }
 }
