@@ -24,14 +24,14 @@ class TokenTest extends TestCaseImplementation
      * From Token
      * @test
      **/
-    public function testGetColumn()
+    public function testGetPrepend()
     {
         $instance = $this->getInstance();
         $return = $instance->getPrepend();
         $this->assertInternalType(
             'int',
             $return,
-            'Return didn\'t match expected instance De\Idrinth\TestGenerator\Twig\type'
+            'Return didn\'t match expected int'
         );
         $this->assertEquals(17, $return);
     }
