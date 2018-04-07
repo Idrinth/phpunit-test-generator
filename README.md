@@ -7,7 +7,7 @@ Generates tests for phpunit based on namespaces listed for autoloading in your c
 
 ## Example
 
-This is a generated testfile for the actual Controller of this library.
+This is a generated testfile for the actual Controller of this library. The intention is to generate PSR2-compatible code, obviously that might not yet be the case everywhere. If you find one where it fails, feel free to file a bug.
 
 ```php
 <?php
