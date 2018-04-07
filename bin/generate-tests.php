@@ -19,7 +19,7 @@ require_once implode(
     ->register('generate-tests')
     ->addOption('mode', 'm', InputArgument::OPTIONAL, "Replace | Skip | Move")
     ->addOption('dir', 'd', InputArgument::OPTIONAL, 'Directory which contains composer.json', null)
-    ->addOption('output', 'o', InputArgument::OPTIONAL, 'Output-Directory for generated Files', null)
+    ->addOption('output', 'o', InputArgument::OPTIONAL, 'Output-Directory for generated files', null)
     ->setCode(
         function(InputInterface $input, OutputInterface $output) {
         Controller::init()->run();
