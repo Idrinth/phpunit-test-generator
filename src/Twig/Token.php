@@ -24,7 +24,7 @@ class Token extends TT
     }
 
     /**
-     * @return type
+     * @return int
      */
     public function getColumn()
     {

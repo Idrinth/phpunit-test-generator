@@ -1,6 +1,6 @@
 <?php
 
-namespace De\Idrinth\TestGenerator\Test;
+namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use De\Idrinth\TestGenerator\Implementations\Composer;
@@ -25,7 +25,7 @@ class ComposerTest extends TestCaseImplementation
      **/
     public function testGetProductionNamespacesToFolders()
     {
-        $base = dirname(__DIR__).DIRECTORY_SEPARATOR;
+        $base = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
         $instance = $this->getInstance($base.'composer.json');
         $this->assertInternalType(
             'array',
@@ -45,7 +45,7 @@ class ComposerTest extends TestCaseImplementation
      **/
     public function testGetDevelopmentNamespacesToFolders()
     {
-        $base = dirname(__DIR__).DIRECTORY_SEPARATOR;
+        $base = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
         $instance = $this->getInstance($base.'composer.json');
         $this->assertInternalType(
             'array',
@@ -67,7 +67,7 @@ class ComposerTest extends TestCaseImplementation
     {
         $old = 'PHPUnit_Framework_TestCase';
         $new = 'PHPUnit\Framework\TestCase';
-        $instance = new Composer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json'));
+        $instance = new Composer(new SplFileInfo(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'composer.json'));
         $class = new ReflectionClass($instance);
         $method = $class->getMethod('findTestClass');
         $method->setAccessible(true);

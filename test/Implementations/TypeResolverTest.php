@@ -1,6 +1,6 @@
 <?php
 
-namespace De\Idrinth\TestGenerator\Test;
+namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\TypeResolver;
 use De\Idrinth\TestGenerator\Interfaces\Type;

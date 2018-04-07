@@ -1,6 +1,6 @@
 <?php
 
-namespace De\Idrinth\TestGenerator\Test;
+namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\Renderer;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +42,7 @@ class RendererTest extends TestCase
      */
     public function testRender($template, $expected)
     {
-        $renderer = new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'));
+        $renderer = new Renderer(new SplFileInfo(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'));
         $this->assertEquals($expected, $renderer->render($template.'.twig'));
     }
 }
