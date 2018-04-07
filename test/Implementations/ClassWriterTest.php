@@ -1,6 +1,6 @@
 <?php
 
-namespace De\Idrinth\TestGenerator\Test;
+namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;

@@ -1,6 +1,6 @@
 <?php
 
-namespace De\Idrinth\TestGenerator\Test;
+namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\Renderer;
 use PHPUnit\Framework\TestCase;
@@ -27,8 +27,8 @@ class RendererTest extends TestCase
             array('test-functions', ""),
             array(
                 'type-tests',
-                "\n        \$this->assertInternalType(\n            '',\n            ,"
-                . "\n            'Return didn\'t match expected type '\n        );\n"
+                "\n\$this->assertInternalType(\n    '',\n    ,"
+                . "\n    'Return didn\'t match expected type '\n);\n"
             ),
             array('type2value', 'null')
         );
@@ -42,7 +42,7 @@ class RendererTest extends TestCase
      */
     public function testRender($template, $expected)
     {
-        $renderer = new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'));
+        $renderer = new Renderer(new SplFileInfo(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'templates'));
         $this->assertEquals($expected, $renderer->render($template.'.twig'));
     }
 }
