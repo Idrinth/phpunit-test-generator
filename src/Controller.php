@@ -6,6 +6,7 @@ use De\Idrinth\TestGenerator\Implementations\ClassReader as ClassReader2;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter as ClassWriter2;
 use De\Idrinth\TestGenerator\Implementations\Composer as Composer2;
 use De\Idrinth\TestGenerator\Implementations\DocBlockParser;
+use De\Idrinth\TestGenerator\Implementations\JsonFile;
 use De\Idrinth\TestGenerator\Implementations\MethodFactory;
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper as NamespacePathMapper2;
 use De\Idrinth\TestGenerator\Implementations\Renderer;
@@ -72,7 +73,7 @@ class Controller
     {
         $opts = getopt('', array('dir:','replace'));
         $composer = new Composer2(
-            new SplFileInfo((
+            new JsonFile((
                 isset($opts['dir']) && $opts['dir'] ?
                     rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
                     getcwd()
