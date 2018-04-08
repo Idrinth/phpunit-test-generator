@@ -1,5 +1,6 @@
 <?php
-use De\Idrinth\TestGenerator\Console;
+
+use De\Idrinth\TestGenerator\GenerateTests;
 
 require_once implode(
     DIRECTORY_SEPARATOR,
@@ -10,7 +11,6 @@ require_once implode(
     )
 );
 
-$console = new Console();
-$console->run();
+new GenerateTests();
 
 
