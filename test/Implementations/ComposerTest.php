@@ -6,54 +6,70 @@ use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use De\Idrinth\TestGenerator\Implementations\Composer;
 use ReflectionClass;
 use ReflectionMethod;
-use SplFileInfo;
 
 class ComposerTest extends TestCaseImplementation
 {
     /**
-     * @param string $file
+     * @param array $data
      * @return Composer
      **/
-    protected function getInstance($file)
+    protected function getInstance($data)
     {
-        return new Composer(new SplFileInfo($file));
+        $mock = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\JsonFile')->getMock();
+        $mock->expects($this->exactly(2))
+            ->method('getPath')
+            ->willReturn('#base');
+        $mock->expects($this->once())
+            ->method('getContent')
+            ->willReturn($data);
+        return new Composer($mock);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideGetNamespacesToFolders()
+    {
+        return array(
+            array(
+                array(
+                    'require-dev'=>array('phpunit/phpunit' => '^4.8')
+                ),
+                array(),
+                array(),
+            ),
+            array(
+                array(
+                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
+                    'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
+                    'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
+                ),
+                array('MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'),
+                array('MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'abcd'),
+            ),
+        );
     }
 
     /**
      * From Composer
      * @test
+     * @dataProvider provideGetNamespacesToFolders
      **/
-    public function testGetProductionNamespacesToFolders()
+    public function testGetNamespacesToFolders($composer, $prod, $dev)
     {
-        $base = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
-        $instance = $this->getInstance($base.'composer.json');
+        $instance = $this->getInstance($composer);
         $this->assertInternalType(
             'array',
             $instance->getProductionNamespacesToFolders(),
             'Return didn\'t match expected type array'
         );
         $this->assertEquals(
-            array("De\\Idrinth\\TestGenerator" => "{$base}src"),
+            $prod,
             $instance->getProductionNamespacesToFolders(),
             'Return didn\'t match expected array'
         );
-    }
-
-    /**
-     * From Composer
-     * @test
-     **/
-    public function testGetDevelopmentNamespacesToFolders()
-    {
-        $base = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
-        $instance = $this->getInstance($base.'composer.json');
-        $this->assertInternalType(
-            'array',
-            $instance->getDevelopmentNamespacesToFolders(),
-            'Return didn\'t match expected type array'
-        );
         $this->assertEquals(
-            array("De\\Idrinth\\TestGenerator\\Test" => "{$base}test"),
+            $dev,
             $instance->getDevelopmentNamespacesToFolders(),
             'Return didn\'t match expected array'
         );
@@ -67,7 +83,7 @@ class ComposerTest extends TestCaseImplementation
     {
         $old = 'PHPUnit_Framework_TestCase';
         $new = 'PHPUnit\Framework\TestCase';
-        $instance = new Composer(new SplFileInfo(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'composer.json'));
+        $instance = $this->getInstance(array('require-dev'=>array('phpunit/phpunit' => '^4.8')));
         $class = new ReflectionClass($instance);
         $method = $class->getMethod('findTestClass');
         $method->setAccessible(true);

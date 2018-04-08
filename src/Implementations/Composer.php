@@ -5,7 +5,7 @@ namespace De\Idrinth\TestGenerator\Implementations;
 use Composer\Semver\Semver;
 use De\Idrinth\TestGenerator\Interfaces\Composer as ComposerInterface;
 use InvalidArgumentException;
-use SplFileInfo;
+use De\Idrinth\TestGenerator\Interfaces\JsonFile as JFI;
 
 class Composer implements ComposerInterface
 {
@@ -62,20 +62,17 @@ class Composer implements ComposerInterface
     );
 
     /**
-     * @param SplFileInfo $file
+     * @param JFI $file
      * @throws InvalidArgumentException if file is unusable
      */
-    public function __construct(SplFileInfo $file)
+    public function __construct(JFI $file)
     {
-        if (!$file->isFile() || !$file->isReadable()) {
-            throw new InvalidArgumentException("File $file doesn't exist or isn't readable.");
-        }
-        $data = json_decode(file_get_contents($file->getPathname()), true);
-        if (!$data) {
-            throw new InvalidArgumentException("File $file couldn't be parsed as json.");
-        }
+        $data = $file->getContent();
         $this->autoloadProd = $this->handleKey($data, 'autoload', $file->getPath());
         $this->autoloadDev = $this->handleKey($data, 'autoload-dev', $file->getPath());
+        if (!isset($data['require-dev']) || !isset($data['require-dev']['phpunit/phpunit'])) {
+            throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
+        }
         $this->testClass = $this->findTestClass($data['require-dev']['phpunit/phpunit']);
     }
 
