@@ -38,14 +38,15 @@ class IncludeNode extends TIN
      */
     public function compile(Compiler $compiler)
     {
-        if ($this->prepend) {
+        if (!$this->prepend) {
             return parent::compile($compiler);
         }
         $compiler->raw("ob_start();\n");
         parent::compile($compiler);
         $compiler->raw("echo preg_replace(\n")
-            ->raw("'/\n\s+($|\n)/',\n")
-            ->raw("\"\\n\\$1\",\n")
+            ->indent()
+            ->raw("'/\\n\s+($|\\n)/',\n")
+            ->raw("\"\\n\$1\",\n")
             ->raw("str_replace(\n")
             ->indent()
             ->raw("\"\\n\",")
@@ -54,6 +55,8 @@ class IncludeNode extends TIN
             ->raw("ob_get_clean()")
             ->outdent()
             ->raw(")")
-            ->raw(");\n\n");
+            ->raw(");")
+            ->outdent()
+            ->raw("\n\n");
     }
 }
