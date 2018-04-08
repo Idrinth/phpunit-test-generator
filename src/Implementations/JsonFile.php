@@ -24,7 +24,7 @@ class JsonFile implements JFI
      */
     public function __construct($file)
     {
-        if(!$file instanceof SplFileInfo) {
+        if (!$file instanceof SplFileInfo) {
             $file = new SplFileInfo($file);
         }
         if (!$file->isFile() || !$file->isReadable()) {

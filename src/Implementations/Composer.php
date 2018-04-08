@@ -70,7 +70,7 @@ class Composer implements ComposerInterface
         $data = $file->getContent();
         $this->autoloadProd = $this->handleKey($data, 'autoload', $file->getPath());
         $this->autoloadDev = $this->handleKey($data, 'autoload-dev', $file->getPath());
-        if(!isset($data['require-dev']) || !isset($data['require-dev']['phpunit/phpunit'])) {
+        if (!isset($data['require-dev']) || !isset($data['require-dev']['phpunit/phpunit'])) {
             throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
         }
         $this->testClass = $this->findTestClass($data['require-dev']['phpunit/phpunit']);
