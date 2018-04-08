@@ -10,11 +10,6 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateTests extends Command
 {
-    public function __construct($name = null)
-    {
-        parent::__construct($name);
-    }
-
     protected function configure()
     {
         $this->setName('generate-tests')
