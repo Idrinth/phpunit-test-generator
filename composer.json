@@ -19,6 +19,7 @@
         "twig/twig": "^1.35.0",
         "nikic/php-parser": "^1.4.1",
         "symfony/finder": "^2.6.13",
+        "symfony/console":"^2.6.13",
         "composer/semver": "^1.4.2"
     },
     "autoload": {

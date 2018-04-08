@@ -1,6 +1,6 @@
 <?php
 
-use De\Idrinth\TestGenerator\Controller;
+use De\Idrinth\TestGenerator\GenerateTests;
 
 require_once implode(
     DIRECTORY_SEPARATOR,
@@ -11,4 +11,6 @@ require_once implode(
     )
 );
 
-Controller::init()->run();
+new GenerateTests();
+
+
