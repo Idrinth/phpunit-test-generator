@@ -52,14 +52,7 @@ class TestClassDecider implements TCDI
      */
     public function get($constraints)
     {
-        $orLessConstraints = explode('|', $constraints);
-        $old = 0;
-        $new = 0;
-        $amount = count($orLessConstraints);
-        foreach ($orLessConstraints as $constraint) {
-            $old += Semver::satisfiedBy(self::$oldVersions, $constraint)?1:0;
-            $new += Semver::satisfiedBy(self::$newVersions, $constraint)?1:0;
-        }
+        list($amount, $old, $new) = $this->getCounts(explode('|', $constraints));
         if ($new === $amount) {
             return 'PHPUnit\Framework\TestCase';
         }
@@ -67,5 +60,23 @@ class TestClassDecider implements TCDI
             return 'PHPUnit_Framework_TestCase';
         }
         throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
+    }
+
+    /**
+     * @param string[] $constraints
+     * @return int[] [amount, old new]
+     */
+    private function getCounts(array $constraints) {
+        $old = 0;
+        $new = 0;
+        $amount = 0;
+        foreach ($constraints as $constraint) {
+            if (strlen($constraint) > 0) {
+                $amount++;
+                $old += Semver::satisfiedBy(self::$oldVersions, $constraint)?1:0;
+                $new += Semver::satisfiedBy(self::$newVersions, $constraint)?1:0;
+            }
+        }
+        return array($amount, $old, $new);
     }
 }
