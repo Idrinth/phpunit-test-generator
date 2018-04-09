@@ -22,8 +22,7 @@ class ControllerTest extends TestCaseImplementation
             new Finder(),
             $reader,
             $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock(),
-            $composer,
-            false
+            $composer
         );
     }
 

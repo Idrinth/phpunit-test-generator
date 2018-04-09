@@ -32,7 +32,9 @@ class LexerTest extends TestCaseImplementation
     public function providePushToken()
     {
         return array(
-            array('why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 4)
+            array('why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 0),
+            array('    why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 4),
+            array(" why?\n   {{ abc }}", \Twig_Token::NAME_TYPE, '', 1, 3)
         );
     }
 
@@ -49,7 +51,7 @@ class LexerTest extends TestCaseImplementation
         $instance = $this->getInstance();
         $rfClass = new ReflectionClass($instance);
         $this->setInObj($instance, $rfClass->getProperty('code'), $code);
-        $this->setInObj($instance, $rfClass->getProperty('lineno'), $line);
+        $this->setInObj($instance, $rfClass->getProperty('lineno'), $line+1);
         $method = $rfClass->getMethod('pushToken');
         $method->setAccessible(true);
         $property = $rfClass->getProperty('tokens');

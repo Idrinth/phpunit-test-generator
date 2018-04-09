@@ -28,9 +28,9 @@ class Lexer extends TL
     private function getOriginalPos()
     {
         $lines = explode("\n", $this->code);
-        if (!isset($lines[$this->lineno]) || empty($lines[$this->lineno])) {
+        if (!isset($lines[$this->lineno-1]) || empty($lines[$this->lineno-1])) {
             return 0;
         }
-        return strlen(preg_replace('/^( *).*$/', '$1', $lines[$this->lineno]))+4;
+        return strlen(preg_replace('/^( *).*?$/', '$1', $lines[$this->lineno-1]));
     }
 }

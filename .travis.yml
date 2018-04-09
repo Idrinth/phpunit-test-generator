@@ -25,9 +25,9 @@ before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer:^3.2.2 ; fi
 install: composer update
 script:
-# unit tests
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then vendor/bin/phpunit --testdox test/; fi
 # check standards
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then vendor/bin/phpcs -p --standard=PSR2 src test bin ; fi
+# unit tests
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then vendor/bin/phpunit --testdox test/; fi
 # unit tests + coverage
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/ && vendor/bin/codacycoverage clover build/logs/clover.xml ; fi

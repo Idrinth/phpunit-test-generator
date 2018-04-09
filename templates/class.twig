@@ -26,6 +26,6 @@ class {{class.name}}Test extends TestCaseImplementation
         return new {{class.name}}{% include 'function.twig' with {'function': class.constructor} only %};
 {% endif %}
     }
-{% include 'test-functions.twig' with {'class': class, 'classes': classes} only %}
+    {% include 'test-functions.twig' with {'class': class, 'classes': classes} only %}
 }
 {{''}}
