@@ -1,6 +1,6 @@
 ({% if function.params %}
 
 {% for param in function.params %}
-        {% include 'type2value.twig' with {'type':param} only %}{% if not loop.last %},{% endif %}
+    {% include 'type2value.twig' with {'type':param} only %}{% if not loop.last %},{% endif %}
 
-{% endfor %}    {% endif %})
+{% endfor %}{% endif %})

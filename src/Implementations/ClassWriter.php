@@ -26,24 +26,30 @@ class ClassWriter implements CWI
     private $composer;
 
     /**
+     * @var boolean
+     */
+    private $replace;
+
+    /**
      * @param NPMI $namespaces
      * @param RI $renderer
      * @param CI $composer
+     * @param boolean $replace
      */
-    public function __construct(NPMI $namespaces, RI $renderer, CI $composer)
+    public function __construct(NPMI $namespaces, RI $renderer, CI $composer, $replace = false)
     {
         $this->namespaces = $namespaces;
         $this->renderer = $renderer;
         $this->composer = $composer;
+        $this->replace = $replace;
     }
 
     /**
      * @param CDI $class
      * @param CDI[] $classes
-     * @param boolean $replace
      * @return boolean
      */
-    public function write(CDI $class, $classes, $replace = false)
+    public function write(CDI $class, $classes)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
         if (!$file instanceof SplFileInfo) {
@@ -53,7 +59,7 @@ class ClassWriter implements CWI
             return false;
         }
         if ($file->isFile()) {
-            if (!$replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
+            if (!$this->replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
                 return false;
             }
         }

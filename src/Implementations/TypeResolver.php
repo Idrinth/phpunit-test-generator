@@ -98,16 +98,16 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
      */
     private function docToType($doc)
     {
-        if ($doc) {
-            if (isset(self::$primitives[$doc])) {
-                return new SimpleType(self::$primitives[$doc]);
-            }
-            if (isset(self::$keywords[$doc])) {
-                return new SimpleType(self::$keywords[$doc]);
-            }
-            return $this->typeListToType(explode('|', $doc));
+        if (!$doc) {
+            return null;
         }
-        return null;
+        if (isset(self::$primitives[$doc])) {
+            return new SimpleType(self::$primitives[$doc]);
+        }
+        if (isset(self::$keywords[$doc])) {
+            return new SimpleType(self::$keywords[$doc]);
+        }
+        return $this->typeListToType(explode('|', $doc));
     }
 
     /**
@@ -116,15 +116,15 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
      */
     private function typeToType($type)
     {
-        if ($type) {
-            if (isset(self::$primitives[$type.''])) {
-                return new SimpleType(self::$primitives[$type.'']);
-            }
-            if ($type instanceof Name) {
-                return new ClassType($this->nameToFQString($type));
-            }
+        if (!$type) {
+            return null;
         }
-        return null;
+        if (isset(self::$primitives[$type.''])) {
+            return new SimpleType(self::$primitives[$type.'']);
+        }
+        if ($type instanceof Name) {
+            return new ClassType($this->nameToFQString($type));
+        }
     }
 
     /**
@@ -198,9 +198,9 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
      */
     private function addTypeToSimpleList($simpleType, array &$simples, &$isObject, &$isArray)
     {
-            $simples[] = $simpleType;
-            $isArray = $isArray && $simpleType === 'array';
-            $isObject = $isObject && $simpleType === 'object';
+        $simples[] = $simpleType;
+        $isArray = $isArray && $simpleType === 'array';
+        $isObject = $isObject && $simpleType === 'object';
     }
 
     /**

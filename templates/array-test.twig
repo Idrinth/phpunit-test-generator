@@ -1,0 +1,4 @@
+{% set next = variable ~ '_' %}
+foreach({{variable}} as {{next}}) {
+    {% include 'type-tests.twig' with {'return': return.itemType, 'variable': next} only %}
+}

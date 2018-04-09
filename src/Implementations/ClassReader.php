@@ -45,11 +45,10 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     {
         $result = $this->parser->parse(file_get_contents($file->getPathname()));
         foreach ($result as $node) {
-            if ($node instanceof Namespace_) {
-                $this->handleNamespaceTree($node);
-            } else {
-                $this->handleNamespaceTree(new Namespace_(new Name(array()), array($node)));
+            if (!$node instanceof Namespace_) {
+                $node = new Namespace_(new Name(array()), array($node));
             }
+            $this->handleNamespaceTree($node);
         }
     }
 

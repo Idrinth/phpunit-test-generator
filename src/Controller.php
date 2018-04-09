@@ -1,21 +1,9 @@
 <?php
 namespace De\Idrinth\TestGenerator;
 
-use De\Idrinth\TestGenerator\Implementations\ClassDescriptorFactory;
-use De\Idrinth\TestGenerator\Implementations\ClassReader as ClassReader2;
-use De\Idrinth\TestGenerator\Implementations\ClassWriter as ClassWriter2;
-use De\Idrinth\TestGenerator\Implementations\Composer as Composer2;
-use De\Idrinth\TestGenerator\Implementations\DocBlockParser;
-use De\Idrinth\TestGenerator\Implementations\JsonFile;
-use De\Idrinth\TestGenerator\Implementations\MethodFactory;
-use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper as NamespacePathMapper2;
-use De\Idrinth\TestGenerator\Implementations\Renderer;
 use De\Idrinth\TestGenerator\Interfaces\ClassReader;
 use De\Idrinth\TestGenerator\Interfaces\ClassWriter;
 use De\Idrinth\TestGenerator\Interfaces\Composer;
-use PhpParser\Lexer;
-use PhpParser\Parser;
-use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
 class Controller
@@ -36,11 +24,6 @@ class Controller
     private $composer;
 
     /**
-     * @var boolean
-     */
-    private $replace;
-
-    /**
      * @var ClassWriter
      */
     private $writer;
@@ -50,19 +33,16 @@ class Controller
      * @param ClassReader $reader
      * @param ClassWriter $writer
      * @param Composer $composer
-     * @param boolean $replace
      */
     public function __construct(
         Finder $finder,
         ClassReader $reader,
         ClassWriter $writer,
-        Composer $composer,
-        $replace
+        Composer $composer
     ) {
         $this->finder = $finder;
         $this->reader = $reader;
         $this->composer = $composer;
-        $this->replace = (bool) $replace;
         $this->writer = $writer;
     }
 
@@ -72,27 +52,24 @@ class Controller
     public static function init()
     {
         $opts = getopt('', array('dir:','replace'));
-        $composer = new Composer2(
-            new JsonFile((
-                isset($opts['dir']) && $opts['dir'] ?
-                    rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
-                    getcwd()
-                ).DIRECTORY_SEPARATOR.'composer.json')
-        );
-        return new Controller(
-            new Finder(),
-            new ClassReader2(
-                new ClassDescriptorFactory(new MethodFactory(new DocBlockParser())),
-                new Parser(new Lexer(), array('throwOnError'=>true))
-            ),
-            new ClassWriter2(
-                new NamespacePathMapper2($composer),
-                new Renderer(new SplFileInfo(dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')),
-                $composer
-            ),
-            $composer,
-            isset($opts['replace'])
-        );
+        return Container::create()
+            ->addValue(
+                'SplFileInfo.file_name',
+                dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'
+            )
+            ->addValue(
+                'PhpParser\Parser.options',
+                array('throwOnError'=>true)
+            )
+            ->addValue(
+                'De\Idrinth\TestGenerator\Interfaces\JsonFile.file',
+                (isset($opts['dir']) && $opts['dir'] ?
+                        rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
+                        getcwd()
+                    ).DIRECTORY_SEPARATOR.'composer.json'
+            )
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.replace', isset($opts['replace']))
+            ->get(__CLASS__);
     }
 
     /**
@@ -107,7 +84,7 @@ class Controller
             $this->reader->parse($file);
         }
         foreach ($this->reader->getResults() as $result) {
-            $this->writer->write($result, $this->reader->getResults(), $this->replace);
+            $this->writer->write($result, $this->reader->getResults());
         }
     }
 }
