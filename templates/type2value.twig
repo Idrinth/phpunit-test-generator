@@ -10,6 +10,6 @@
     {% elseif type.type == 'object' and type.className is defined %}
         $this->getMockBuilder('{{type.className}}')->getMock()
     {% else %}
-        null/*unknown*/
+        null/* @todo unknown, please check */
     {% endif %}
 {% endspaceless %}
