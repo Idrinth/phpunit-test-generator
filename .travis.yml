@@ -39,4 +39,4 @@ script:
 # unit tests + coverage
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/ && tools/vendor/bin/codacycoverage clover build/logs/clover.xml ; fi
 # greedy symbol usage
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib\PhpParser ./composer.json ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json ; fi
