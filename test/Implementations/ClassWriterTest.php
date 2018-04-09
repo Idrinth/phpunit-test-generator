@@ -128,7 +128,7 @@ class ClassWriterTest extends TestCase
             $this->getMockedNamespacePathMapper(),
             $this->getMockedRenderer(),
             $this->getMockedComposer()
-        );//thanks to twig
+        );
         $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
         $this->assertEquals('rendered', file_get_contents($this->filename));
         $writer->write($this->getMockedClassDescriptor(), array());
