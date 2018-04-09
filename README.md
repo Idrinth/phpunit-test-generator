@@ -5,7 +5,12 @@
 
 Generates tests for phpunit based on namespaces listed for autoloading in your composer.json. Existing files will NOT be overwritten, so if you need the redone, move or delete them.
 
-## Example
+## How does it work?
+
+The composer.json at the word-dir(or the supplied dir) will pe parsed for namespaces(psr 0 and 4), the folders targeted by none-dev namespaces will be searched for classes and test classes will be generated in the appropriate developement-autoloading-folder.
+To determine the testing class to be used, the phpunit dev-dependency is parsed, so you need to supply a constraint to make the generation work.
+
+## Generated Test - Example
 
 This is a generated testfile for the actual Controller of this library. The intention is to generate PSR2-compatible code, obviously that might not yet be the case everywhere. If you find one where it fails, feel free to file a bug.
 
