@@ -66,7 +66,8 @@ class TestClassDecider implements TCDI
      * @param string[] $constraints
      * @return int[] [amount, old new]
      */
-    private function getCounts(array $constraints) {
+    private function getCounts(array $constraints)
+    {
         $old = 0;
         $new = 0;
         $amount = 0;

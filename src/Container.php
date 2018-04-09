@@ -10,11 +10,6 @@ use ReflectionParameter;
 class Container implements ContainerInterface
 {
     /**
-     * @var string
-     */
-    private static $skipped = 'SKIPPINGTHISOPTIONALPARAM';
-
-    /**
      * @var mixed[]
      */
     private $values = array();
@@ -37,16 +32,24 @@ class Container implements ContainerInterface
         if (isset($this->implements[$id])) {
             return $this->implements[$id];
         }
-        if (!class_exists($id) && !interface_exists($id)) {
-            throw new InvalidArgumentException("Can't wire id $id");
-        }
-        $class = new ReflectionClass($id);
-        if ($class->isInterface()) {
-            $this->implements[$id] = $this->get(str_replace('\\Interfaces\\', '\\Implementations\\', $id));
-            return $this->implements[$id];
-        }
-        $this->implements[$id] = $class->newInstanceArgs($this->getArgs($class));
+        $this->implements[$id] = $this->getUncached($id);
         return $this->implements[$id];
+    }
+
+    /**
+     * @param string $identifier
+     * @return object
+     * @throws InvalidArgumentException
+     */
+    private function getUncached($identifier) {
+        if (!class_exists($identifier) && !interface_exists($identifier)) {
+            throw new InvalidArgumentException("Can't wire id $identifier");
+        }
+        $class = new ReflectionClass($identifier);
+        if ($class->isInterface()) {
+            return $this->get(str_replace('\\Interfaces\\', '\\Implementations\\', $identifier));
+        }
+        return $class->newInstanceArgs($this->getArgs($class));
     }
 
     /**
@@ -61,15 +64,10 @@ class Container implements ContainerInterface
         $args = array();
         $isSkipping = false;
         foreach ($class->getConstructor()->getParameters() as $parameter) {
-            $param = $this->handleParam($parameter, $class);
-            if ($param === self::$skipped) {
-                $isSkipping = true;
-                continue;
+            $param = $this->handleParam($parameter, $class, $isSkipping);
+            if (!$isSkipping) {
+                $args[] = $this->get($param);
             }
-            if ($param !== self::$skipped && $isSkipping) {
-                throw new InvalidArgumentException("Can't wire params for {$class->getName()}");
-            }
-            $args[] = $this->get($param);
         }
         return $args;
     }
@@ -77,13 +75,28 @@ class Container implements ContainerInterface
     /**
      * @param ReflectionParameter $parameter
      * @param ReflectionClass $class
+     * @param boolean $isSkipping
      * @return mixed
      */
-    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class)
+    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
     {
+        if($isSkipping && !$parameter->isOptional()) {
+            throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
+        }
         if ($parameter->getClass()) {
             return $parameter->getClass()->getName();
         }
+        return $this->handleSimpleTypeParam($parameter, $class, $isSkipping);
+    }
+
+    /**
+     * @param ReflectionParameter $parameter
+     * @param ReflectionClass $class
+     * @param boolean $isSkipping
+     * @return mixed
+     */
+    private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
+    {
         if ($this->has("{$class->getName()}.{$parameter->getName()}")) {
             return "{$class->getName()}.{$parameter->getName()}";
         }
@@ -95,10 +108,10 @@ class Container implements ContainerInterface
         if ($this->has("{$parameter->getName()}")) {
             return $parameter->getName();
         }
-        if ($parameter->isOptional()) {
-            return self::$skipped;
+        if (!$parameter->isOptional()) {
+            throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
         }
-        throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
+        $isSkipping = true;
     }
 
     /**
