@@ -124,7 +124,7 @@ class ClassWriterTest extends TestCase
      */
     public function testWrite()
     {
-        $writer = @new ClassWriter(
+        $writer = new ClassWriter(
             $this->getMockedNamespacePathMapper(),
             $this->getMockedRenderer(),
             $this->getMockedComposer()

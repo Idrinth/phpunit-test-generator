@@ -24,11 +24,6 @@ class Controller
     private $composer;
 
     /**
-     * @var boolean
-     */
-    private $replace;
-
-    /**
      * @var ClassWriter
      */
     private $writer;
@@ -38,19 +33,16 @@ class Controller
      * @param ClassReader $reader
      * @param ClassWriter $writer
      * @param Composer $composer
-     * @param boolean $replace
      */
     public function __construct(
         Finder $finder,
         ClassReader $reader,
         ClassWriter $writer,
-        Composer $composer,
-        $replace
+        Composer $composer
     ) {
         $this->finder = $finder;
         $this->reader = $reader;
         $this->composer = $composer;
-        $this->replace = (bool) $replace;
         $this->writer = $writer;
     }
 
@@ -76,7 +68,7 @@ class Controller
                         getcwd()
                     ).DIRECTORY_SEPARATOR.'composer.json'
             )
-            ->addValue(__CLASS__.'.replace', isset($opts['replace']))
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.replace', isset($opts['replace']))
             ->get(__CLASS__);
     }
 
@@ -92,7 +84,7 @@ class Controller
             $this->reader->parse($file);
         }
         foreach ($this->reader->getResults() as $result) {
-            $this->writer->write($result, $this->reader->getResults(), $this->replace);
+            $this->writer->write($result, $this->reader->getResults());
         }
     }
 }
