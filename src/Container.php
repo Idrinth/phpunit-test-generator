@@ -98,16 +98,11 @@ class Container implements ContainerInterface
      */
     private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
     {
-        if ($this->has("{$class->getName()}.{$parameter->getName()}")) {
-            return "{$class->getName()}.{$parameter->getName()}";
-        }
-        foreach ($class->getInterfaceNames() as $interface) {
-            if ($this->has("$interface.{$parameter->getName()}")) {
-                return "$interface.{$parameter->getName()}";
+        foreach (array_merge(array($class->getName()), $class->getInterfaceNames(), array('')) as $interface) {
+            $key = trim("$interface.{$parameter->getName()}", '.');
+            if ($this->has($key)) {
+                return $key;
             }
-        }
-        if ($this->has("{$parameter->getName()}")) {
-            return $parameter->getName();
         }
         if (!$parameter->isOptional()) {
             throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
