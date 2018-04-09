@@ -19,7 +19,7 @@ If set old testfiles will be overwritte, if not set they will be renamed instead
 
 ## How does it work?
 
-The composer.json at the word-dir(or the supplied dir) will pe parsed for namespaces(psr 0 and 4), the folders targeted by none-dev namespaces will be searched for classes and test classes will be generated in the appropriate developement-autoloading-folder.
+The composer.json at the working directory(or the supplied dir) will pe parsed for namespaces(psr 0 and 4), the folders targeted by none-dev namespaces will be searched for classes and test classes will be generated in the appropriate developement-autoloading-folder.
 To determine the testing class to be used, the phpunit dev-dependency is parsed, so you need to supply a constraint to make the generation work.
 
 ## Generated Test - Example
