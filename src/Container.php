@@ -41,7 +41,8 @@ class Container implements ContainerInterface
      * @return object
      * @throws InvalidArgumentException
      */
-    private function getUncached($identifier) {
+    private function getUncached($identifier)
+    {
         if (!class_exists($identifier) && !interface_exists($identifier)) {
             throw new InvalidArgumentException("Can't wire id $identifier");
         }
@@ -80,7 +81,7 @@ class Container implements ContainerInterface
      */
     private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
     {
-        if($isSkipping && !$parameter->isOptional()) {
+        if ($isSkipping && !$parameter->isOptional()) {
             throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
         }
         if ($parameter->getClass()) {
