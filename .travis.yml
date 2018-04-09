@@ -27,7 +27,7 @@ before_install:
 # no need to test formatting more than once and php_codesniffer does not work with old php
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer:^3.2.2 --working-dir=tools ; fi
 # no need to check for greedy symbol use multiple times
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer require maglnet/composer-require-checker:^0.2.1 --working-dir=tools ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer config repositories.idrinthforked vcs https://github.com/idrinth/ComposerRequireChecker && composer require maglnet/composer-require-checker:dev-master --working-dir=tools ; fi
 install: composer update
 script:
 # check assertions
@@ -39,4 +39,4 @@ script:
 # unit tests + coverage
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/ && tools/vendor/bin/codacycoverage clover build/logs/clover.xml ; fi
 # greedy symbol usage
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then tools/vendor/bin/composer-require-checker check ./composer.json ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib\PhpParser ./composer.json ; fi
