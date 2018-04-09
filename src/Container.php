@@ -47,10 +47,14 @@ class Container implements ContainerInterface
             throw new InvalidArgumentException("Can't wire id $identifier");
         }
         $class = new ReflectionClass($identifier);
-        if ($class->isInterface()) {
-            return $this->get(str_replace('\\Interfaces\\', '\\Implementations\\', $identifier));
+        if (!$class->isInterface()) {
+            return $class->newInstanceArgs($this->getArgs($class));
         }
-        return $class->newInstanceArgs($this->getArgs($class));
+        $impl = str_replace('\\Interfaces\\', '\\Implementations\\', $identifier);
+        if ($impl === $identifier) {
+            throw new InvalidArgumentException("Can't find implementation of $identifier");
+        }
+        return $this->get($impl);
     }
 
     /**
