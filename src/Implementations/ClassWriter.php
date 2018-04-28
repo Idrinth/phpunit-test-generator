@@ -4,7 +4,6 @@ namespace De\Idrinth\TestGenerator\Implementations;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor as CDI;
 use De\Idrinth\TestGenerator\Interfaces\ClassWriter as CWI;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper as NPMI;
-use De\Idrinth\TestGenerator\Interfaces\Composer as CI;
 use SplFileInfo;
 use De\Idrinth\TestGenerator\Interfaces\Renderer as RI;
 
@@ -21,11 +20,6 @@ class ClassWriter implements CWI
     private $namespaces;
 
     /**
-     * @var CI
-     */
-    private $composer;
-
-    /**
      * @var string
      */
     private $mode;
@@ -33,14 +27,12 @@ class ClassWriter implements CWI
     /**
      * @param NPMI $namespaces
      * @param RI $renderer
-     * @param CI $composer
      * @param string $mode
      */
-    public function __construct(NPMI $namespaces, RI $renderer, CI $composer, $mode)
+    public function __construct(NPMI $namespaces, RI $renderer, $mode)
     {
         $this->namespaces = $namespaces;
         $this->renderer = $renderer;
-        $this->composer = $composer;
         $this->mode = $mode;
     }
 
@@ -87,8 +79,7 @@ class ClassWriter implements CWI
                     'class' => $class,
                     'classes' => $classes,
                     'config' => array(
-                        'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace()),
-                        'testcase' => $this->composer->getTestClass()
+                        'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace())
                     )
                 )
             )

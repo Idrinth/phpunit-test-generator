@@ -108,19 +108,6 @@ class ClassWriterTest extends TestCase
     }
 
     /**
-     * @return Composer
-     */
-    private function getMockedComposer()
-    {
-        $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')
-            ->getMock();
-        $environment->expects($this->exactly(2))
-            ->method('getTestClass')
-            ->willReturn('None');
-        return $environment;
-    }
-
-    /**
      * @param string $mode
      * @return ClassWriter
      */
@@ -129,7 +116,6 @@ class ClassWriterTest extends TestCase
         return new ClassWriter(
             $this->getMockedNamespacePathMapper(),
             $this->getMockedRenderer(),
-            $this->getMockedComposer(),
             $mode
         );
     }
