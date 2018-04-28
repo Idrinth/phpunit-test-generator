@@ -33,18 +33,16 @@ class ComposerProcessor implements CPI
      * @return array [$autoloadProd, $autoloadDev, $testClass]
      * @throws InvalidArgumentException if file is unusable
      */
-    public function process(array $composer, $path) {
-        $autoloadProd = $this->handleKey($composer, 'autoload', $path);
-        $autoloadDev = $this->handleKey(
-            $composer,
-            'autoload-dev',
-            $path.$this->output
-        );
+    public function process(array $composer, $path)
+    {
         if (!isset($composer['require-dev']) || !isset($composer['require-dev']['phpunit/phpunit'])) {
             throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
         }
-        $testClass = $this->decider->get($composer['require-dev']['phpunit/phpunit']);
-        return [$autoloadProd, $autoloadDev, $testClass];
+        return array(
+            $this->handleKey($composer, 'autoload', $path),
+            $this->handleKey($composer, 'autoload-dev', $path.$this->output),
+            $this->decider->get($composer['require-dev']['phpunit/phpunit'])
+        );
     }
 
     /**
