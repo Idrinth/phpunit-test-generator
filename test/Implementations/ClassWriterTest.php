@@ -121,38 +121,37 @@ class ClassWriterTest extends TestCase
     }
 
     /**
+     * @param string $mode
+     * @return ClassWriter
+     */
+    private function buildClassWriter($mode)
+    {
+        return new ClassWriter(
+            $this->getMockedNamespacePathMapper(),
+            $this->getMockedRenderer(),
+            $this->getMockedComposer(),
+            $mode
+        );
+    }
+
+    /**
      * @return array
      */
     public function provideWrite()
     {
         return array(
             array(
-                new ClassWriter(
-                    $this->getMockedNamespacePathMapper(),
-                    $this->getMockedRenderer(),
-                    $this->getMockedComposer(),
-                    'replace'
-                ),
+                $this->buildClassWriter('replace'),
                 true,
                 false
             ),
             array(
-                new ClassWriter(
-                    $this->getMockedNamespacePathMapper(),
-                    $this->getMockedRenderer(),
-                    $this->getMockedComposer(),
-                    'skip'
-                ),
+                $this->buildClassWriter('skip'),
                 false,
                 false
             ),
             array(
-                new ClassWriter(
-                    $this->getMockedNamespacePathMapper(),
-                    $this->getMockedRenderer(),
-                    $this->getMockedComposer(),
-                    'move'
-                ),
+                $this->buildClassWriter('move'),
                 false,
                 true
             )
@@ -180,7 +179,7 @@ class ClassWriterTest extends TestCase
     }
 
     /**
-     * check existance and return filemtime
+     * check existence and return last modified time
      * @param string $path
      * @param string $text
      * @param string $exists
