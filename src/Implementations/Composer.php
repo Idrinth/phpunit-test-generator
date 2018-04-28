@@ -2,7 +2,6 @@
 
 namespace De\Idrinth\TestGenerator\Implementations;
 
-use Composer\Semver\Semver;
 use De\Idrinth\TestGenerator\Interfaces\Composer as ComposerInterface;
 use InvalidArgumentException;
 use De\Idrinth\TestGenerator\Interfaces\JsonFile as JFI;
@@ -28,13 +27,18 @@ class Composer implements ComposerInterface
     /**
      * @param JFI $file
      * @param TCDI $decider
+     * @param string $output
      * @throws InvalidArgumentException if file is unusable
      */
-    public function __construct(JFI $file, TCDI $decider)
+    public function __construct(JFI $file, TCDI $decider, $output = '')
     {
         $data = $file->getContent();
         $this->autoloadProd = $this->handleKey($data, 'autoload', $file->getPath());
-        $this->autoloadDev = $this->handleKey($data, 'autoload-dev', $file->getPath());
+        $this->autoloadDev = $this->handleKey(
+            $data,
+            'autoload-dev',
+            $file->getPath().($output?DIRECTORY_SEPARATOR:'').$output
+        );
         if (!isset($data['require-dev']) || !isset($data['require-dev']['phpunit/phpunit'])) {
             throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
         }

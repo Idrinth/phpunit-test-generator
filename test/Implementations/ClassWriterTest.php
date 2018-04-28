@@ -9,29 +9,31 @@ use De\Idrinth\TestGenerator\Interfaces\Composer;
 use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
 use De\Idrinth\TestGenerator\Interfaces\Renderer;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
 class ClassWriterTest extends TestCase
 {
     /**
-     * @var string
+     * @var vfsStreamDirectory
      */
-    private $filename;
-
+    private $root;
     /**
      * @return string
      */
     private function getFileName()
     {
-        if (!$this->filename) {
-            $this->filename = sys_get_temp_dir()
-                .DIRECTORY_SEPARATOR
-                .str_replace('\\', '_', __CLASS__)
-                .DIRECTORY_SEPARATOR
-                .'.'.md5(__FILE__.microtime().mt_rand().PHP_VERSION).'.php';
-        }
-        return $this->filename;
+        return vfsStream::url('/root/test/folder/file.php');
+    }
+
+    /**
+     * init vfsStream
+     */
+    protected function setUp()
+    {
+        $this->root = vfsStream::setup();
     }
 
     /**
@@ -39,7 +41,6 @@ class ClassWriterTest extends TestCase
      */
     private function getMockedNamespacePathMapper()
     {
-        $this->filename = $this->getFileName();
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
@@ -47,7 +48,7 @@ class ClassWriterTest extends TestCase
             ->willReturn('My\Tests');
         $namespaces->expects($this->any())
             ->method('getTestFileForNamespacedClass')
-            ->willReturn(new SplFileInfo($this->filename));
+            ->willReturn(new SplFileInfo($this->getFileName()));
         return $namespaces;
     }
 
@@ -119,22 +120,74 @@ class ClassWriterTest extends TestCase
     }
 
     /**
-     * @test
-     * @todo properly test
+     * @return array
      */
-    public function testWrite()
+    public function provideWrite()
     {
-        $writer = new ClassWriter(
-            $this->getMockedNamespacePathMapper(),
-            $this->getMockedRenderer(),
-            $this->getMockedComposer()
+        return array(
+            array(
+                new ClassWriter(
+                    $this->getMockedNamespacePathMapper(),
+                    $this->getMockedRenderer(),
+                    $this->getMockedComposer(),
+                    'replace'
+                ),
+                true,
+                false
+            ),
+            array(
+                new ClassWriter(
+                    $this->getMockedNamespacePathMapper(),
+                    $this->getMockedRenderer(),
+                    $this->getMockedComposer(),
+                    'skip'
+                ),
+                false,
+                false
+            ),
+            array(
+                new ClassWriter(
+                    $this->getMockedNamespacePathMapper(),
+                    $this->getMockedRenderer(),
+                    $this->getMockedComposer(),
+                    'move'
+                ),
+                false,
+                true
+            )
         );
+    }
+
+    /**
+     * @test
+     * @dataProvider provideWrite
+     * @param ClassWriter $writer
+     * @param type $willChange
+     * @param type $willMove
+     */
+    public function testWrite(ClassWriter $writer, $willChange, $willMove)
+    {
         $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
-        $this->assertEquals('rendered', file_get_contents($this->filename));
-        $writer->write($this->getMockedClassDescriptor(), array());
-        $this->assertFileExists($this->filename.'.'.date('YmdHi').'.old');
-        @unlink($this->filename.'.'.date('YmdHi').'.old');
-        $this->assertFileExists($this->filename);
-        @unlink($this->filename);
+        $created = $this->checkFile($this->getFileName(), true);
+        sleep(1);
+        $this->assertEquals($willChange||$willMove, $writer->write($this->getMockedClassDescriptor(), array()));
+        $this->checkFile($this->getFileName().'.'.date('YmdHi').'.old', $willMove);
+        $this->assertEquals($willChange, $created !== $this->checkFile($this->getFileName(), true));
+    }
+
+    /**
+     * check existance and return filemtime
+     * @param string $path
+     * @param string $exists
+     * @return int
+     */
+    private function checkFile($path, $exists)
+    {
+        $this->assertEquals($exists, is_file($path));
+        if ($exists) {
+            $this->assertEquals('rendered', file_get_contents($path));
+            return filemtime($path);
+        }
+        return 0;
     }
 }

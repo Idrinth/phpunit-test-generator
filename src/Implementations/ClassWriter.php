@@ -26,22 +26,46 @@ class ClassWriter implements CWI
     private $composer;
 
     /**
-     * @var boolean
+     * @var string
      */
-    private $replace;
+    private $mode;
 
     /**
      * @param NPMI $namespaces
      * @param RI $renderer
      * @param CI $composer
-     * @param boolean $replace
+     * @param string $mode
      */
-    public function __construct(NPMI $namespaces, RI $renderer, CI $composer, $replace = false)
+    public function __construct(NPMI $namespaces, RI $renderer, CI $composer, $mode)
     {
         $this->namespaces = $namespaces;
         $this->renderer = $renderer;
         $this->composer = $composer;
-        $this->replace = $replace;
+        $this->mode = $mode;
+    }
+
+    /**
+     * @param SplFileInfo $file
+     * @return boolean
+     */
+    private function mayWrite($file)
+    {
+        if (!$file instanceof SplFileInfo) {
+            return false;
+        }
+        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
+            return false;
+        }
+        if ($file->isDir()) {
+            return false;
+        }
+        if (!$file->isFile()) {
+            return true;
+        }
+        if($this->mode === 'skip') {
+            return false;
+        }
+        return ($this->mode === 'move' && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old'));
     }
 
     /**
@@ -52,16 +76,8 @@ class ClassWriter implements CWI
     public function write(CDI $class, $classes)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
-        if (!$file instanceof SplFileInfo) {
+        if (!$this->mayWrite($file)) {
             return false;
-        }
-        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
-            return false;
-        }
-        if ($file->isFile()) {
-            if (!$this->replace && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old')) {
-                return false;
-            }
         }
         return false !== file_put_contents(
             $file->getPathname(),

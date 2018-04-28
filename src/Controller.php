@@ -51,24 +51,24 @@ class Controller
      */
     public static function init()
     {
-        $opts = getopt('', array('dir:','replace'));
+        list($composer, $mode, $output) = (function () {
+            $opts = getopt('', array('dir:','replace','output:','mode:'));
+            $dir = (isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], '\\/') : getcwd());
+            $modes = array('replace', 'move', 'skip');
+            return array(
+                $dir.DIRECTORY_SEPARATOR.'composer.json',
+                isset($opts['mode']) && in_array($opts['mode'], $modes) ?
+                    $opts['mode'] :
+                    isset($opts['replace']) ? 'replace' : 'move',
+                isset($opts['output']) ? $opts['output'] : ''
+            );
+        })();
         return Container::create()
-            ->addValue(
-                'SplFileInfo.file_name',
-                dirname(__DIR__).DIRECTORY_SEPARATOR.'templates'
-            )
-            ->addValue(
-                'PhpParser\Parser.options',
-                array('throwOnError'=>true)
-            )
-            ->addValue(
-                'De\Idrinth\TestGenerator\Interfaces\JsonFile.file',
-                (isset($opts['dir']) && $opts['dir'] ?
-                        rtrim($opts['dir'], DIRECTORY_SEPARATOR) :
-                        getcwd()
-                    ).DIRECTORY_SEPARATOR.'composer.json'
-            )
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.replace', isset($opts['replace']))
+            ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
+            ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.mode', $mode)
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\Composer.output', $output)
             ->get(__CLASS__);
     }
 
