@@ -51,18 +51,7 @@ class Controller
      */
     public static function init()
     {
-        list($composer, $mode, $output) = (function () {
-            $opts = getopt('', array('dir:','replace','output:','mode:'));
-            $dir = (isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], '\\/') : getcwd());
-            $modes = array('replace', 'move', 'skip');
-            return array(
-                $dir.DIRECTORY_SEPARATOR.'composer.json',
-                isset($opts['mode']) && in_array($opts['mode'], $modes) ?
-                    $opts['mode'] :
-                    isset($opts['replace']) ? 'replace' : 'move',
-                isset($opts['output']) ? $opts['output'] : ''
-            );
-        })();
+        list($composer, $mode, $output) = self::getParams();
         return Container::create()
             ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
             ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
@@ -70,6 +59,24 @@ class Controller
             ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.mode', $mode)
             ->addValue('De\Idrinth\TestGenerator\Interfaces\Composer.output', $output)
             ->get(__CLASS__);
+    }
+
+    /**
+     * processes getopt
+     * @return array [$composer, $mode, $output]
+     */
+    private static function getParams()
+    {
+        $opts = getopt('', array('dir:','replace','output:','mode:'));
+        $dir = (isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], '\\/') : getcwd());
+        $modes = array('replace', 'move', 'skip');
+        return array(
+            $dir.DIRECTORY_SEPARATOR.'composer.json',
+            isset($opts['mode']) && in_array($opts['mode'], $modes) ?
+                $opts['mode'] :
+                isset($opts['replace']) ? 'replace' : 'move',
+            isset($opts['output']) ? $opts['output'] : ''
+        );
     }
 
     /**

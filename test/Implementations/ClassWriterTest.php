@@ -20,18 +20,19 @@ class ClassWriterTest extends TestCase
      * @var vfsStreamDirectory
      */
     private $root;
+
     /**
      * @return string
      */
     private function getFileName()
     {
-        return vfsStream::url('/root/test/folder/file.php');
+        return vfsStream::url('root/test/ClassFile.php');
     }
 
     /**
      * init vfsStream
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->root = vfsStream::setup();
     }
@@ -102,7 +103,7 @@ class ClassWriterTest extends TestCase
             ->getMock();
         $environment->expects($this->exactly(2))
             ->method('render')
-            ->willReturn('rendered');
+            ->willReturnOnConsecutiveCalls('1st', '2nd');
         return $environment;
     }
 
@@ -162,30 +163,35 @@ class ClassWriterTest extends TestCase
      * @test
      * @dataProvider provideWrite
      * @param ClassWriter $writer
-     * @param type $willChange
-     * @param type $willMove
+     * @param boolean $willChange
+     * @param boolean $willMove
      */
     public function testWrite(ClassWriter $writer, $willChange, $willMove)
     {
-        $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
-        $created = $this->checkFile($this->getFileName(), true);
+        $modified = $willChange||$willMove;
+        $class = $this->getMockedClassDescriptor();
+        $this->assertTrue($writer->write($class, array()));
+        $created = $this->checkFile($this->getFileName(), '1st');
         sleep(1);
-        $this->assertEquals($willChange||$willMove, $writer->write($this->getMockedClassDescriptor(), array()));
-        $this->checkFile($this->getFileName().'.'.date('YmdHi').'.old', $willMove);
-        $this->assertEquals($willChange, $created !== $this->checkFile($this->getFileName(), true));
+        $this->assertEquals($modified, $writer->write($class, array()));
+        $this->checkFile($this->getFileName().'.'.date('YmdHi').'.old', '1st', $willMove);
+        $recreated = $this->checkFile($this->getFileName(), $modified?'2nd':'1st');
+        $this->assertEquals($modified, $created !== $recreated, "$created $recreated");
     }
 
     /**
      * check existance and return filemtime
      * @param string $path
+     * @param string $text
      * @param string $exists
      * @return int
      */
-    private function checkFile($path, $exists)
+    private function checkFile($path, $text, $exists = true)
     {
+        clearstatcache();
         $this->assertEquals($exists, is_file($path));
         if ($exists) {
-            $this->assertEquals('rendered', file_get_contents($path));
+            $this->assertEquals($text, file_get_contents($path));
             return filemtime($path);
         }
         return 0;

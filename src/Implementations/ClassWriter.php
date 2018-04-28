@@ -53,10 +53,10 @@ class ClassWriter implements CWI
         if (!$file instanceof SplFileInfo) {
             return false;
         }
-        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
+        if ($file->isDir()) {
             return false;
         }
-        if ($file->isDir()) {
+        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
             return false;
         }
         if (!$file->isFile()) {
@@ -65,7 +65,7 @@ class ClassWriter implements CWI
         if($this->mode === 'skip') {
             return false;
         }
-        return ($this->mode === 'move' && !rename($file->getRealPath(), $file->getRealPath().date('.YmdHi').'.old'));
+        return $this->mode === 'replace' || rename($file->getPathname(), $file->getPathname().date('.YmdHi').'.old');
     }
 
     /**
