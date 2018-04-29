@@ -1,21 +1,32 @@
 # Test-Generator for PHPUnit
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cabd3fc70be847d4b2f28c9472598c61)](https://www.codacy.com/app/Idrinth/phpunit-test-generator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Idrinth/phpunit-test-generator&amp;utm_campaign=Badge_Grade) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/cabd3fc70be847d4b2f28c9472598c61)](https://www.codacy.com/app/Idrinth/phpunit-test-generator?utm_source=github.com&utm_medium=referral&utm_content=Idrinth/phpunit-test-generator&utm_campaign=Badge_Coverage) [![Build Status](https://travis-ci.org/Idrinth/phpunit-test-generator.svg?branch=master)](https://travis-ci.org/Idrinth/phpunit-test-generator)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cabd3fc70be847d4b2f28c9472598c61)](https://www.codacy.com/app/Idrinth/phpunit-test-generator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Idrinth/phpunit-test-generator&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/cabd3fc70be847d4b2f28c9472598c61)](https://www.codacy.com/app/Idrinth/phpunit-test-generator?utm_source=github.com&utm_medium=referral&utm_content=Idrinth/phpunit-test-generator&utm_campaign=Badge_Coverage)
+[![Build Status](https://travis-ci.org/Idrinth/phpunit-test-generator.svg?branch=master)](https://travis-ci.org/Idrinth/phpunit-test-generator)
 [![CodeFactor](https://www.codefactor.io/repository/github/idrinth/phpunit-test-generator/badge)](https://www.codefactor.io/repository/github/idrinth/phpunit-test-generator)
+[![BCH compliance](https://bettercodehub.com/edge/badge/Idrinth/phpunit-test-generator?branch=master)](https://bettercodehub.com/)
 
 ## Command & Options
 
 ```
-php bin/generate-tests.php --dir=/path/to/alternative/dir --replace
+php bin/generate-tests.php --dir=/path/to/alternative/dir --mode=replace
 ```
 
 ### dir
 
 Dir is optional and will default to the current working directory. Pick the directory that the composer.json is in.
 
-### replace
+### replace (deprecated, see mode)
 
 If set old testfiles will be overwritten, if not set they will be renamed instead. Usually you shouldn't need this.
+
+### mode
+
+One of replace, skip or move. Defines how to handle file conflicts and defaults to moving the old file.
+
+### output
+
+If set will be prepended to the relative paths of dev-autoload paths.
 
 ## How does it work?
 

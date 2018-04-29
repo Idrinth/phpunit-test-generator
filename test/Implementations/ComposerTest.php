@@ -14,17 +14,20 @@ class ComposerTest extends TestCaseImplementation
     protected function getInstance($data)
     {
         $json = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\JsonFile')->getMock();
-        $json->expects($this->exactly(2))
+        $json->expects($this->once())
             ->method('getPath')
+            ->with()
             ->willReturn('#base');
         $json->expects($this->once())
             ->method('getContent')
+            ->with()
             ->willReturn($data);
-        $decider = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\TestClassDecider')->getMock();
-        $decider->expects($this->once())
-            ->method('get')
-            ->willReturn('test-class');
-        return new Composer($json, $decider);
+        $processor = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ComposerProcessor')->getMock();
+        $processor->expects($this->once())
+            ->method('process')
+            ->with($data)
+            ->willReturn(array(array('prod' => 'a'), array('dev' => 'b'), 'test-class'));
+        return new Composer($json, $processor);
     }
 
     /**
@@ -36,18 +39,14 @@ class ComposerTest extends TestCaseImplementation
             array(
                 array(
                     'require-dev'=>array('phpunit/phpunit' => '^4.8')
-                ),
-                array(),
-                array(),
+                )
             ),
             array(
                 array(
                     'require-dev'=>array('phpunit/phpunit' => '^4.8'),
                     'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
                     'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
-                ),
-                array('MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'),
-                array('MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'abcd'),
+                )
             ),
         );
     }
@@ -56,8 +55,9 @@ class ComposerTest extends TestCaseImplementation
      * From Composer
      * @test
      * @dataProvider provideGetNamespacesToFolders
+     * @param array $composer
      **/
-    public function testGetNamespacesToFolders($composer, $prod, $dev)
+    public function testGetNamespacesToFolders(array $composer)
     {
         $instance = $this->getInstance($composer);
         $this->assertInternalType(
@@ -66,12 +66,12 @@ class ComposerTest extends TestCaseImplementation
             'Return didn\'t match expected type array'
         );
         $this->assertEquals(
-            $prod,
+            array('prod' => 'a'),
             $instance->getProductionNamespacesToFolders(),
             'Return didn\'t match expected array'
         );
         $this->assertEquals(
-            $dev,
+            array('dev' => 'b'),
             $instance->getDevelopmentNamespacesToFolders(),
             'Return didn\'t match expected array'
         );

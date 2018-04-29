@@ -14,10 +14,17 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     private $folders = array();
 
     /**
-     * @param ComposerInterface $composer
+     * @var string
      */
-    public function __construct(ComposerInterface $composer)
+    private $mode;
+
+    /**
+     * @param ComposerInterface $composer
+     * @param string $mode
+     */
+    public function __construct(ComposerInterface $composer, $mode)
     {
+        $this->mode = $mode;
         foreach ($composer->getDevelopmentNamespacesToFolders() as $namespace => $folder) {
             $this->folders[$namespace] = $folder;
         }
@@ -87,15 +94,18 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
 
     /**
      * @param string $class
-     * @return SplFileInfo
+     * @return TargetPhpFile
      */
     public function getTestFileForNamespacedClass($class)
     {
         list($namespace, $append) = $this->splitIntoMain($this->getTestNamespaceForNamespace($class));
-        return new SplFileInfo(
-            $this->folders[$namespace].DIRECTORY_SEPARATOR
-            .str_replace('\\', DIRECTORY_SEPARATOR, trim($append, '\\'))
-            .'Test.php'
+        return new TargetPhpFile(
+            new SplFileInfo(
+                $this->folders[$namespace].DIRECTORY_SEPARATOR
+                .str_replace('\\', DIRECTORY_SEPARATOR, trim($append, '\\'))
+                .'Test.php'
+            ),
+            $this->mode
         );
     }
 }

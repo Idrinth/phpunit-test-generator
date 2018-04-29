@@ -4,32 +4,38 @@ namespace De\Idrinth\TestGenerator\Test;
 
 use De\Idrinth\TestGenerator\Controller;
 use De\Idrinth\TestGenerator\Test\Mock\GetCwd;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use Symfony\Component\Finder\Finder;
 
 class ControllerTest extends TestCaseImplementation
 {
     /**
+     * @param int $returnNumber
      * @return Controller
      **/
-    protected function getInstance()
+    protected function getInstance($returnNumber)
     {
+        $item = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock();
+        $list = $returnNumber?array_fill(0, $returnNumber, $item):array();
         $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
-        $composer->expects($this->once())->method('getProductionNamespacesToFolders')->willReturn(array(__DIR__));
+        $composer->expects($this->once())
+            ->method('getProductionNamespacesToFolders')
+            ->with()
+            ->willReturn(array(__DIR__));
         $reader = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassReader')->getMock();
-        $reader->expects($this->once())->method('getResults')->willReturn(array());
-        return new Controller(
-            new Finder(),
-            $reader,
-            $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock(),
-            $composer
-        );
+        $reader->expects($this->exactly(1+$returnNumber))->method('getResults')->with()->willReturn($list);
+        $writer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock();
+        $writer->expects($this->exactly($returnNumber))
+            ->method('write')
+            ->with($item);
+        return new Controller(new Finder(), $reader, $writer, $composer);
     }
 
     /**
      * From Controller
      * @test
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      **/
     public function testInitThrowsInvalidArgumentException()
     {
@@ -54,12 +60,21 @@ class ControllerTest extends TestCaseImplementation
     }
 
     /**
+     * @return array
+     */
+    public function provideRun()
+    {
+        return array(array(0), array(2), array(7));
+    }
+
+    /**
      * From Controller
+     * @dataProvider provideRun
      * @test
      **/
-    public function testRun()
+    public function testRun($returnNumber)
     {
-        $instance = $this->getInstance();
+        $instance = $this->getInstance($returnNumber);
         $this->assertInternalType(
             'null',
             $instance->run(),

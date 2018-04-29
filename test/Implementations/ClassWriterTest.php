@@ -5,49 +5,37 @@ namespace De\Idrinth\TestGenerator\Test\Implementations;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
-use De\Idrinth\TestGenerator\Interfaces\Composer;
 use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
 use De\Idrinth\TestGenerator\Interfaces\Renderer;
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class ClassWriterTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private $filename;
-
-    /**
-     * @return string
-     */
-    private function getFileName()
-    {
-        if (!$this->filename) {
-            $this->filename = sys_get_temp_dir()
-                .DIRECTORY_SEPARATOR
-                .str_replace('\\', '_', __CLASS__)
-                .DIRECTORY_SEPARATOR
-                .'.'.md5(__FILE__.microtime().mt_rand().PHP_VERSION).'.php';
-        }
-        return $this->filename;
-    }
-
-    /**
+     * @param boolean $isWriteable
+     * @param string $content
      * @return NamespacePathMapper
      */
-    private function getMockedNamespacePathMapper()
+    private function getMockedNamespacePathMapper($isWriteable)
     {
-        $this->filename = $this->getFileName();
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
             ->method('getTestNamespaceForNamespace')
             ->willReturn('My\Tests');
+        $file = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\TargetPhpFile')->getMock();
+        $file->expects($this->once())
+            ->method('mayWrite')
+            ->with()
+            ->willReturn($isWriteable);
+        $file->expects($isWriteable?$this->once():$this->never())
+            ->method('write')
+            ->with('rendered')
+            ->willReturn(true);
         $namespaces->expects($this->any())
             ->method('getTestFileForNamespacedClass')
-            ->willReturn(new SplFileInfo($this->filename));
+            ->willReturn($file);
         return $namespaces;
     }
 
@@ -93,48 +81,57 @@ class ClassWriterTest extends TestCase
     }
 
     /**
+     * @param boolean $isWriteable
      * @return Renderer
      */
-    private function getMockedRenderer()
+    private function getMockedRenderer($isWriteable)
     {
         $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Renderer')
             ->getMock();
-        $environment->expects($this->exactly(2))
+        $environment->expects($isWriteable?$this->once():$this->never())
             ->method('render')
             ->willReturn('rendered');
         return $environment;
     }
 
     /**
-     * @return Composer
+     * @param boolean $isWriteable
+     * @return ClassWriter
      */
-    private function getMockedComposer()
+    private function buildClassWriter($isWriteable)
     {
-        $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')
-            ->getMock();
-        $environment->expects($this->exactly(2))
-            ->method('getTestClass')
-            ->willReturn('None');
-        return $environment;
+        return new ClassWriter(
+            $this->getMockedNamespacePathMapper($isWriteable),
+            $this->getMockedRenderer($isWriteable)
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function provideWrite()
+    {
+        return array(
+            array(
+                $this->buildClassWriter(true),
+                true
+            ),
+            array(
+                $this->buildClassWriter(false),
+                false
+            ),
+        );
     }
 
     /**
      * @test
-     * @todo properly test
+     * @dataProvider provideWrite
+     * @param ClassWriter $writer
+     * @param boolean $isWriteable
      */
-    public function testWrite()
+    public function testWrite(ClassWriter $writer, $isWriteable)
     {
-        $writer = new ClassWriter(
-            $this->getMockedNamespacePathMapper(),
-            $this->getMockedRenderer(),
-            $this->getMockedComposer()
-        );
-        $this->assertTrue($writer->write($this->getMockedClassDescriptor(), array()));
-        $this->assertEquals('rendered', file_get_contents($this->filename));
-        $writer->write($this->getMockedClassDescriptor(), array());
-        $this->assertFileExists($this->filename.'.'.date('YmdHi').'.old');
-        @unlink($this->filename.'.'.date('YmdHi').'.old');
-        $this->assertFileExists($this->filename);
-        @unlink($this->filename);
+        $class = $this->getMockedClassDescriptor();
+        $this->assertEquals($isWriteable, $writer->write($class, array()));
     }
 }

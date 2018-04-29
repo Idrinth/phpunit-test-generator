@@ -3,6 +3,7 @@
 namespace De\Idrinth\TestGenerator\Implementations;
 
 use De\Idrinth\TestGenerator\Interfaces\Renderer as RI;
+use De\Idrinth\TestGenerator\Interfaces\Composer as CI;
 use De\Idrinth\TestGenerator\Twig\IncludeParser;
 use De\Idrinth\TestGenerator\Twig\Lexer;
 use SplFileInfo;
@@ -13,14 +14,32 @@ use Twig\TwigFilter;
 class Renderer extends Environment implements RI
 {
     /**
-     * @param SplFileInfo $templates
+     * @var string
      */
-    public function __construct(SplFileInfo $templates)
+    private $testClass;
+
+    /**
+     * @param SplFileInfo $templates
+     * @param CI $composer
+     */
+    public function __construct(SplFileInfo $templates, CI $composer)
     {
         parent::__construct(new FilesystemLoader($templates->getPathname()));
         $this->addTokenParser(new IncludeParser());
         $this->filterToUpperCamelCase();
         $this->setLexer(new Lexer($this));
+        $this->testClass = $composer->getTestClass();
+    }
+
+    /**
+     * @param string $name
+     * @param array $context
+     * @return string
+     */
+    public function render($name, array $context = array())
+    {
+        $context['config']['testcase'] = $this->testClass;
+        return parent::render($name, $context);
     }
 
     /**

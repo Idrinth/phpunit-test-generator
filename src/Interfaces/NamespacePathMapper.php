@@ -2,19 +2,17 @@
 
 namespace De\Idrinth\TestGenerator\Interfaces;
 
-use SplFileInfo;
-
 interface NamespacePathMapper
 {
     /**
-     * @param type $namespace
+     * @param string $namespace
      * @return string
      */
     public function getTestNamespaceForNamespace($namespace);
 
     /**
      * @param string $class
-     * @return SplFileInfo
+     * @return TargetPhpFile
      */
     public function getTestFileForNamespacedClass($class);
 }
