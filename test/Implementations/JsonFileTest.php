@@ -20,7 +20,7 @@ class JsonFileTest extends TestCaseImplementation
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessageRegExp /File .+ doesn't exist or isn't readable\./
      */
     public function testMissingFile()
@@ -30,7 +30,7 @@ class JsonFileTest extends TestCaseImplementation
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessageRegExp /File .+ couldn't be parsed as json\./
      */
     public function testNoneJsonFile()

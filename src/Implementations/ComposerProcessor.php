@@ -4,6 +4,7 @@ namespace De\Idrinth\TestGenerator\Implementations;
 
 use De\Idrinth\TestGenerator\Interfaces\TestClassDecider as TCDI;
 use De\Idrinth\TestGenerator\Interfaces\ComposerProcessor as CPI;
+use InvalidArgumentException;
 
 class ComposerProcessor implements CPI
 {

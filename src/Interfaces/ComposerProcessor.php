@@ -2,6 +2,8 @@
 
 namespace De\Idrinth\TestGenerator\Interfaces;
 
+use InvalidArgumentException;
+
 interface ComposerProcessor
 {
     /**
