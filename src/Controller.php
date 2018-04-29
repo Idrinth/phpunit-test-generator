@@ -57,7 +57,7 @@ class Controller
             ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
             ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)
             ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.mode', $mode)
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\Composer.output', $output)
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\ComposerProcessor.output', $output)
             ->get(__CLASS__);
     }
 
