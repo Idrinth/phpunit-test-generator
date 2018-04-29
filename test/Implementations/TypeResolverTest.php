@@ -10,6 +10,7 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class TypeResolverTest extends TestCase
 {
@@ -178,5 +179,42 @@ class TypeResolverTest extends TestCase
         $this->assertEquals('array', $type->getType());
         $this->assertTrue($type->isComplex());
         $this->assertSimpleType($type->getItemType(), $simple);
+    }
+
+    /**
+     * @test
+     */
+    public function testEmptyListReduction()
+    {
+        $instance = new TypeResolver(
+            $this
+                ->getMockBuilder('PhpParser\Node\Stmt\Namespace_')
+                ->disableOriginalConstructor()
+                ->getMock()
+        );
+        $class = new ReflectionClass($instance);
+        $method = $class->getMethod('typeListToType');
+        $method->setAccessible(true);
+        $this->assertInstanceOf(
+            'De\Idrinth\TestGenerator\Implementations\Type\UnknownType',
+            $method->invoke($instance, array())
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function testWeirdTypeToType()
+    {
+        $instance = new TypeResolver(
+            $this
+                ->getMockBuilder('PhpParser\Node\Stmt\Namespace_')
+                ->disableOriginalConstructor()
+                ->getMock()
+        );
+        $class = new ReflectionClass($instance);
+        $method = $class->getMethod('typeToType');
+        $method->setAccessible(true);
+        $this->assertNull($method->invoke($instance, '_'));
     }
 }
