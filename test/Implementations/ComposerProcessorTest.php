@@ -44,6 +44,16 @@ class ComposerProcessorTest
             array(
                 array(
                     'require-dev'=>array('phpunit/phpunit' => '^4.8'),
+                    "autoload" => array(),
+                    "autoload-dev" => array(),
+                ),
+                array(),
+                array(),
+                'hello'
+            ),
+            array(
+                array(
+                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
                     'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
                     'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
                 ),

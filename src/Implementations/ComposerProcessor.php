@@ -58,13 +58,26 @@ class ComposerProcessor implements CPI
             return array();
         }
         $autoloaders = $data[$key];
+        return array_merge(
+            $this->processPsrAutoloadKey($autoloaders, 'psr-0', $rootDir),
+            $this->processPsrAutoloadKey($autoloaders, 'psr-4', $rootDir)
+        );
+    }
+
+    /**
+     * @param array $autoloaders
+     * @param string $method
+     * @param string $rootDir
+     * @return string[]
+     */
+    private function processPsrAutoloadKey($autoloaders, $method, $rootDir)
+    {
+        if (!isset($autoloaders[$method])) {
+            return array();
+        }
         $folders = array();
-        foreach (array('psr-0', 'psr-4') as $method) {
-            if (isset($autoloaders[$method])) {
-                foreach ($autoloaders[$method] as $namespace => $folder) {
-                    $folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
-                }
-            }
+        foreach ($autoloaders[$method] as $namespace => $folder) {
+            $folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
         }
         return $folders;
     }
