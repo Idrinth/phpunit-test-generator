@@ -71,16 +71,23 @@ class ClassWriter implements CWI
         if (!$this->mayWrite($file)) {
             return false;
         }
-        return false !== file_put_contents(
-            $file->getPathname(),
-            $this->renderer->render(
-                'class.twig',
-                array(
-                    'class' => $class,
-                    'classes' => $classes,
-                    'config' => array(
-                        'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace())
-                    )
+        return false !== file_put_contents($file->getPathname(), $this->createContent($class, $classes));
+    }
+
+    /**
+     * @param CDI $class
+     * @param CDI[] $classes
+     * @return string
+     */
+    private function createContent(CDI $class, $classes)
+    {
+        return $this->renderer->render(
+            'class.twig',
+            array(
+                'class' => $class,
+                'classes' => $classes,
+                'config' => array(
+                    'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace())
                 )
             )
         );
