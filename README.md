@@ -9,16 +9,24 @@
 ## Command & Options
 
 ```
-php bin/generate-tests.php --dir=/path/to/alternative/dir --replace
+php bin/generate-tests.php --dir=/path/to/alternative/dir --mode=replace
 ```
 
 ### dir
 
 Dir is optional and will default to the current working directory. Pick the directory that the composer.json is in.
 
-### replace
+### replace (deprecated, see mode)
 
 If set old testfiles will be overwritten, if not set they will be renamed instead. Usually you shouldn't need this.
+
+### mode
+
+One of replace, skip or move. Defines how to handle file conflicts and defaults to moving the old file.
+
+### output
+
+If set will be prepended to the relative paths of dev-autoload paths.
 
 ## How does it work?
 
