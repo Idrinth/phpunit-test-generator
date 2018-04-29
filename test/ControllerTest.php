@@ -7,7 +7,6 @@ use De\Idrinth\TestGenerator\Test\Mock\GetCwd;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase as TestCaseImplementation;
 use Symfony\Component\Finder\Finder;
-use I;
 
 class ControllerTest extends TestCaseImplementation
 {
@@ -18,7 +17,7 @@ class ControllerTest extends TestCaseImplementation
     protected function getInstance($returnNumber)
     {
         $item = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock();
-        $list = array_fill(0, $returnNumber, $item);
+        $list = $returnNumber?array_fill(0, $returnNumber, $item):array();
         $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
@@ -65,10 +64,7 @@ class ControllerTest extends TestCaseImplementation
      */
     public function provideRun()
     {
-        return array(
-            array(0),
-            array(2)
-        );
+        return array(array(0), array(2), array(7));
     }
 
     /**
