@@ -4,7 +4,6 @@ namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper;
 use De\Idrinth\TestGenerator\Implementations\TargetPhpFile;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use UnexpectedValueException;
@@ -70,7 +69,6 @@ class NamespacePathMapperTest extends TestCase
      */
     public function testGetTestFileForNamespacedClass()
     {
-        $root = vfsStream::setup();
         $object = $this->getInstance();
         $namespace = 'De\Idrinth\TestGenerator\NamespacePathMapper';
         $this->assertInstanceOf(
@@ -85,7 +83,6 @@ class NamespacePathMapperTest extends TestCase
             implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapper', 'ExampleTest.php')),
             $this->getPath($object->getTestFileForNamespacedClass($namespace.'\Example'))
         );
-        unset($root);
     }
 
     /**
