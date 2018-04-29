@@ -56,7 +56,7 @@ class Controller
             ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
             ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
             ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\ClassWriter.mode', $mode)
+            ->addValue('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper.mode', $mode)
             ->addValue('De\Idrinth\TestGenerator\Interfaces\ComposerProcessor.output', $output)
             ->get(__CLASS__);
     }

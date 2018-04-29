@@ -3,7 +3,11 @@
 namespace De\Idrinth\TestGenerator\Test\Implementations;
 
 use De\Idrinth\TestGenerator\Implementations\NamespacePathMapper;
+use De\Idrinth\TestGenerator\Implementations\TargetPhpFile;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use UnexpectedValueException;
 
 class NamespacePathMapperTest extends TestCase
 {
@@ -25,7 +29,7 @@ class NamespacePathMapperTest extends TestCase
                 'De\Idrinth\TestGenerator' => 'src',
                 'De\Idrinth\AnyTestGenerator' => 'src'
             ));
-        return new NamespacePathMapper($composer);
+        return new NamespacePathMapper($composer, '');
     }
 
     /**
@@ -54,7 +58,7 @@ class NamespacePathMapperTest extends TestCase
 
     /**
      * @test
-     * @expectedException \UnexpectedValueException
+     * @expectedException UnexpectedValueException
      */
     public function testGetTestNamespaceForNamespaceThrowsUnexpectedValueException()
     {
@@ -66,16 +70,33 @@ class NamespacePathMapperTest extends TestCase
      */
     public function testGetTestFileForNamespacedClass()
     {
+        $root = vfsStream::setup();
         $object = $this->getInstance();
         $namespace = 'De\Idrinth\TestGenerator\NamespacePathMapper';
-        $this->assertInstanceOf('SplFileInfo', $object->getTestFileForNamespacedClass($namespace));
+        $this->assertInstanceOf(
+            'De\Idrinth\TestGenerator\Interfaces\TargetPhpFile',
+            $object->getTestFileForNamespacedClass($namespace)
+        );
         $this->assertEquals(
             implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapperTest.php')),
-            $object->getTestFileForNamespacedClass($namespace)->getPathname()
+            $this->getPath($object->getTestFileForNamespacedClass($namespace))
         );
         $this->assertEquals(
             implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapper', 'ExampleTest.php')),
-            $object->getTestFileForNamespacedClass($namespace.'\Example')->getPathname()
+            $this->getPath($object->getTestFileForNamespacedClass($namespace.'\Example'))
         );
+        unset($root);
+    }
+
+    /**
+     * @param TargetPhpFile $file
+     * @return string
+     */
+    private function getPath(TargetPhpFile $file)
+    {
+        $class = new ReflectionClass('De\Idrinth\TestGenerator\Implementations\TargetPhpFile');
+        $property = $class->getProperty('file');
+        $property->setAccessible(true);
+        return $property->getValue($file);
     }
 }

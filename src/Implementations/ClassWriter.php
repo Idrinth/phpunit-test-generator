@@ -4,7 +4,6 @@ namespace De\Idrinth\TestGenerator\Implementations;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor as CDI;
 use De\Idrinth\TestGenerator\Interfaces\ClassWriter as CWI;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper as NPMI;
-use SplFileInfo;
 use De\Idrinth\TestGenerator\Interfaces\Renderer as RI;
 
 class ClassWriter implements CWI
@@ -20,44 +19,13 @@ class ClassWriter implements CWI
     private $namespaces;
 
     /**
-     * @var string
-     */
-    private $mode;
-
-    /**
      * @param NPMI $namespaces
      * @param RI $renderer
-     * @param string $mode
      */
-    public function __construct(NPMI $namespaces, RI $renderer, $mode)
+    public function __construct(NPMI $namespaces, RI $renderer)
     {
         $this->namespaces = $namespaces;
         $this->renderer = $renderer;
-        $this->mode = $mode;
-    }
-
-    /**
-     * @param SplFileInfo $file
-     * @return boolean
-     */
-    private function mayWrite($file)
-    {
-        if (!$file instanceof SplFileInfo) {
-            return false;
-        }
-        if ($file->isDir()) {
-            return false;
-        }
-        if (!is_dir($file->getPath()) && !mkdir($file->getPath(), 0777, true)) {
-            return false;
-        }
-        if (!$file->isFile()) {
-            return true;
-        }
-        if ($this->mode === 'skip') {
-            return false;
-        }
-        return $this->mode === 'replace' || rename($file->getPathname(), $file->getPathname().date('.YmdHi').'.old');
     }
 
     /**
@@ -68,10 +36,10 @@ class ClassWriter implements CWI
     public function write(CDI $class, $classes)
     {
         $file = $this->namespaces->getTestFileForNamespacedClass($class->getNamespace().'\\'.$class->getName());
-        if (!$this->mayWrite($file)) {
+        if (!$file->mayWrite()) {
             return false;
         }
-        return false !== file_put_contents($file->getPathname(), $this->createContent($class, $classes));
+        return $file->write($this->createContent($class, $classes));
     }
 
     /**

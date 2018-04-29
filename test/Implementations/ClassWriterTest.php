@@ -5,51 +5,37 @@ namespace De\Idrinth\TestGenerator\Test\Implementations;
 use De\Idrinth\TestGenerator\Implementations\ClassWriter;
 use De\Idrinth\TestGenerator\Implementations\Type\UnknownType;
 use De\Idrinth\TestGenerator\Interfaces\ClassDescriptor;
-use De\Idrinth\TestGenerator\Interfaces\Composer;
 use De\Idrinth\TestGenerator\Interfaces\MethodDescriptor;
 use De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper;
 use De\Idrinth\TestGenerator\Interfaces\Renderer;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 
 class ClassWriterTest extends TestCase
 {
     /**
-     * @var vfsStreamDirectory
-     */
-    private $root;
-
-    /**
-     * @return string
-     */
-    private function getFileName()
-    {
-        return vfsStream::url('root/test/ClassFile.php');
-    }
-
-    /**
-     * init vfsStream
-     */
-    public function setUp()
-    {
-        $this->root = vfsStream::setup();
-    }
-
-    /**
+     * @param boolean $isWriteable
+     * @param string $content
      * @return NamespacePathMapper
      */
-    private function getMockedNamespacePathMapper()
+    private function getMockedNamespacePathMapper($isWriteable)
     {
         $namespaces = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper')
             ->getMock();
         $namespaces->expects($this->any())
             ->method('getTestNamespaceForNamespace')
             ->willReturn('My\Tests');
+        $file = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\TargetPhpFile')->getMock();
+        $file->expects($this->once())
+            ->method('mayWrite')
+            ->with()
+            ->willReturn($isWriteable);
+        $file->expects($isWriteable?$this->once():$this->never())
+            ->method('write')
+            ->with('rendered')
+            ->willReturn(true);
         $namespaces->expects($this->any())
             ->method('getTestFileForNamespacedClass')
-            ->willReturn(new SplFileInfo($this->getFileName()));
+            ->willReturn($file);
         return $namespaces;
     }
 
@@ -95,28 +81,28 @@ class ClassWriterTest extends TestCase
     }
 
     /**
+     * @param boolean $isWriteable
      * @return Renderer
      */
-    private function getMockedRenderer()
+    private function getMockedRenderer($isWriteable)
     {
         $environment = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Renderer')
             ->getMock();
-        $environment->expects($this->exactly(2))
+        $environment->expects($isWriteable?$this->once():$this->never())
             ->method('render')
-            ->willReturnOnConsecutiveCalls('1st', '2nd');
+            ->willReturn('rendered');
         return $environment;
     }
 
     /**
-     * @param string $mode
+     * @param boolean $isWriteable
      * @return ClassWriter
      */
-    private function buildClassWriter($mode)
+    private function buildClassWriter($isWriteable)
     {
         return new ClassWriter(
-            $this->getMockedNamespacePathMapper(),
-            $this->getMockedRenderer(),
-            $mode
+            $this->getMockedNamespacePathMapper($isWriteable),
+            $this->getMockedRenderer($isWriteable)
         );
     }
 
@@ -127,20 +113,13 @@ class ClassWriterTest extends TestCase
     {
         return array(
             array(
-                $this->buildClassWriter('replace'),
-                true,
-                false
-            ),
-            array(
-                $this->buildClassWriter('skip'),
-                false,
-                false
-            ),
-            array(
-                $this->buildClassWriter('move'),
-                false,
+                $this->buildClassWriter(true),
                 true
-            )
+            ),
+            array(
+                $this->buildClassWriter(false),
+                false
+            ),
         );
     }
 
@@ -148,37 +127,11 @@ class ClassWriterTest extends TestCase
      * @test
      * @dataProvider provideWrite
      * @param ClassWriter $writer
-     * @param boolean $willChange
-     * @param boolean $willMove
+     * @param boolean $isWriteable
      */
-    public function testWrite(ClassWriter $writer, $willChange, $willMove)
+    public function testWrite(ClassWriter $writer, $isWriteable)
     {
-        $modified = $willChange||$willMove;
         $class = $this->getMockedClassDescriptor();
-        $this->assertTrue($writer->write($class, array()));
-        $created = $this->checkFile($this->getFileName(), '1st');
-        sleep(1);
-        $this->assertEquals($modified, $writer->write($class, array()));
-        $this->checkFile($this->getFileName().'.'.date('YmdHi').'.old', '1st', $willMove);
-        $recreated = $this->checkFile($this->getFileName(), $modified?'2nd':'1st');
-        $this->assertEquals($modified, $created !== $recreated, "$created $recreated");
-    }
-
-    /**
-     * check existence and return last modified time
-     * @param string $path
-     * @param string $text
-     * @param string $exists
-     * @return int
-     */
-    private function checkFile($path, $text, $exists = true)
-    {
-        clearstatcache();
-        $this->assertEquals($exists, is_file($path));
-        if ($exists) {
-            $this->assertEquals($text, file_get_contents($path));
-            return filemtime($path);
-        }
-        return 0;
+        $this->assertEquals($isWriteable, $writer->write($class, array()));
     }
 }
