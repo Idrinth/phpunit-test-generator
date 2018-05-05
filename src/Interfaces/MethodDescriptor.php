@@ -20,6 +20,11 @@ interface MethodDescriptor
     public function getReturn();
 
     /**
+     * @return boolean
+     */
+    public function isStatic();
+
+    /**
      * @return Type[]
      */
     public function getExceptions();

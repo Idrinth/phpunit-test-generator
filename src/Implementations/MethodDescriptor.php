@@ -24,6 +24,11 @@ class MethodDescriptor implements MDI
     private $return;
 
     /**
+     * @var boolean
+     */
+    private $static;
+
+    /**
      * @var Type[]
      */
     private $exceptions = array();
@@ -32,14 +37,16 @@ class MethodDescriptor implements MDI
      * @param string $name
      * @param Type[] $params
      * @param Type $return
+     * @param boolean $static
      * @param ClassType[] $exceptions
      */
-    public function __construct($name, $params, Type $return, $exceptions = array())
+    public function __construct($name, $params, Type $return, $static = false, $exceptions = array())
     {
         $this->name = $name;
         $this->params = $params;
         $this->return = $return;
         $this->exceptions = $exceptions;
+        $this->static = $static;
     }
 
     /**
@@ -72,5 +79,13 @@ class MethodDescriptor implements MDI
     public function getExceptions()
     {
         return $this->exceptions;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStatic()
+    {
+        return $this->static;
     }
 }

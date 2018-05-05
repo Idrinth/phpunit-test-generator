@@ -7,9 +7,12 @@
  **/
 public function test{{function.name|toUpperCamelCase}} ()
 {
+{% if function.static %}
+    {% include "static-type-test-wrapper.twig" with {'function': function,'class': class.name} only %}
+{% else %}
     $instance = $this->getInstance();
     {% include "type-test-wrapper.twig" with {'function': function} only %}
-
+{% endif %}
     $this->markTestIncomplete(
         'This test has not been implemented yet.'
     );
