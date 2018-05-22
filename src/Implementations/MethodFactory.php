@@ -38,6 +38,7 @@ class MethodFactory implements MFI
                 $method->returnType,
                 $this->doc->getReturn($doc)
             ),
+            $method->isStatic(),
             $this->getThrows($resolver, $doc)
         );
     }

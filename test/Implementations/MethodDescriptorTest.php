@@ -31,6 +31,7 @@ class MethodDescriptorTest extends TestCase
             'test2',
             array(new SimpleType('integer'), new UnknownType(), new SimpleType('boolean'), new UnknownType()),
             new SimpleType('boolean'),
+            true,
             array(new ClassType('AClass'))
         );
     }
@@ -68,6 +69,15 @@ class MethodDescriptorTest extends TestCase
     {
         $this->assertEquals('object', $this->getTest1()->getReturn()->getType());
         $this->assertEquals('boolean', $this->getTest2()->getReturn()->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function testIsStatic()
+    {
+        $this->assertFalse($this->getTest1()->isStatic());
+        $this->assertTrue($this->getTest2()->isStatic());
     }
 
     /**

@@ -42,6 +42,6 @@
         "squizlabs/php_codesniffer": "For formatting according to PSR2"
     },
     "bin": [
-        "bin/generate-tests.php"
+        "bin/generate-tests"
     ]
 }
