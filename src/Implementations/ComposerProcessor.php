@@ -36,7 +36,7 @@ class ComposerProcessor implements CPI
      */
     public function process(array $composer, $path)
     {
-        foreach(array('require-dev', 'require') as $require) {
+        foreach (array('require-dev', 'require') as $require) {
             if (isset($composer[$require]) && isset($composer[$require]['phpunit/phpunit'])) {
                 return array(
                     $this->handleKey($composer, 'autoload', $path),
