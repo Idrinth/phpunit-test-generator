@@ -70,7 +70,7 @@ class Container implements ContainerInterface
         $isSkipping = false;
         foreach ($class->getConstructor()->getParameters() as $parameter) {
             $param = $this->handleParam($parameter, $class, $isSkipping);
-            if (!$isSkipping) {
+            if ($isSkipping === false) {
                 $args[] = $this->get($param);
             }
         }

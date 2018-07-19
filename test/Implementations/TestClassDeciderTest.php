@@ -26,6 +26,7 @@ class TestClassDeciderTest extends TestCaseImplementation
             array('^1|^7', true),
             array('4.5.6|^7', true),
             array('^4|^7', false, $new),
+            array('^7.0', false, $new),
         );
     }
 
