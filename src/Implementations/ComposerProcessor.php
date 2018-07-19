@@ -36,14 +36,21 @@ class ComposerProcessor implements CPI
      */
     public function process(array $composer, $path)
     {
-        if (!isset($composer['require-dev']) || !isset($composer['require-dev']['phpunit/phpunit'])) {
-            throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
+        if (isset($composer['require-dev']) && isset($composer['require-dev']['phpunit/phpunit'])) {
+            return array(
+                $this->handleKey($composer, 'autoload', $path),
+                $this->handleKey($composer, 'autoload-dev', $path.$this->output),
+                $this->decider->get($composer['require-dev']['phpunit/phpunit'])
+            );
         }
-        return array(
-            $this->handleKey($composer, 'autoload', $path),
-            $this->handleKey($composer, 'autoload-dev', $path.$this->output),
-            $this->decider->get($composer['require-dev']['phpunit/phpunit'])
-        );
+        if (isset($composer['require']) || !isset($composer['require']['phpunit/phpunit'])) {
+            return array(
+                $this->handleKey($composer, 'autoload', $path),
+                $this->handleKey($composer, 'autoload-dev', $path.$this->output),
+                $this->decider->get($composer['require-dev']['phpunit/phpunit'])
+            );
+        }
+        throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
     }
 
     /**
