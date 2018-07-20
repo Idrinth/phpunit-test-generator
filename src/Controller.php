@@ -84,14 +84,19 @@ class Controller
      */
     public function run()
     {
+        echo "\nRead:\n";
         foreach ($this->finder
             ->files()
             ->name('/\\.php[0-9]?$/i')
             ->in($this->composer->getProductionNamespacesToFolders()) as $file) {
             $this->reader->parse($file);
+            echo ".";
         }
+        echo "\nWrite:\n";
         foreach ($this->reader->getResults() as $result) {
             $this->writer->write($result, $this->reader->getResults());
+            echo ".";
         }
+        echo "\n\n";
     }
 }
