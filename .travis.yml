@@ -6,12 +6,12 @@ branches:
   - /[0-9]+\.[0-9]+\.[0-9]+/
 git:
   depth: 3
- cache:
+  cache:
     directories:
       - $HOME/.composer/cache/
 jobs:
   include:
-    ## PHP Linting
+# PHP Linting
     - stage: PHP Linting
       php: 7.2
       name: PHP 7.2
@@ -83,7 +83,7 @@ jobs:
       install: true
       script:
         - ../tools/vendor/bin/php-parallel-lint --exclude vendor
-    # Unit Tests
+# Unit Tests
     - stage: Test
       php: 7.2
       name: PHP 7.2
@@ -150,7 +150,7 @@ jobs:
         - composer update
       script:
         - vendor/bin/phpunit --testdox test/
-    # Static Code Analysis
+# Static Code Analysis
     - stage: Static Code Analysis
       php: 7.2
       name: PHP Assumptions
@@ -163,7 +163,7 @@ jobs:
         - ../tools/vendor/bin/phpa --exclude=./vendor ./
     - stage: Static Code Analysis
       php: 7.2
-      name: PHP Codesniffer: PSR2
+      name: "PHP Codesniffer: PSR2"
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
