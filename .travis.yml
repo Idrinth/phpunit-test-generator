@@ -89,7 +89,7 @@ jobs:
       name: PHP 7.2
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require codacy/coverage:dev-master:dev-master --working-dir=../tools
+        - composer require codacy/coverage:dev-master --working-dir=../tools
       install:
         - composer update
       script:
@@ -143,6 +143,7 @@ jobs:
         - vendor/bin/phpunit --testdox test/
     - stage: Test
       php: 5.3
+      dist: precise
       name: PHP 5.3
       before_install:
         - phpenv config-rm xdebug.ini || true
