@@ -1,42 +1,180 @@
 language: php
 dist: trusty
-php:
-  - '5.4'
-  - '5.5'
-  - '5.6'
-  - '7.0'
-  - '7.1'
-  - '7.2'
-matrix:
-  include:
-    - php: "5.3"
-      dist: precise
 branches:
   only:
   - master
   - /[0-9]+\.[0-9]+\.[0-9]+/
 git:
   depth: 3
-before_install:
-  - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-# no need to check for unsafe assumptions multiple times
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools ; fi
-# no need to provide coverage more than once and no need for the speedbump otherwise
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpenv config-rm xdebug.ini || true ; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then composer require codacy/coverage:dev-master --working-dir=../tools ; fi
-# no need to test formatting more than once and php_codesniffer does not work with old php
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require squizlabs/php_codesniffer:^3.2.2 --working-dir=../tools ; fi
-# no need to check for greedy symbol use multiple times
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer config repositories.maglnet/composer-require-checker '{"type":"vcs","url":"https://github.com/idrinth/ComposerRequireChecker","no-api":true}' --working-dir=../tools && composer require maglnet/composer-require-checker:dev-bandaid --working-dir=../tools ; fi
-install: composer update
-script:
-# check assertions
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then ../tools/vendor/bin/phpa --exclude=./vendor ./ ; fi
-# check standards
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then ../tools/vendor/bin/phpcs -p --standard=PSR2 src test bin ; fi
-# unit tests
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then vendor/bin/phpunit --testdox test/; fi
-# unit tests + coverage
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/ && ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml ; fi
-# greedy symbol usage
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json ; fi
+jobs:
+  include:
+    ## PHP Linting
+    - stage: PHP Linting
+      php: 7.2
+      name: PHP 7.2
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP 7.1
+      php: 7.1
+      name: PHP Assumptions
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP Linting
+      php: 7.0
+      name: PHP 7.0
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP Linting
+      php: 5.6
+      name: PHP 5.6
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP Linting
+      php: 5.5
+      name: PHP 5.5
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP Linting
+      php: 5.4
+      name: PHP 5.4
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    - stage: PHP Linting
+      php: 5.3
+      dist: precise
+      name: PHP 5.3
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+    # Unit Tests
+    - stage: Test
+      php: 7.2
+      name: PHP 7.2
+      before_install:
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require codacy/coverage:dev-master:dev-master --working-dir=../tools
+      install:
+        - composer update
+      script:
+        - then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
+    - stage: Test
+      php: 7.1
+      name: PHP 7.1
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 7.0
+      name: PHP 7.0
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 5.6
+      name: PHP 5.6
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 5.5
+      dist: precise
+      name: PHP 5.5
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 5.4
+      name: PHP 5.4
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 5.3
+      name: PHP 5.3
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    # Static Code Analysis
+    - stage: Static Code Analysis
+      php: 7.2
+      name: PHP Assumptions
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
+      install: composer update
+      script:
+        - ../tools/vendor/bin/phpa --exclude=./vendor ./
+    - stage: Static Code Analysis
+      php: 7.2
+      name: PHP Codesniffer: PSR2
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require quizlabs/php_codesniffer:^3.2.2 --working-dir=../tools
+      install:
+      script:
+        - ../tools/vendor/bin/phpcs -p --standard=PSR2 src test bin
+    - stage: Static Code Analysis
+      php: 7.2
+      name: Composer Require Checker
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer config repositories.maglnet/composer-require-checker '{"type":"vcs","url":"https://github.com/idrinth/ComposerRequireChecker","no-api":true}' --working-dir=../tools && composer require maglnet/composer-require-checker:dev-bandaid --working-dir=../tools
+      install: composer update
+      script:
+        - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
