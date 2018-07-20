@@ -21,7 +21,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP 7.1
       php: 7.1
       name: PHP Assumptions
@@ -31,7 +31,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP Linting
       php: 7.0
       name: PHP 7.0
@@ -41,7 +41,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP Linting
       php: 5.6
       name: PHP 5.6
@@ -51,7 +51,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP Linting
       php: 5.5
       name: PHP 5.5
@@ -61,7 +61,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP Linting
       php: 5.4
       name: PHP 5.4
@@ -71,7 +71,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
     - stage: PHP Linting
       php: 5.3
       dist: precise
@@ -82,7 +82,7 @@ jobs:
         - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/php-parallel-lint --exclude vendor
+        - ../tools/vendor/bin/parallel-lint --exclude vendor
 # Unit Tests
     - stage: Test
       php: 7.2
