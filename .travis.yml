@@ -22,9 +22,9 @@ jobs:
       install: true
       script:
         - ../tools/vendor/bin/parallel-lint --exclude vendor
-    - stage: PHP 7.1
+    - stage: PHP Linting
       php: 7.1
-      name: PHP Assumptions
+      name: PHP 7.1
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
