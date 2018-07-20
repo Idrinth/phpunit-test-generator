@@ -93,7 +93,7 @@ jobs:
       install:
         - composer update
       script:
-        - then vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
         - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
     - stage: Test
       php: 7.1
