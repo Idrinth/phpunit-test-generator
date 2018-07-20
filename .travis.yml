@@ -168,7 +168,7 @@ jobs:
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require quizlabs/php_codesniffer:^3.2.2 --working-dir=../tools
+        - composer require squizlabs/php_codesniffer:^3.2.2 --working-dir=../tools
       install: true
       script:
         - ../tools/vendor/bin/phpcs -p --standard=PSR2 src test bin
