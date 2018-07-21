@@ -5,7 +5,7 @@
  * @test
  * @todo replace with actual tests
  **/
-public function test{{function.name|toUpperCamelCase}} ()
+public function test{{function.name|toUpperCamelCase}}()
 {
 {% if function.static %}
     {% include "static-type-test-wrapper.twig" with {'function': function,'class': class.name} only %}
@@ -26,7 +26,7 @@ public function test{{function.name|toUpperCamelCase}} ()
  * @todo replace with actual tests
  * @expectedException \{{exception.className}}
  **/
-public function test{{function.name|toUpperCamelCase}}Throws{{exception.className|toUpperCamelCase}} ()
+public function test{{function.name|toUpperCamelCase}}Throws{{exception.className|toUpperCamelCase}}()
 {
     $this->getInstance()->{{function.name}}{% include 'function.twig' with {'function': function} only %};
 
