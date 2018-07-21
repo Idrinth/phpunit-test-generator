@@ -192,3 +192,14 @@ jobs:
       install: composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src tests
+    # Pre-Tag
+    - stage: Pre-Tag
+      php: 7.2
+      name: PHPstan
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
+      install: composer update
+      script:
+        - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
