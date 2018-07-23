@@ -195,7 +195,7 @@ jobs:
     # Pre-Tag
     - stage: Pre-Tag
       php: 7.2
-      name: PHPstan
+      name: PHP Semver Checker
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
