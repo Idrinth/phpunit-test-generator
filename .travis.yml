@@ -6,9 +6,9 @@ branches:
   - /[0-9]+\.[0-9]+\.[0-9]+/
 git:
   depth: 3
-  cache:
-    directories:
-      - $HOME/.composer/cache/
+cache:
+  directories:
+    - $HOME/.composer/cache/
 jobs:
   include:
 # PHP Linting
