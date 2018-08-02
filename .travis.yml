@@ -202,4 +202,4 @@ jobs:
         - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
       install: composer update
       script:
-        - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
+        - ../tools/php-semver-checker-git/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
