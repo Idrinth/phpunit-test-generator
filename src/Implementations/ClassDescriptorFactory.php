@@ -73,7 +73,7 @@ class ClassDescriptorFactory implements CDFI
      */
     private function addMethod($methodName, MDI &$constructor, array &$methods, MDI $function, $className)
     {
-        if ($methodName == '__construct' || $methodName == $className) {
+        if ($methodName === '__construct' || $methodName === $className) {
             $constructor = $function;
             return;
         }

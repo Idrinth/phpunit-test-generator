@@ -16,7 +16,7 @@ class ComposerProcessor implements CPI
     /**
      * @var string
      */
-    private $output;
+    private $output = '';
 
     /**
      * @param TCDI $decider
@@ -25,7 +25,9 @@ class ComposerProcessor implements CPI
     public function __construct(TCDI $decider, $output = '')
     {
         $this->decider = $decider;
-        $this->output = ($output?DIRECTORY_SEPARATOR:'').$output;
+        if (is_string($output) && strlen($output) > 0) {
+            $this->output = DIRECTORY_SEPARATOR . $output;
+        }
     }
 
     /**

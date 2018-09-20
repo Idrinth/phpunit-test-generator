@@ -69,7 +69,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
      */
     private function parseValue($originalValue)
     {
-        if (!$originalValue || $originalValue === 'null') {
+        if (strlen($originalValue) === 0 || $originalValue === 'null') {
             return 'null';
         }
         return $originalValue;
@@ -81,7 +81,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
      */
     public function getReturn($rawDocBlock)
     {
-        if (!$rawDocBlock) {
+        if (strlen($rawDocBlock) === 0) {
             return 'null';
         }
         $return = $this->getVariableType('return', $rawDocBlock);
@@ -94,7 +94,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
      */
     public function getParams($rawDocBlock)
     {
-        if (!$rawDocBlock) {
+        if (strlen($rawDocBlock) === 0) {
             return array();
         }
         return $this->getVariableType('param', $rawDocBlock);
@@ -106,7 +106,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
      */
     public function getExceptions($rawDocBlock)
     {
-        if (!$rawDocBlock) {
+        if (strlen($rawDocBlock) === 0) {
             return array();
         }
         return $this->getVariableType('throws', $rawDocBlock);

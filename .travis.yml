@@ -192,7 +192,7 @@ jobs:
       install: composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src tests
-    # Pre-Tag
+# Pre-Tag
     - stage: Pre-Tag
       php: 7.2
       name: PHP Semver Checker
