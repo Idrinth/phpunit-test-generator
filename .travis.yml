@@ -192,6 +192,16 @@ jobs:
       install: composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src tests
+    - stage: Static Code Analysis
+      php: 7.2
+      name: Phan
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require phan/phan:^1 --working-dir=../tools
+      install: composer update
+      script:
+        - ../tools/vendor/bin/phan
 # Pre-Tag
     - stage: Pre-Tag
       php: 7.2
