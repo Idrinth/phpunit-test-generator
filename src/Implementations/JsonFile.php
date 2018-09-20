@@ -31,7 +31,7 @@ class JsonFile implements JFI
             throw new InvalidArgumentException("File $file doesn't exist or isn't readable.");
         }
         $data = json_decode(file_get_contents($file->getPathname()), true);
-        if (!$data) {
+        if (!is_array($data) || empty($data)) {
             throw new InvalidArgumentException("File $file couldn't be parsed as json.");
         }
         $this->content = $data;
