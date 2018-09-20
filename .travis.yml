@@ -197,7 +197,7 @@ jobs:
       name: Phan
       before_install:
         - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools --ignore-platform-reqs
         - composer require phan/phan:^1 --working-dir=../tools
       install: composer update
       script:
