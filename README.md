@@ -9,7 +9,7 @@
 ## Command & Options
 
 ```
-php bin/generate-tests.php --dir=/path/to/alternative/dir --mode=replace
+php bin/generate-tests --dir=/path/to/alternative/dir --mode=replace
 ```
 
 ### dir
