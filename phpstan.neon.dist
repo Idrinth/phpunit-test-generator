@@ -1,0 +1,50 @@
+rules:
+  # LOCALHEINZ
+	- Localheinz\PHPStan\Rules\Classes\AbstractOrFinalRule
+	- Localheinz\PHPStan\Rules\Functions\NoNullableReturnTypeDeclarationRule
+	- Localheinz\PHPStan\Rules\Methods\NoNullableReturnTypeDeclarationRule
+  # DEPRECATION
+	- PHPStan\Rules\Deprecations\AccessDeprecatedPropertyRule
+	- PHPStan\Rules\Deprecations\AccessDeprecatedStaticPropertyRule
+	- PHPStan\Rules\Deprecations\CallToDeprecatedFunctionRule
+	- PHPStan\Rules\Deprecations\CallToDeprecatedMethodRule
+	- PHPStan\Rules\Deprecations\CallToDeprecatedStaticMethodRule
+	- PHPStan\Rules\Deprecations\FetchingClassConstOfDeprecatedClassRule
+	- PHPStan\Rules\Deprecations\ImplementationOfDeprecatedInterfaceRule
+	- PHPStan\Rules\Deprecations\InheritanceOfDeprecatedClassRule
+	- PHPStan\Rules\Deprecations\InheritanceOfDeprecatedInterfaceRule
+	- PHPStan\Rules\Deprecations\InstantiationOfDeprecatedClassRule
+	- PHPStan\Rules\Deprecations\UsageOfDeprecatedTraitRule
+  # PHPUNIT
+  - PHPStan\Rules\PHPUnit\AssertSameBooleanExpectedRule
+	- PHPStan\Rules\PHPUnit\AssertSameNullExpectedRule
+	- PHPStan\Rules\PHPUnit\AssertSameWithCountRule
+services:
+	-	class: PHPStan\PhpDoc\PHPUnit\MockObjectTypeNodeResolverExtension
+		tags:
+			- phpstan.phpDoc.typeNodeResolverExtension
+	-	class: PHPStan\Type\PHPUnit\Assert\AssertFunctionTypeSpecifyingExtension
+		tags:
+			- phpstan.typeSpecifier.functionTypeSpecifyingExtension
+	-	class: PHPStan\Type\PHPUnit\Assert\AssertMethodTypeSpecifyingExtension
+		tags:
+			- phpstan.typeSpecifier.methodTypeSpecifyingExtension
+	-	class: PHPStan\Type\PHPUnit\Assert\AssertStaticMethodTypeSpecifyingExtension
+		tags:
+			- phpstan.typeSpecifier.staticMethodTypeSpecifyingExtension
+	-	class: PHPStan\Type\PHPUnit\CreateMockDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-	class: PHPStan\Type\PHPUnit\GetMockBuilderDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+	-	class: PHPStan\Type\PHPUnit\MockBuilderDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
+parameters:
+	earlyTerminatingMethodCalls:
+		PHPUnit\Framework\TestCase:
+			- fail
+			- markTestIncomplete
+			- markTestSkipped
+  ignoreErrors:
