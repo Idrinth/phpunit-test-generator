@@ -188,7 +188,7 @@ jobs:
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.10 localheinz/phpstan-rules phpstan/phpstan-deprecation-rules phpstan/phpstan-phpunit --working-dir=../tools
+        - composer require phpstan/phpstan:^0.10 phpstan/phpstan-strict-rules localheinz/phpstan-rules phpstan/phpstan-deprecation-rules phpstan/phpstan-phpunit --working-dir=../tools
       install: composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src tests
