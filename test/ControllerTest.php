@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test;
 
@@ -14,7 +14,7 @@ class ControllerTest extends TestCaseImplementation
      * @param int $returnNumber
      * @return Controller
      **/
-    protected function getInstance($returnNumber)
+    protected function getInstance(int $returnNumber): Controller
     {
         $item = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock();
         $list = $returnNumber?array_fill(0, $returnNumber, $item):[];
@@ -37,7 +37,7 @@ class ControllerTest extends TestCaseImplementation
      * @test
      * @expectedException InvalidArgumentException
      **/
-    public function testInitThrowsInvalidArgumentException()
+    public function testInitThrowsInvalidArgumentException(): void
     {
         $cwd = new GetCwd(__DIR__);
         Controller::init();
@@ -47,8 +47,9 @@ class ControllerTest extends TestCaseImplementation
     /**
      * From Controller
      * @test
+     * @return void
      **/
-    public function testInit()
+    public function testInit(): void
     {
         $cwd = new GetCwd(dirname(__DIR__));
         $this->assertInstanceOf(
@@ -62,7 +63,7 @@ class ControllerTest extends TestCaseImplementation
     /**
      * @return array
      */
-    public function provideRun()
+    public function provideRun(): array
     {
         return [[0], [2], [7]];
     }
@@ -71,8 +72,9 @@ class ControllerTest extends TestCaseImplementation
      * From Controller
      * @dataProvider provideRun
      * @test
+     * @return void
      **/
-    public function testRun($returnNumber)
+    public function testRun(int $returnNumber): void
     {
         $instance = $this->getInstance($returnNumber);
         $this->assertInternalType(

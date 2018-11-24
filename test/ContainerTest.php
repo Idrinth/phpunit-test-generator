@@ -10,7 +10,7 @@ class ContainerTest extends TestCaseImplementation
     /**
      * @return array [input, output] for classes
      */
-    public function provideGet()
+    public function provideGet(): array
     {
         return [
             [
@@ -25,7 +25,7 @@ class ContainerTest extends TestCaseImplementation
      * @param string $identifier
      * @param string $result
      */
-    public function testGet($identifier, $result)
+    public function testGet(string $identifier, string $result): void
     {
         $key = 'De\Idrinth\TestGenerator\Interfaces\JsonFile.file';
         $container = Container::create()->addValue($key, dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');

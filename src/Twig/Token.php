@@ -1,10 +1,10 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Twig;
 
 use Twig\Token as TT;
 
-class Token extends TT
+final class Token extends TT
 {
     /**
      * @var int
@@ -17,7 +17,7 @@ class Token extends TT
      * @param int $lineno
      * @param int $prepend
      */
-    public function __construct($type, $value, $lineno, $prepend)
+    public function __construct(int $type, string $value, int $lineno, int $prepend)
     {
         parent::__construct($type, $value, $lineno);
         $this->prepend = $prepend;
@@ -27,7 +27,7 @@ class Token extends TT
      * Whitespace to prepend to new lines
      * @return int
      */
-    public function getPrepend()
+    public function getPrepend(): int
     {
         return $this->prepend;
     }

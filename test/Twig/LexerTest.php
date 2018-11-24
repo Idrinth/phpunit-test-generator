@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test\Twig;
 
@@ -13,7 +13,7 @@ class LexerTest extends TestCaseImplementation
     /**
      * @return Lexer
      **/
-    protected function getInstance()
+    protected function getInstance(): Lexer
     {
         $environment = $this->getMockBuilder('Twig_Environment')->disableOriginalClone()->getMock();
         $environment->expects($this->once())
@@ -26,10 +26,9 @@ class LexerTest extends TestCaseImplementation
     }
 
     /**
-     * @todo add actual tests - this is just temporary
      * @return array
      */
-    public function providePushToken()
+    public function providePushToken(): array
     {
         return [
             ['why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 0],
@@ -39,14 +38,15 @@ class LexerTest extends TestCaseImplementation
     }
 
     /**
+     * @dataProvider providePushToken
      * @param string $code
      * @param int $type
      * @param mixed $value
      * @param int $line
      * @param int $column
-     * @dataProvider providePushToken
+     * @return void
      */
-    public function testPushToken($code, $type, $value, $line, $column)
+    public function testPushToken(string $code, int $type, $value, int $line, int $column): void
     {
         $instance = $this->getInstance();
         $rfClass = new ReflectionClass($instance);
@@ -66,9 +66,10 @@ class LexerTest extends TestCaseImplementation
     /**
      * @param Lexer $instance
      * @param ReflectionProperty $property
-     * @param type $value
+     * @param mixed $value
+     * @return void
      */
-    private function setInObj(Lexer $instance, ReflectionProperty $property, $value)
+    private function setInObj(Lexer $instance, ReflectionProperty $property, $value): void
     {
         $property->setAccessible(true);
         $property->setValue($instance, $value);
@@ -79,7 +80,7 @@ class LexerTest extends TestCaseImplementation
      * @param ReflectionProperty $property
      * @return Token
      */
-    private function getInstanceTokenList(Lexer $instance, ReflectionProperty $property)
+    private function getInstanceTokenList(Lexer $instance, ReflectionProperty $property): Token
     {
         list($return) = $property->getValue($instance);
         return $return;

@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test\Twig;
 
@@ -10,7 +10,7 @@ class IncludeParserTest extends TestCaseImplementation
     /**
      * @return IncludeParser
      **/
-    protected function getInstance()
+    protected function getInstance(): IncludeParser
     {
         return new IncludeParser();
     }
@@ -18,8 +18,9 @@ class IncludeParserTest extends TestCaseImplementation
     /**
      * From IncludeParser
      * @test
+     * @return void
      **/
-    public function testParse()
+    public function testParse(): void
     {
         $instance = $this->getInstance();
         $parser = $this->getMockBuilder('Twig_Parser')->disableOriginalConstructor()->getMock();
@@ -34,9 +35,16 @@ class IncludeParserTest extends TestCaseImplementation
             ->method('getStream')
             ->willReturn($this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock());
         $instance->setParser($parser);
-        $return = $instance->parse(
-            $this->getMockBuilder('De\Idrinth\TestGenerator\Twig\Token')->disableOriginalConstructor()->getMock()
-        );
+        $token = $this->getMockBuilder('De\Idrinth\TestGenerator\Twig\Token')->disableOriginalConstructor()->getMock();
+        $token->expects(self::once())
+            ->method('getLine')
+            ->with()
+            ->willReturn(0);
+        $token->expects(self::once())
+            ->method('getPrepend')
+            ->with()
+            ->willReturn(0);
+        $return = $instance->parse($token);
 
         $this->assertInternalType(
             'object',

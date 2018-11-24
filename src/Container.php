@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator;
 
@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionParameter;
 
-class Container implements ContainerInterface
+final class Container implements ContainerInterface
 {
     /**
      * @var mixed[]
@@ -41,7 +41,7 @@ class Container implements ContainerInterface
      * @return object
      * @throws InvalidArgumentException
      */
-    private function getUncached($identifier)
+    private function getUncached(string $identifier): object
     {
         if (!class_exists($identifier) && !interface_exists($identifier)) {
             throw new InvalidArgumentException("Can't wire id $identifier");
@@ -61,7 +61,7 @@ class Container implements ContainerInterface
      * @param ReflectionClass $class
      * @return array
      */
-    private function getArgs(ReflectionClass $class)
+    private function getArgs(ReflectionClass $class): array
     {
         if (!$class->getConstructor()) {
             return [];
@@ -83,7 +83,7 @@ class Container implements ContainerInterface
      * @param boolean $isSkipping
      * @return mixed
      */
-    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
+    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, bool &$isSkipping)
     {
         if ($isSkipping && !$parameter->isOptional()) {
             throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
@@ -100,7 +100,7 @@ class Container implements ContainerInterface
      * @param boolean $isSkipping
      * @return mixed
      */
-    private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
+    private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, bool &$isSkipping)
     {
         foreach (array_merge([$class->getName()], $class->getInterfaceNames(), ['']) as $interface) {
             $key = trim("$interface.{$parameter->getName()}", '.');
@@ -128,7 +128,7 @@ class Container implements ContainerInterface
      * @param mixed $value
      * @return $this
      */
-    public function addValue($key, $value)
+    public function addValue(string $key, $value): Container
     {
         $this->values[$key] = $value;
         return $this;
@@ -137,7 +137,7 @@ class Container implements ContainerInterface
     /**
      * @return Container
      */
-    public static function create()
+    public static function create(): Container
     {
         return new self();
     }

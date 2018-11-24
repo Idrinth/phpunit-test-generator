@@ -1,4 +1,5 @@
-<?php
+<?php declare (strict_types=1);
+
 namespace De\Idrinth\TestGenerator;
 
 use De\Idrinth\TestGenerator\Interfaces\ClassReader;
@@ -6,7 +7,7 @@ use De\Idrinth\TestGenerator\Interfaces\ClassWriter;
 use De\Idrinth\TestGenerator\Interfaces\Composer;
 use Symfony\Component\Finder\Finder;
 
-class Controller
+final class Controller
 {
     /**
      * @var Finder
@@ -49,7 +50,7 @@ class Controller
     /**
      * @return Controller
      */
-    public static function init()
+    public static function init(): Controller
     {
         list($composer, $mode, $output) = self::getParams();
         return Container::create()
@@ -65,7 +66,7 @@ class Controller
      * processes getopt
      * @return array [$composer, $mode, $output]
      */
-    private static function getParams()
+    private static function getParams(): array
     {
         $opts = getopt('', ['dir:','replace','output:','mode:']);
         $dir = (isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], '\\/') : getcwd());
@@ -82,7 +83,7 @@ class Controller
     /**
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         echo "\nRead:\n";
         foreach ($this->finder

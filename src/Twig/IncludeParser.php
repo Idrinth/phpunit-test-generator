@@ -1,11 +1,11 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Twig;
 
 use Twig\TokenParser\IncludeTokenParser;
 use Twig_Token;
 
-class IncludeParser extends IncludeTokenParser
+final class IncludeParser extends IncludeTokenParser
 {
     /**
      * @param Token $token
