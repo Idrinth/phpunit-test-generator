@@ -53,7 +53,7 @@ final class Controller
     public static function init(): Controller
     {
         list($composer, $mode, $output) = self::getParams();
-        return Container::create()
+        return (new Container())
             ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
             ->addValue('PhpParser\Parser.options', ['throwOnError' => true])
             ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)

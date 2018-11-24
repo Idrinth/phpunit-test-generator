@@ -133,12 +133,4 @@ final class Container implements ContainerInterface
         $this->values[$key] = $value;
         return $this;
     }
-
-    /**
-     * @return Container
-     */
-    public static function create(): Container
-    {
-        return new self();
-    }
 }
