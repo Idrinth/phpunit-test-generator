@@ -12,12 +12,12 @@ class ContainerTest extends TestCaseImplementation
      */
     public function provideGet()
     {
-        return array(
-            array(
+        return [
+            [
                 'De\Idrinth\TestGenerator\Interfaces\Composer',
                 'De\Idrinth\TestGenerator\Implementations\Composer',
-            )
-        );
+            ]
+        ];
     }
 
     /**

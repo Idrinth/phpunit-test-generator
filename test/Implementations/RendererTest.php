@@ -14,8 +14,8 @@ class RendererTest extends TestCase
      */
     public function provideRender()
     {
-        return array(
-            array(
+        return [
+            [
                 'class',
                 "<?php\n\nnamespace ;\n\nuse  as TestCaseImplementation;\nuse \;\n\n/**\n"
                 . " * this is an automatically generated skeleton for testing \n "
@@ -24,17 +24,17 @@ class RendererTest extends TestCase
                 . " as expected\n     **/\n    protected function getInstance()\n    {"
                 . "\n        return new ();\n    }\n    }\n",
                 $this->getMockedComposer('')
-            ),
-            array('function', '()', $this->getMockedComposer('')),
-            array('test-functions', "", $this->getMockedComposer('')),
-            array(
+            ],
+            ['function', '()', $this->getMockedComposer('')],
+            ['test-functions', "", $this->getMockedComposer('')],
+            [
                 'type-tests',
                 "\n\$this->assertInternalType(\n    '',\n    ,"
                 . "\n    'Return didn\'t match expected type '\n);",
                 $this->getMockedComposer('')
-            ),
-            array('type2value', 'null/* @todo unknown, please check */', $this->getMockedComposer('')),
-            array(
+            ],
+            ['type2value', 'null/* @todo unknown, please check */', $this->getMockedComposer('')],
+            [
                 'class',
                 "<?php\n\nnamespace ;\n\nuse Example as TestCaseImplementation;\nuse \;\n\n/**\n"
                 . " * this is an automatically generated skeleton for testing \n "
@@ -43,17 +43,17 @@ class RendererTest extends TestCase
                 . " as expected\n     **/\n    protected function getInstance()\n    {"
                 . "\n        return new ();\n    }\n    }\n",
                 $this->getMockedComposer('Example')
-            ),
-            array('function', '()', $this->getMockedComposer('Example')),
-            array('test-functions', "", $this->getMockedComposer('Example')),
-            array(
+            ],
+            ['function', '()', $this->getMockedComposer('Example')],
+            ['test-functions', "", $this->getMockedComposer('Example')],
+            [
                 'type-tests',
                 "\n\$this->assertInternalType(\n    '',\n    ,"
                 . "\n    'Return didn\'t match expected type '\n);",
                 $this->getMockedComposer('Example')
-            ),
-            array('type2value', 'null/* @todo unknown, please check */', $this->getMockedComposer('Example')),
-        );
+            ],
+            ['type2value', 'null/* @todo unknown, please check */', $this->getMockedComposer('Example')],
+        ];
     }
 
     /**

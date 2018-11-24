@@ -18,10 +18,10 @@ class LexerTest extends TestCaseImplementation
         $environment = $this->getMockBuilder('Twig_Environment')->disableOriginalClone()->getMock();
         $environment->expects($this->once())
             ->method('getBinaryOperators')
-            ->willReturn(array());
+            ->willReturn([]);
         $environment->expects($this->once())
             ->method('getUnaryOperators')
-            ->willReturn(array());
+            ->willReturn([]);
         return new Lexer($environment);
     }
 
@@ -31,11 +31,11 @@ class LexerTest extends TestCaseImplementation
      */
     public function providePushToken()
     {
-        return array(
-            array('why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 0),
-            array('    why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 4),
-            array(" why?\n   {{ abc }}", \Twig_Token::NAME_TYPE, '', 1, 3)
-        );
+        return [
+            ['why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 0],
+            ['    why? {{"hi"}} {{ abc }}', \Twig_Token::NAME_TYPE, '', 0, 4],
+            [" why?\n   {{ abc }}", \Twig_Token::NAME_TYPE, '', 1, 3]
+        ];
     }
 
     /**

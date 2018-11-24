@@ -24,64 +24,64 @@ class ComposerProcessorTest
      */
     public function provideProcess()
     {
-        return array(
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8')
-                ),
-                array(),
-                array(),
+        return [
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8']
+                ],
+                [],
+                [],
                 ''
-            ),
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8')
-                ),
-                array(),
-                array(),
+            ],
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8']
+                ],
+                [],
+                [],
                 'hello'
-            ),
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
-                    "autoload" => array(),
-                    "autoload-dev" => array(),
-                ),
-                array(),
-                array(),
+            ],
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8'],
+                    "autoload" => [],
+                    "autoload-dev" => [],
+                ],
+                [],
+                [],
                 'hello'
-            ),
-            array(
-                array(
-                    'require'=>array('phpunit/phpunit' => '^4.8'),
-                    "autoload" => array(),
-                    "autoload-dev" => array(),
-                ),
-                array(),
-                array(),
+            ],
+            [
+                [
+                    'require'=>['phpunit/phpunit' => '^4.8'],
+                    "autoload" => [],
+                    "autoload-dev" => [],
+                ],
+                [],
+                [],
                 'hello'
-            ),
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
-                    'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
-                    'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
-                ),
-                array('MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'),
-                array('MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'abcd'),
+            ],
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8'],
+                    'autoload'=>['psr-4'=>['MyTest' => 'abc']],
+                    'autoload-dev'=>['psr-0'=>['MyTestTest' => 'abcd']]
+                ],
+                ['MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'],
+                ['MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'abcd'],
                 ''
-            ),
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
-                    'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
-                    'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
-                ),
-                array('MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'),
-                array('MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'hello'.DIRECTORY_SEPARATOR.'abcd'),
+            ],
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8'],
+                    'autoload'=>['psr-4'=>['MyTest' => 'abc']],
+                    'autoload-dev'=>['psr-0'=>['MyTestTest' => 'abcd']]
+                ],
+                ['MyTest' => '#base'.DIRECTORY_SEPARATOR.'abc'],
+                ['MyTestTest' => '#base'.DIRECTORY_SEPARATOR.'hello'.DIRECTORY_SEPARATOR.'abcd'],
                 'hello'
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -95,7 +95,7 @@ class ComposerProcessorTest
     public function testProcess(array $data, array $prod, array $dev, $output)
     {
         $this->assertEquals(
-            array($prod, $dev, 'test-class'),
+            [$prod, $dev, 'test-class'],
             $this->getInstance($output)->process($data, '#base')
         );
     }

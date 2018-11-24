@@ -16,64 +16,64 @@ class ClassDescriptorFactoryTest extends TestCase
      */
     public function provideCreate()
     {
-        return array(
-            array(
+        return [
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(0)),
                 $this->getClass(0),
                 '',
                 false,
                 0
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(1)),
                 $this->getClass(0, true),
                 '',
                 false,
                 0
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(1)),
                 $this->getClass(0, false, true),
                 '',
                 false,
                 0
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(2)),
                 $this->getClass(0, true, true),
                 '',
                 false,
                 0
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(2)),
                 $this->getClass(1, true),
                 '',
                 false,
                 1
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(2)),
                 $this->getClass(1, false, true),
                 '',
                 false,
                 1
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(5)),
                 $this->getClass(3, true, true),
                 '',
                 false,
                 3
-            ),
-            array(
+            ],
+            [
                 new ClassDescriptorFactory($this->getMethodFactoryInstance(4)),
                 $this->getClass(2, true, true, 'Mine'),
                 'Mine',
                 false,
                 2
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -89,7 +89,7 @@ class ClassDescriptorFactoryTest extends TestCase
         $hasOldConstructor = false,
         $extends = ''
     ) {
-        $data = array('stmts' => array());
+        $data = ['stmts' => []];
         for ($pos = 0; $pos < $countMethods; $pos++) {
             $data['stmts'][] = new ClassMethod("method$pos");
         }

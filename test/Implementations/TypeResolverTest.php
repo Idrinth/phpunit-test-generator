@@ -20,12 +20,12 @@ class TypeResolverTest extends TestCase
     public function provideSimpleArrayType()
     {
         $object = new TypeResolver(new Namespace_(new Name('Example')));
-        return array(
-            array($object, null, 'string[]', 'string'),
-            array($object, null, 'integer[]|int[]', 'integer'),
-            array($object, 'array', 'integer[]|int[]', 'integer'),
-            array($object, 'array', 'AClass[]|BClass[]', 'object')
-        );
+        return [
+            [$object, null, 'string[]', 'string'],
+            [$object, null, 'integer[]|int[]', 'integer'],
+            [$object, 'array', 'integer[]|int[]', 'integer'],
+            [$object, 'array', 'AClass[]|BClass[]', 'object']
+        ];
     }
 
     /**
@@ -34,20 +34,20 @@ class TypeResolverTest extends TestCase
     public function provideSimpleType()
     {
         $object = new TypeResolver(new Namespace_(new Name('Example')));
-        return array(
-            array($object, null, 'int', 'integer'),
-            array($object, 'float', '', 'float'),
-            array($object, '', '', 'unknown'),
-            array($object, null, 'array', 'array'),
-            array($object, null, 'MyClass[]|int[]', 'array'),
-            array($object, null, 'self', 'object'),
-            array($object, null, 'float|int', 'unknown'),
-            array($object, null, 'integer|int', 'integer'),
-            array($object, null, 'self|static|$this', 'object'),
-            array($object, 'string', 'string', 'string'),
-            array($object, new Name('string'), 'string', 'string'),
-            array($object, new Name('bool'), 'boolean', 'boolean')
-        );
+        return [
+            [$object, null, 'int', 'integer'],
+            [$object, 'float', '', 'float'],
+            [$object, '', '', 'unknown'],
+            [$object, null, 'array', 'array'],
+            [$object, null, 'MyClass[]|int[]', 'array'],
+            [$object, null, 'self', 'object'],
+            [$object, null, 'float|int', 'unknown'],
+            [$object, null, 'integer|int', 'integer'],
+            [$object, null, 'self|static|$this', 'object'],
+            [$object, 'string', 'string', 'string'],
+            [$object, new Name('string'), 'string', 'string'],
+            [$object, new Name('bool'), 'boolean', 'boolean']
+        ];
     }
 
     /**
@@ -57,17 +57,17 @@ class TypeResolverTest extends TestCase
     {
         $object1 = new TypeResolver(new Namespace_(new Name('Base')));
         $object2 = new TypeResolver(new Namespace_(new Name('Base')));
-        $object2->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
-        return array(
-            array($object1, null, 'MyClass', 'Base\MyClass'),
-            array($object1, null, '\MyClass', 'MyClass'),
-            array($object1, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'),
-            array($object2, new Name('MyClass'), 'MyClass', 'NoBase\\MyClass'),
-            array($object1, new FullyQualified('MyClass'), 'MyClass', 'MyClass'),
-            array($object2, null, 'MyClass', 'NoBase\MyClass'),
-            array($object2, null, '\MyClass', 'MyClass'),
-            array($object2, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'),
-        );
+        $object2->addUse(new Use_([new UseUse(new Name('NoBase\MyClass'))]));
+        return [
+            [$object1, null, 'MyClass', 'Base\MyClass'],
+            [$object1, null, '\MyClass', 'MyClass'],
+            [$object1, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'],
+            [$object2, new Name('MyClass'), 'MyClass', 'NoBase\\MyClass'],
+            [$object1, new FullyQualified('MyClass'), 'MyClass', 'MyClass'],
+            [$object2, null, 'MyClass', 'NoBase\MyClass'],
+            [$object2, null, '\MyClass', 'MyClass'],
+            [$object2, new Name('Any\\MyClass'), 'MyClass', 'Base\\Any\\MyClass'],
+        ];
     }
 
     /**
@@ -77,13 +77,13 @@ class TypeResolverTest extends TestCase
     {
         $object1 = new TypeResolver(new Namespace_(new Name('Base')));
         $object2 = new TypeResolver(new Namespace_(new Name('Base')));
-        $object2->addUse(new Use_(array(new UseUse(new Name('NoBase\MyClass')))));
-        return array(
-            array($object1, null, 'YourClass[]', 'Base\YourClass'),
-            array($object2, null, 'YourClass[]', 'Base\YourClass'),
-            array($object1, null, 'MyClass[]', 'Base\MyClass'),
-            array($object2, null, 'MyClass[]', 'NoBase\MyClass')
-        );
+        $object2->addUse(new Use_([new UseUse(new Name('NoBase\MyClass'))]));
+        return [
+            [$object1, null, 'YourClass[]', 'Base\YourClass'],
+            [$object2, null, 'YourClass[]', 'Base\YourClass'],
+            [$object1, null, 'MyClass[]', 'Base\MyClass'],
+            [$object2, null, 'MyClass[]', 'NoBase\MyClass']
+        ];
     }
 
     /**
@@ -197,7 +197,7 @@ class TypeResolverTest extends TestCase
         $method->setAccessible(true);
         $this->assertInstanceOf(
             'De\Idrinth\TestGenerator\Implementations\Type\UnknownType',
-            $method->invoke($instance, array())
+            $method->invoke($instance, [])
         );
     }
 

@@ -18,7 +18,7 @@ class ClassDescriptor implements \De\Idrinth\TestGenerator\Interfaces\ClassDescr
     /**
      * @var \De\Idrinth\TestGenerator\Interfaces\MethodDescriptor[]
      */
-    private $methods = array();
+    private $methods = [];
 
     /**
      * @var \De\Idrinth\TestGenerator\Interfaces\MethodDescriptor

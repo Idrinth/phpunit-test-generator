@@ -12,12 +12,12 @@ class Container implements ContainerInterface
     /**
      * @var mixed[]
      */
-    private $values = array();
+    private $values = [];
 
     /**
      * @var object[]
      */
-    private $implements = array();
+    private $implements = [];
 
     /**
      * @param string $id
@@ -64,9 +64,9 @@ class Container implements ContainerInterface
     private function getArgs(ReflectionClass $class)
     {
         if (!$class->getConstructor()) {
-            return array();
+            return [];
         }
-        $args = array();
+        $args = [];
         $isSkipping = false;
         foreach ($class->getConstructor()->getParameters() as $parameter) {
             $param = $this->handleParam($parameter, $class, $isSkipping);
@@ -102,7 +102,7 @@ class Container implements ContainerInterface
      */
     private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
     {
-        foreach (array_merge(array($class->getName()), $class->getInterfaceNames(), array('')) as $interface) {
+        foreach (array_merge([$class->getName()], $class->getInterfaceNames(), ['']) as $interface) {
             $key = trim("$interface.{$parameter->getName()}", '.');
             if ($this->has($key)) {
                 return $key;

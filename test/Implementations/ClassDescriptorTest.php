@@ -21,7 +21,7 @@ class ClassDescriptorTest extends TestCase
         return new ClassDescriptor(
             'ClassOne',
             '',
-            array(),
+            [],
             $this->getConstructorMock(),
             false,
             'My\Namespace\ClassTwo'
@@ -36,7 +36,7 @@ class ClassDescriptorTest extends TestCase
         return new ClassDescriptor(
             'ClassTwo',
             'My\Namespace',
-            array($this->getConstructorMock()),
+            [$this->getConstructorMock()],
             $this->getConstructorMock(),
             true
         );

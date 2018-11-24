@@ -32,7 +32,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
     private function getParameter($key, $rawDocBlock)
     {
         $this->pregMatchAll($key, $rawDocBlock, $matches);
-        $parameters = array();
+        $parameters = [];
         foreach ($matches[1] as $elem) {
             $parameters[] = $this->parseValue($elem);
         }
@@ -46,7 +46,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
      */
     private function getVariableType($name, $rawDocBlock)
     {
-        $declarations = array();
+        $declarations = [];
         foreach ($this->getParameter($name, $rawDocBlock) as $declaration) {
             $declarations[] = $this->parseVariableType($declaration);
         }
@@ -95,7 +95,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
     public function getParams($rawDocBlock)
     {
         if (strlen($rawDocBlock) === 0) {
-            return array();
+            return [];
         }
         return $this->getVariableType('param', $rawDocBlock);
     }
@@ -107,7 +107,7 @@ class DocBlockParser implements \De\Idrinth\TestGenerator\Interfaces\DocBlockPar
     public function getExceptions($rawDocBlock)
     {
         if (strlen($rawDocBlock) === 0) {
-            return array();
+            return [];
         }
         return $this->getVariableType('throws', $rawDocBlock);
     }

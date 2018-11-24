@@ -15,11 +15,11 @@
         }
     ],
     "require": {
-        "php": "^5.3.3|^7.0.0",
+        "php": "^7.1",
         "ext-json": "*",
         "twig/twig": "^1.35.0",
         "nikic/php-parser": "^1.4.1",
-        "symfony/finder": "^2.6.13",
+        "symfony/finder": "^4.1",
         "composer/semver": "^1.4.2",
         "psr/container": "^1.0.0"
     },
@@ -29,7 +29,8 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8.36|^6.5.7|^7.0.2",
+        "phpunit/phpunit": "^7.4.4",
+        "brianium/paratest": "^2",
         "mikey179/vfsStream": "^1.6.5"
     },
     "autoload-dev": {
@@ -37,9 +38,6 @@
             "De\\Idrinth\\TestGenerator\\Test\\": "test"
         },
         "files": ["test/Mock/getcwd_function.php"]
-    },
-    "suggest": {
-        "squizlabs/php_codesniffer": "For formatting according to PSR2"
     },
     "bin": [
         "bin/generate-tests"

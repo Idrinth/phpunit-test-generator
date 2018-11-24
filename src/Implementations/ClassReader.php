@@ -20,7 +20,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
     /**
      * @var CDI[]
      */
-    private $classes = array();
+    private $classes = [];
 
     /**
      * @var ClassDescriptorFactor
@@ -46,7 +46,7 @@ class ClassReader implements \De\Idrinth\TestGenerator\Interfaces\ClassReader
         $result = $this->parser->parse(file_get_contents($file->getPathname()));
         foreach ($result as $node) {
             if (!$node instanceof Namespace_) {
-                $node = new Namespace_(new Name(array()), array($node));
+                $node = new Namespace_(new Name([]), [$node]);
             }
             $this->handleNamespaceTree($node);
         }

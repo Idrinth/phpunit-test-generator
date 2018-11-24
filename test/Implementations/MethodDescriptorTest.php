@@ -17,7 +17,7 @@ class MethodDescriptorTest extends TestCase
     {
         return new MethodDescriptor(
             'test1',
-            array(new SimpleType('string'), new ClassType('MyClass')),
+            [new SimpleType('string'), new ClassType('MyClass')],
             new ClassType('YourClass')
         );
     }
@@ -29,10 +29,10 @@ class MethodDescriptorTest extends TestCase
     {
         return new MethodDescriptor(
             'test2',
-            array(new SimpleType('integer'), new UnknownType(), new SimpleType('boolean'), new UnknownType()),
+            [new SimpleType('integer'), new UnknownType(), new SimpleType('boolean'), new UnknownType()],
             new SimpleType('boolean'),
             true,
-            array(new ClassType('AClass'))
+            [new ClassType('AClass')]
         );
     }
 

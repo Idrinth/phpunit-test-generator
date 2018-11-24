@@ -14,20 +14,20 @@ class TestClassDeciderTest extends TestCaseImplementation
     {
         $old = 'PHPUnit_Framework_TestCase';
         $new = 'PHPUnit\Framework\TestCase';
-        return array(
-            array('^1', false, $old),
-            array('^2', false, $old),
-            array('^3', false, $old),
-            array('^4', false, $new),
-            array('^5', false, $new),
-            array('^6', false, $new),
-            array('^7', false, $new),
-            array('^3|^4|^5|^6', true),
-            array('^1|^7', true),
-            array('4.5.6|^7', true),
-            array('^4|^7', false, $new),
-            array('^7.0', false, $new),
-        );
+        return [
+            ['^1', false, $old],
+            ['^2', false, $old],
+            ['^3', false, $old],
+            ['^4', false, $new],
+            ['^5', false, $new],
+            ['^6', false, $new],
+            ['^7', false, $new],
+            ['^3|^4|^5|^6', true],
+            ['^1|^7', true],
+            ['4.5.6|^7', true],
+            ['^4|^7', false, $new],
+            ['^7.0', false, $new],
+        ];
     }
 
     /**

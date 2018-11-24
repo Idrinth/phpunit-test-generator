@@ -18,16 +18,16 @@ class NamespacePathMapperTest extends TestCase
         $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
         $composer->expects($this->once())
             ->method('getDevelopmentNamespacesToFolders')
-            ->willReturn(array(
+            ->willReturn([
                 'De\Idrinth\TestGenerator\Test' => 'test',
                 'De\Test\Idrinth\AnyTestGenerator' => 'test'
-            ));
+            ]);
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
-            ->willReturn(array(
+            ->willReturn([
                 'De\Idrinth\TestGenerator' => 'src',
                 'De\Idrinth\AnyTestGenerator' => 'src'
-            ));
+            ]);
         return new NamespacePathMapper($composer, '');
     }
 
@@ -76,11 +76,11 @@ class NamespacePathMapperTest extends TestCase
             $object->getTestFileForNamespacedClass($namespace)
         );
         $this->assertEquals(
-            implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapperTest.php')),
+            implode(DIRECTORY_SEPARATOR, ['test', 'NamespacePathMapperTest.php']),
             $this->getPath($object->getTestFileForNamespacedClass($namespace))
         );
         $this->assertEquals(
-            implode(DIRECTORY_SEPARATOR, array('test', 'NamespacePathMapper', 'ExampleTest.php')),
+            implode(DIRECTORY_SEPARATOR, ['test', 'NamespacePathMapper', 'ExampleTest.php']),
             $this->getPath($object->getTestFileForNamespacedClass($namespace.'\Example'))
         );
     }

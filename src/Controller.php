@@ -54,7 +54,7 @@ class Controller
         list($composer, $mode, $output) = self::getParams();
         return Container::create()
             ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
-            ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
+            ->addValue('PhpParser\Parser.options', ['throwOnError' => true])
             ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)
             ->addValue('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper.mode', $mode)
             ->addValue('De\Idrinth\TestGenerator\Interfaces\ComposerProcessor.output', $output)
@@ -67,16 +67,16 @@ class Controller
      */
     private static function getParams()
     {
-        $opts = getopt('', array('dir:','replace','output:','mode:'));
+        $opts = getopt('', ['dir:','replace','output:','mode:']);
         $dir = (isset($opts['dir']) && $opts['dir'] ? rtrim($opts['dir'], '\\/') : getcwd());
-        $modes = array('replace', 'move', 'skip');
-        return array(
+        $modes = ['replace', 'move', 'skip'];
+        return [
             $dir.DIRECTORY_SEPARATOR.'composer.json',
             isset($opts['mode']) && in_array($opts['mode'], $modes) ?
                 $opts['mode'] :
                 isset($opts['replace']) ? 'replace' : 'move',
             isset($opts['output']) ? $opts['output'] : ''
-        );
+        ];
     }
 
     /**

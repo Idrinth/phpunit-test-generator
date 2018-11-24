@@ -11,7 +11,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
      * Mapping Namespace => Folder
      * @var string[]
      */
-    private $folders = array();
+    private $folders = [];
 
     /**
      * @var string
@@ -42,9 +42,9 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
      */
     private function toNamespace($parts, $part, $position)
     {
-        $original = array();
+        $original = [];
         array_splice($original, 0, 0, $parts);
-        array_splice($original, $position, 0, array($part));
+        array_splice($original, $position, 0, [$part]);
         return implode("\\", $original);
     }
 
@@ -54,7 +54,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
      */
     private function splitIntoMain($namespace)
     {
-        $matches = array();
+        $matches = [];
         foreach (array_keys($this->folders) as $nsKey) {
             if (preg_match('/^'.preg_quote($nsKey).'/', $namespace)) {
                 $matches[] = $nsKey;
@@ -66,10 +66,10 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
         usort($matches, function ($first, $second) {
             return strlen($second)-strlen($first);
         });
-        return array(
+        return [
             trim($matches[0], '\\'),
             trim(str_replace($matches[0], '', $namespace), '\\')
-        );
+        ];
     }
 
     /**
@@ -80,7 +80,7 @@ class NamespacePathMapper implements \De\Idrinth\TestGenerator\Interfaces\Namesp
     {
         list($prepend, $append) = $this->splitIntoMain($namespace);
         $parts = explode("\\", trim($prepend, '\\'));
-        $tests = array('Test','test','Tests','tests');
+        $tests = ['Test','test','Tests','tests'];
         for ($counter = count($parts); $counter >= 0; $counter--) {
             foreach ($tests as $test) {
                 $ns1 = $this->toNamespace($parts, $test, $counter);

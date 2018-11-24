@@ -16,7 +16,7 @@ class MethodDescriptor implements MDI
     /**
      * @var Type[]
      */
-    private $params = array();
+    private $params = [];
 
     /**
      * @var Type
@@ -31,7 +31,7 @@ class MethodDescriptor implements MDI
     /**
      * @var Type[]
      */
-    private $exceptions = array();
+    private $exceptions = [];
 
     /**
      * @param string $name
@@ -40,7 +40,7 @@ class MethodDescriptor implements MDI
      * @param boolean $static
      * @param ClassType[] $exceptions
      */
-    public function __construct($name, $params, Type $return, $static = false, $exceptions = array())
+    public function __construct($name, $params, Type $return, $static = false, $exceptions = [])
     {
         $this->name = $name;
         $this->params = $params;

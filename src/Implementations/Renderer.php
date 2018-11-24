@@ -36,7 +36,7 @@ class Renderer extends Environment implements RI
      * @param array $context
      * @return string
      */
-    public function render($name, array $context = array())
+    public function render($name, array $context = [])
     {
         $context['config']['testcase'] = $this->testClass;
         return preg_replace('/ +($\n)/', '$1', parent::render($name, $context));
