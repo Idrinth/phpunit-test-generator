@@ -4,7 +4,7 @@ namespace De\Idrinth\TestGenerator\Twig;
 
 use Twig\Token as TT;
 
-final class Token extends TT
+class Token extends TT
 {
     /**
      * @var int
