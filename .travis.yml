@@ -42,7 +42,7 @@ jobs:
       install:
         - composer update
       script:
-        - vendor/bin/paratest --coverage-text --coverage-clover build/logs/clover.xml
+        - vendor/bin/paratest -c phpunit.xml --coverage-text --coverage-clover build/logs/clover.xml
         - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
     - stage: Test
       php: 7.1
@@ -52,7 +52,7 @@ jobs:
       install:
         - composer update
       script:
-        - vendor/bin/paratest
+        - vendor/bin/paratest -c phpunit.xml
 # Static Code Analysis
     - stage: Static Code Analysis
       php: 7.2
