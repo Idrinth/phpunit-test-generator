@@ -7,7 +7,7 @@ return [
         'bin',
     ],
     'analyzed_file_extensions' => ['php'],
-    "exclude_analysis_directory_list" => [
+    'exclude_analysis_directory_list' => [
         'vendor/'
     ],
     'plugins' => [

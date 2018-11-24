@@ -1,10 +1,3 @@
-parameters:
-  # STRICT RULES
-  polluteScopeWithLoopInitialAssignments: false
-  checkAlwaysTrueCheckTypeFunctionCall: true
-  checkAlwaysTrueInstanceof: true
-  checkAlwaysTrueStrictComparison: true
-  checkFunctionNameCase: true
 rules:
   # LOCALHEINZ
   - Localheinz\PHPStan\Rules\Classes\AbstractOrFinalRule
@@ -82,9 +75,17 @@ services:
   - class: PHPStan\Rules\BooleansInConditions\BooleanRuleHelper
   - class: PHPStan\Rules\Operators\OperatorRuleHelper
 parameters:
+  # STRICT RULES
+  polluteScopeWithLoopInitialAssignments: false
+  checkAlwaysTrueCheckTypeFunctionCall: true
+  checkAlwaysTrueInstanceof: true
+  checkAlwaysTrueStrictComparison: true
+  checkFunctionNameCase: true
+  # PHPUNIT
   earlyTerminatingMethodCalls:
     PHPUnit\Framework\TestCase:
       - fail
       - markTestIncomplete
       - markTestSkipped
+  # MANUAL
   ignoreErrors:
