@@ -38,13 +38,13 @@ class ComposerProcessor implements CPI
      */
     public function process(array $composer, $path)
     {
-        foreach (array('require-dev', 'require') as $require) {
+        foreach (['require-dev', 'require'] as $require) {
             if (isset($composer[$require]) && isset($composer[$require]['phpunit/phpunit'])) {
-                return array(
+                return [
                     $this->handleKey($composer, 'autoload', $path),
                     $this->handleKey($composer, 'autoload-dev', $path.$this->output),
                     $this->decider->get($composer[$require]['phpunit/phpunit'])
-                );
+                ];
             }
         }
         throw new InvalidArgumentException("No possibility to determine PHPunit TestCase class found");
@@ -59,7 +59,7 @@ class ComposerProcessor implements CPI
     private function handleKey(array $data, $key, $rootDir)
     {
         if (!isset($data[$key])) {
-            return array();
+            return [];
         }
         $autoloaders = $data[$key];
         return array_merge(
@@ -77,9 +77,9 @@ class ComposerProcessor implements CPI
     private function processPsrAutoloadKey($autoloaders, $method, $rootDir)
     {
         if (!isset($autoloaders[$method])) {
-            return array();
+            return [];
         }
-        $folders = array();
+        $folders = [];
         foreach ($autoloaders[$method] as $namespace => $folder) {
             $folders[trim($namespace, '\\')] = $rootDir.DIRECTORY_SEPARATOR.$folder;
         }

@@ -11,7 +11,7 @@ class TestClassDecider implements TCDI
     /**
      * @var string[]
      */
-    private static $newVersions = array(
+    private static $newVersions = [
         '4.8.35',
         '4.8.99',
         '5.4.3',
@@ -22,12 +22,12 @@ class TestClassDecider implements TCDI
         '7.99.99',
         '8.0.0',
         '8.99.99'
-    );
+    ];
 
     /**
      * @var string[]
      */
-    private static $oldVersions = array(
+    private static $oldVersions = [
         '1.0.0',
         '1.0.99',
         '1.99.99',
@@ -43,7 +43,7 @@ class TestClassDecider implements TCDI
         '5.0.0',
         '5.0.99',
         '5.99.99',
-    );
+    ];
 
     /**
      * @param string $constraints
@@ -78,6 +78,6 @@ class TestClassDecider implements TCDI
                 $new += Semver::satisfiedBy(self::$newVersions, $constraint)?1:0;
             }
         }
-        return array($amount, $old, $new);
+        return [$amount, $old, $new];
     }
 }

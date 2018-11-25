@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test\Twig;
 
@@ -10,7 +10,7 @@ class IncludeNodeTest extends TestCaseImplementation
     /**
      * @return IncludeNode
      **/
-    protected function getInstance($indent)
+    protected function getInstance($indent): IncludeNode
     {
         return new IncludeNode(
             $this->getMockBuilder('Twig_Node_Expression')->getMock(),
@@ -25,8 +25,9 @@ class IncludeNodeTest extends TestCaseImplementation
     /**
      * From IncludeNode
      * @test
+     * @return void
      **/
-    public function testCompileIndented()
+    public function testCompileIndented(): void
     {
         $instance = $this->getInstance(1);
         $compiler = $this->getMockBuilder('Twig\Compiler')->disableOriginalConstructor()->getMock();
@@ -60,8 +61,9 @@ class IncludeNodeTest extends TestCaseImplementation
     /**
      * From IncludeNode
      * @test
+     * @return void
      **/
-    public function testCompileUnindented()
+    public function testCompileUnindented(): void
     {
         $instance = $this->getInstance(0);
         $compiler = $this->getMockBuilder('Twig\Compiler')->disableOriginalConstructor()->getMock();

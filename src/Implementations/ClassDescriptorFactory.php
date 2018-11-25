@@ -33,10 +33,10 @@ class ClassDescriptorFactory implements CDFI
      */
     public function create(Class_ $class, TRI $resolver)
     {
-        $methods = array();
+        $methods = [];
         $constructor = new MethodDescriptor(
             '__construct',
-            array(),
+            [],
             new ClassType(trim($resolver->getNamespace().'\\'.$class->name, '\\'))
         );
         foreach ($class->stmts as $iNode) {

@@ -26,7 +26,7 @@ class ComposerTest extends TestCaseImplementation
         $processor->expects($this->once())
             ->method('process')
             ->with($data)
-            ->willReturn(array(array('prod' => 'a'), array('dev' => 'b'), 'test-class'));
+            ->willReturn([['prod' => 'a'], ['dev' => 'b'], 'test-class']);
         return new Composer($json, $processor);
     }
 
@@ -35,20 +35,20 @@ class ComposerTest extends TestCaseImplementation
      */
     public function provideGetNamespacesToFolders()
     {
-        return array(
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8')
-                )
-            ),
-            array(
-                array(
-                    'require-dev'=>array('phpunit/phpunit' => '^4.8'),
-                    'autoload'=>array('psr-4'=>array('MyTest' => 'abc')),
-                    'autoload-dev'=>array('psr-0'=>array('MyTestTest' => 'abcd'))
-                )
-            ),
-        );
+        return [
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8']
+                ]
+            ],
+            [
+                [
+                    'require-dev'=>['phpunit/phpunit' => '^4.8'],
+                    'autoload'=>['psr-4'=>['MyTest' => 'abc']],
+                    'autoload-dev'=>['psr-0'=>['MyTestTest' => 'abcd']]
+                ]
+            ],
+        ];
     }
 
     /**
@@ -66,12 +66,12 @@ class ComposerTest extends TestCaseImplementation
             'Return didn\'t match expected type array'
         );
         $this->assertEquals(
-            array('prod' => 'a'),
+            ['prod' => 'a'],
             $instance->getProductionNamespacesToFolders(),
             'Return didn\'t match expected array'
         );
         $this->assertEquals(
-            array('dev' => 'b'),
+            ['dev' => 'b'],
             $instance->getDevelopmentNamespacesToFolders(),
             'Return didn\'t match expected array'
         );

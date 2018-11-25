@@ -17,30 +17,30 @@ class MethodFactoryTest extends TestCase
      */
     public function provideCreate()
     {
-        return array(
+        return [
             $this->getClassMethodSet(),
             $this->getClassMethodSet(1),
             $this->getClassMethodSet(0, 1),
             $this->getClassMethodSet(1, 2),
             $this->getClassMethodSet(2, 3),
             $this->getClassMethodSet(3, 1),
-        );
+        ];
     }
 
     private function getClassMethodSet($params = 0, $exceptions = 0)
     {
         $name = 'name'.time();
-        return array(
+        return [
             new ClassMethod(
                 $name,
-                array('params' => $this->fillArray($params, json_decode('{"type":"hi"}')))
+                ['params' => $this->fillArray($params, json_decode('{"type":"hi"}'))]
             ),
             $this->getDocParserInstance($exceptions, $params),
             $this->getTypeResolverInstance(1 + $exceptions + $params),
             $name,
             $params,
             $exceptions
-        );
+        ];
     }
 
     /**
@@ -129,6 +129,6 @@ class MethodFactoryTest extends TestCase
         if ($amount > 0) {
             return array_fill(0, $amount, $content);
         }
-        return array();
+        return [];
     }
 }

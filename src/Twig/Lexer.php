@@ -1,11 +1,11 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Twig;
 
 use Twig\Lexer as TL;
 use Twig_Token;
 
-class Lexer extends TL
+final class Lexer extends TL
 {
     /**
      * @param int $type
@@ -25,7 +25,7 @@ class Lexer extends TL
      * tries to determine the position of the first none-space character
      * @return int
      */
-    private function getOriginalPos()
+    private function getOriginalPos(): int
     {
         $lines = explode("\n", $this->code);
         if (!isset($lines[$this->lineno-1]) || empty($lines[$this->lineno-1])) {

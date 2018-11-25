@@ -9,5 +9,5 @@ interface Renderer
      * @param array $context
      * @return string
      */
-    public function render($name, array $context = array());
+    public function render($name, array $context = []);
 }

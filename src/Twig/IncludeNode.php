@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Twig;
 
@@ -6,7 +6,7 @@ use Twig\Compiler;
 use Twig\Node\IncludeNode as TIN;
 use Twig_Node_Expression;
 
-class IncludeNode extends TIN
+final class IncludeNode extends TIN
 {
     /**
      * @var int
@@ -24,10 +24,10 @@ class IncludeNode extends TIN
     public function __construct(
         Twig_Node_Expression $expr,
         Twig_Node_Expression $variables = null,
-        $only = false,
-        $ignoreMissing = false,
-        $lineno = 0,
-        $prepend = 0
+        bool $only = false,
+        bool $ignoreMissing = false,
+        int $lineno = 0,
+        int $prepend = 0
     ) {
         parent::__construct($expr, $variables, $only, $ignoreMissing, $lineno, 'include');
         $this->prepend = $prepend;
@@ -36,10 +36,11 @@ class IncludeNode extends TIN
     /**
      * @param Compiler $compiler
      */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         if (!$this->prepend) {
-            return parent::compile($compiler);
+            parent::compile($compiler);
+            return;
         }
         $compiler->raw("ob_start();\n");
         parent::compile($compiler);

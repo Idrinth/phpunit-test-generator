@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test;
 
@@ -14,15 +14,15 @@ class ControllerTest extends TestCaseImplementation
      * @param int $returnNumber
      * @return Controller
      **/
-    protected function getInstance($returnNumber)
+    protected function getInstance(int $returnNumber): Controller
     {
         $item = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock();
-        $list = $returnNumber?array_fill(0, $returnNumber, $item):array();
+        $list = $returnNumber?array_fill(0, $returnNumber, $item):[];
         $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
             ->with()
-            ->willReturn(array(__DIR__));
+            ->willReturn([__DIR__]);
         $reader = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassReader')->getMock();
         $reader->expects($this->exactly(1+$returnNumber))->method('getResults')->with()->willReturn($list);
         $writer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock();
@@ -37,7 +37,7 @@ class ControllerTest extends TestCaseImplementation
      * @test
      * @expectedException InvalidArgumentException
      **/
-    public function testInitThrowsInvalidArgumentException()
+    public function testInitThrowsInvalidArgumentException(): void
     {
         $cwd = new GetCwd(__DIR__);
         Controller::init();
@@ -47,8 +47,9 @@ class ControllerTest extends TestCaseImplementation
     /**
      * From Controller
      * @test
+     * @return void
      **/
-    public function testInit()
+    public function testInit(): void
     {
         $cwd = new GetCwd(dirname(__DIR__));
         $this->assertInstanceOf(
@@ -62,17 +63,18 @@ class ControllerTest extends TestCaseImplementation
     /**
      * @return array
      */
-    public function provideRun()
+    public function provideRun(): array
     {
-        return array(array(0), array(2), array(7));
+        return [[0], [2], [7]];
     }
 
     /**
      * From Controller
      * @dataProvider provideRun
      * @test
+     * @return void
      **/
-    public function testRun($returnNumber)
+    public function testRun(int $returnNumber): void
     {
         $instance = $this->getInstance($returnNumber);
         $this->assertInternalType(

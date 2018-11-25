@@ -18,12 +18,12 @@ class ClassReaderTest extends TestCase
      * @param array $return
      * @return Parser
      */
-    private function getParserInstance(array $return = array())
+    private function getParserInstance(array $return = [])
     {
         $parser = $this->getMockBuilder('PhpParser\Parser')->setConstructorArgs(
-            array(
+            [
                 $this->getMockBuilder('PhpParser\Lexer')->getMock()
-            )
+            ]
         )->getMock();
         $parser->expects($this->once())
             ->method('parse')
@@ -50,53 +50,53 @@ class ClassReaderTest extends TestCase
     public function provideParseAndGetResults()
     {
         $file = new SplFileInfo(__FILE__);
-        return array(
-            array(
+        return [
+            [
                 new ClassReader($this->getFactory(), $this->getParserInstance()),
                 $file,
-                array()
-            ),
-            array(
-                new ClassReader($this->getFactory(1), $this->getParserInstance(array(new Class_('n1')))),
+                []
+            ],
+            [
+                new ClassReader($this->getFactory(1), $this->getParserInstance([new Class_('n1')])),
                 $file,
-                array('n1')
-            ),
-            array(
+                ['n1']
+            ],
+            [
                 new ClassReader(
                     $this->getFactory(2),
-                    $this->getParserInstance(array(new Class_('n1'), new Class_('n2')))
+                    $this->getParserInstance([new Class_('n1'), new Class_('n2')])
                 ),
                 $file,
-                array('n1', 'n2')
-            ),
-            array(
+                ['n1', 'n2']
+            ],
+            [
                 new ClassReader(
                     $this->getFactory(2),
-                    $this->getParserInstance(array(
+                    $this->getParserInstance([
                         new Namespace_(
                             new Name('prefix'),
-                            array(new Class_('n1'), new Class_('n2'))
+                            [new Class_('n1'), new Class_('n2')]
                         )
-                    ))
+                    ])
                 ),
                 $file,
-                array('prefix\\n1', 'prefix\\n2')
-            ),
-            array(
+                ['prefix\\n1', 'prefix\\n2']
+            ],
+            [
                 new ClassReader(
                     $this->getFactory(2),
                     $this->getParserInstance(
-                        array(
-                            new Use_(array()),
+                        [
+                            new Use_([]),
                             new Class_('n1'),
                             new Class_('n2')
-                        )
+                        ]
                     )
                 ),
                 $file,
-                array('n1', 'n2')
-            )
-        );
+                ['n1', 'n2']
+            ]
+        ];
     }
 
     /**

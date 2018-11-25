@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator;
 
@@ -7,17 +7,17 @@ use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionParameter;
 
-class Container implements ContainerInterface
+final class Container implements ContainerInterface
 {
     /**
      * @var mixed[]
      */
-    private $values = array();
+    private $values = [];
 
     /**
      * @var object[]
      */
-    private $implements = array();
+    private $implements = [];
 
     /**
      * @param string $id
@@ -41,7 +41,7 @@ class Container implements ContainerInterface
      * @return object
      * @throws InvalidArgumentException
      */
-    private function getUncached($identifier)
+    private function getUncached(string $identifier)
     {
         if (!class_exists($identifier) && !interface_exists($identifier)) {
             throw new InvalidArgumentException("Can't wire id $identifier");
@@ -61,12 +61,12 @@ class Container implements ContainerInterface
      * @param ReflectionClass $class
      * @return array
      */
-    private function getArgs(ReflectionClass $class)
+    private function getArgs(ReflectionClass $class): array
     {
         if (!$class->getConstructor()) {
-            return array();
+            return [];
         }
-        $args = array();
+        $args = [];
         $isSkipping = false;
         foreach ($class->getConstructor()->getParameters() as $parameter) {
             $param = $this->handleParam($parameter, $class, $isSkipping);
@@ -83,7 +83,7 @@ class Container implements ContainerInterface
      * @param boolean $isSkipping
      * @return mixed
      */
-    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
+    private function handleParam(ReflectionParameter $parameter, ReflectionClass $class, bool &$isSkipping)
     {
         if ($isSkipping && !$parameter->isOptional()) {
             throw new InvalidArgumentException("Can't wire param {$parameter->getName()} for {$class->getName()}");
@@ -100,9 +100,9 @@ class Container implements ContainerInterface
      * @param boolean $isSkipping
      * @return mixed
      */
-    private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, &$isSkipping)
+    private function handleSimpleTypeParam(ReflectionParameter $parameter, ReflectionClass $class, bool &$isSkipping)
     {
-        foreach (array_merge(array($class->getName()), $class->getInterfaceNames(), array('')) as $interface) {
+        foreach (array_merge([$class->getName()], $class->getInterfaceNames(), ['']) as $interface) {
             $key = trim("$interface.{$parameter->getName()}", '.');
             if ($this->has($key)) {
                 return $key;
@@ -128,17 +128,9 @@ class Container implements ContainerInterface
      * @param mixed $value
      * @return $this
      */
-    public function addValue($key, $value)
+    public function addValue(string $key, $value): Container
     {
         $this->values[$key] = $value;
         return $this;
-    }
-
-    /**
-     * @return Container
-     */
-    public static function create()
-    {
-        return new self();
     }
 }

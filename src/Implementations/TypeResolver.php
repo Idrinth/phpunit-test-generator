@@ -16,7 +16,7 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     /**
      * @var string[]
      */
-    private $uses = array();
+    private $uses = [];
 
     /**
      * @var Namespace_
@@ -26,7 +26,7 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
     /**
      * @var string[]
      */
-    private static $primitives = array(
+    private static $primitives = [
         'string' => 'string',
         'integer' => 'integer',
         'int' => 'integer',
@@ -37,12 +37,12 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
         'resource' => 'unknown',
         'null' => 'null',
         'callable' => 'unknown'
-    );
+    ];
 
     /**
      * @var string[]
      */
-    private static $keywords = array(
+    private static $keywords = [
         'mixed' => 'unknown',
         'void' => 'null',
         'object' => 'object',
@@ -51,7 +51,7 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
         'self' => 'object',
         'static' => 'object',
         '$this' => 'object'
-    );
+    ];
 
     /**
      * @param Namespace_ $namespace
@@ -138,8 +138,8 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
         }
         $isArray = true;
         $isObject = true;
-        $simples = array();
-        $arrayTypes = array();
+        $simples = [];
+        $arrayTypes = [];
         $this->simplifyList($types, $simples, $arrayTypes, $isObject, $isArray);
         if ($isArray) {
             $inner = $this->typeListToType($arrayTypes);
@@ -188,7 +188,7 @@ class TypeResolver implements \De\Idrinth\TestGenerator\Interfaces\TypeResolver
         }
         $this->addTypeToSimpleList('object', $simples, $isObject, $isArray);
     }
-    
+
     /**
      * @param string $simpleType
      * @param string[] $simples

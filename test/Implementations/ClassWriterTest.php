@@ -51,7 +51,7 @@ class ClassWriterTest extends TestCase
             ->willReturn('method');
         $method->expects($this->any())
             ->method('getParams')
-            ->willReturn(array());
+            ->willReturn([]);
         $method->expects($this->any())
             ->method('getReturn')
             ->willReturn(new UnknownType());
@@ -73,7 +73,7 @@ class ClassWriterTest extends TestCase
             ->willReturn('My');
         $class->expects($this->any())
             ->method('getMethods')
-            ->willReturn(array($this->getMockedMethod()));
+            ->willReturn([$this->getMockedMethod()]);
         $class->expects($this->any())
             ->method('getConstructor')
             ->willReturn($this->getMockedMethod());
@@ -111,16 +111,16 @@ class ClassWriterTest extends TestCase
      */
     public function provideWrite()
     {
-        return array(
-            array(
+        return [
+            [
                 $this->buildClassWriter(true),
                 true
-            ),
-            array(
+            ],
+            [
                 $this->buildClassWriter(false),
                 false
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -132,6 +132,6 @@ class ClassWriterTest extends TestCase
     public function testWrite(ClassWriter $writer, $isWriteable)
     {
         $class = $this->getMockedClassDescriptor();
-        $this->assertEquals($isWriteable, $writer->write($class, array()));
+        $this->assertEquals($isWriteable, $writer->write($class, []));
     }
 }

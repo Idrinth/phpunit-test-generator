@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types=1);
 
 namespace De\Idrinth\TestGenerator\Test\Twig;
 
@@ -10,12 +10,12 @@ class TokenTest extends TestCaseImplementation
     /**
      * @return Token
      **/
-    protected function getInstance()
+    protected function getInstance(): Token
     {
         return new Token(
-            null,
+            0,
             '',
-            null,
+            0,
             17
         );
     }
@@ -23,8 +23,9 @@ class TokenTest extends TestCaseImplementation
     /**
      * From Token
      * @test
+     * @return void
      **/
-    public function testGetPrepend()
+    public function testGetPrepend(): void
     {
         $instance = $this->getInstance();
         $return = $instance->getPrepend();

@@ -21,11 +21,11 @@ class TargetPhpFileTest
      */
     public function provideWrite()
     {
-        return array(
-            array('replace', true, false),
-            array('skip', false, false),
-            array('move', false, true)
-        );
+        return [
+            ['replace', true, false],
+            ['skip', false, false],
+            ['move', false, true]
+        ];
     }
 
     /**

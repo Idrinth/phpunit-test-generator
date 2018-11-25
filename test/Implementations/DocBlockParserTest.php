@@ -12,14 +12,14 @@ class DocBlockParserTest extends TestCase
      */
     private function getCases()
     {
-        return array(
+        return [
             '',
             "/**\n* @return string \n*/",
             "/**\n*@throws \Exception \n* @param \$a\n*@return string \n* @return void\n */",
             "/**\n * @param int \$z \n*@return A|B \n*/",
             "/**\n*@throws IException \n*@throws UException \n*@param int \$z\n*@param \$m\n @return string \n*/",
             "/**\n*@param boolean \$z\n*@param \$m Just a bit of text\n @return  \n*/"
-        );
+        ];
     }
 
     /**
@@ -47,13 +47,13 @@ class DocBlockParserTest extends TestCase
         $this->assertCount(0, $instance->getParams(''));
         $this->assertCount(0, $instance->getParams($cases[1]));
         $this->assertCount(1, $instance->getParams($cases[2]));
-        $this->assertEquals(array('string'), $instance->getParams($cases[2]));
+        $this->assertEquals(['string'], $instance->getParams($cases[2]));
         $this->assertCount(1, $instance->getParams($cases[3]));
-        $this->assertEquals(array('int'), $instance->getParams($cases[3]));
+        $this->assertEquals(['int'], $instance->getParams($cases[3]));
         $this->assertCount(2, $instance->getParams($cases[4]));
-        $this->assertEquals(array('int', 'string'), $instance->getParams($cases[4]));
+        $this->assertEquals(['int', 'string'], $instance->getParams($cases[4]));
         $this->assertCount(2, $instance->getParams($cases[5]));
-        $this->assertEquals(array('boolean', 'string'), $instance->getParams($cases[5]));
+        $this->assertEquals(['boolean', 'string'], $instance->getParams($cases[5]));
     }
 
     /**
@@ -66,10 +66,10 @@ class DocBlockParserTest extends TestCase
         $this->assertCount(0, $instance->getExceptions(''));
         $this->assertCount(0, $instance->getExceptions($cases[1]));
         $this->assertCount(1, $instance->getExceptions($cases[2]));
-        $this->assertEquals(array('\Exception'), $instance->getExceptions($cases[2]));
+        $this->assertEquals(['\Exception'], $instance->getExceptions($cases[2]));
         $this->assertCount(0, $instance->getExceptions($cases[3]));
         $this->assertCount(2, $instance->getExceptions($cases[4]));
-        $this->assertEquals(array('IException', 'UException'), $instance->getExceptions($cases[4]));
+        $this->assertEquals(['IException', 'UException'], $instance->getExceptions($cases[4]));
         $this->assertCount(0, $instance->getExceptions($cases[5]));
     }
 }

@@ -51,13 +51,13 @@ class ClassWriter implements CWI
     {
         return $this->renderer->render(
             'class.twig',
-            array(
+            [
                 'class' => $class,
                 'classes' => $classes,
-                'config' => array(
+                'config' => [
                     'namespace' => $this->namespaces->getTestNamespaceForNamespace($class->getNamespace())
-                )
-            )
+                ]
+            ]
         );
     }
 }

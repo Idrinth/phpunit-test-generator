@@ -12,12 +12,12 @@ class Composer implements ComposerInterface
     /**
      * @var string[] namespace => folder
      */
-    private $autoloadProd = array();
+    private $autoloadProd = [];
 
     /**
      * @var string[] namespace => folder
      */
-    private $autoloadDev = array();
+    private $autoloadDev = [];
 
     /**
      * @var string
