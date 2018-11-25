@@ -41,7 +41,7 @@ final class Container implements ContainerInterface
      * @return object
      * @throws InvalidArgumentException
      */
-    private function getUncached(string $identifier): object
+    private function getUncached(string $identifier)
     {
         if (!class_exists($identifier) && !interface_exists($identifier)) {
             throw new InvalidArgumentException("Can't wire id $identifier");
