@@ -63,7 +63,7 @@ jobs:
         - composer require squizlabs/php_codesniffer:^3.2.2 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/phpcs -p --standard=PSR2 src test bin
+        - ../tools/vendor/bin/phpcs -p
     - stage: Static Code Analysis
       php: 7.2
       name: Composer Require Checker
@@ -74,14 +74,4 @@ jobs:
       install: composer update
       script:
         - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
-# Pre-Tag
-    - stage: Pre-Tag
-      php: 7.2
-      name: PHPstan
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
-      install: composer update
-      script:
-        - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
+
