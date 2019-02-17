@@ -1,9 +1,9 @@
 <?php
 namespace De\Idrinth\TestGenerator;
 
-use De\Idrinth\TestGenerator\Interfaces\ClassReader;
-use De\Idrinth\TestGenerator\Interfaces\ClassWriter;
-use De\Idrinth\TestGenerator\Interfaces\Composer;
+use De\Idrinth\TestGenerator\Service\ClassReader;
+use De\Idrinth\TestGenerator\Service\ClassWriter;
+use De\Idrinth\TestGenerator\Model\Composer;
 use Symfony\Component\Finder\Finder;
 
 class Controller
@@ -55,9 +55,9 @@ class Controller
         return Container::create()
             ->addValue('SplFileInfo.file_name', dirname(__DIR__).DIRECTORY_SEPARATOR.'templates')
             ->addValue('PhpParser\Parser.options', array('throwOnError' => true))
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\JsonFile.file', $composer)
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\NamespacePathMapper.mode', $mode)
-            ->addValue('De\Idrinth\TestGenerator\Interfaces\ComposerProcessor.output', $output)
+            ->addValue('De\Idrinth\TestGenerator\File\JsonFile.file', $composer)
+            ->addValue('De\Idrinth\TestGenerator\Service\NamespacePathMapper.mode', $mode)
+            ->addValue('De\Idrinth\TestGenerator\Service\ComposerProcessor.output', $output)
             ->get(__CLASS__);
     }
 

@@ -43,18 +43,11 @@ class Container implements ContainerInterface
      */
     private function getUncached($identifier)
     {
-        if (!class_exists($identifier) && !interface_exists($identifier)) {
+        if (!class_exists($identifier)) {
             throw new InvalidArgumentException("Can't wire id $identifier");
         }
         $class = new ReflectionClass($identifier);
-        if (!$class->isInterface()) {
-            return $class->newInstanceArgs($this->getArgs($class));
-        }
-        $impl = str_replace('\\Interfaces\\', '\\Implementations\\', $identifier);
-        if ($impl === $identifier) {
-            throw new InvalidArgumentException("Can't find implementation of $identifier");
-        }
-        return $this->get($impl);
+        return $class->newInstanceArgs($this->getArgs($class));;
     }
 
     /**
