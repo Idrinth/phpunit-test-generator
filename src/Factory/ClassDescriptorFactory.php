@@ -70,8 +70,13 @@ class ClassDescriptorFactory
      * @param string $className
      * @return void
      */
-    private function addMethod($methodName, MethodDescriptor &$constructor, array &$methods, MethodDescriptor $function, $className)
-    {
+    private function addMethod(
+        $methodName,
+        MethodDescriptor &$constructor,
+        array &$methods,
+        MethodDescriptor $function,
+        $className
+    ) {
         if ($methodName === '__construct' || $methodName === $className) {
             $constructor = $function;
             return;

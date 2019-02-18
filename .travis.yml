@@ -152,16 +152,16 @@ jobs:
       script:
         - vendor/bin/phpunit --testdox test/
 # Static Code Analysis
-    - stage: Static Code Analysis
-      php: 7.2
-      name: PHP Assumptions
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
-      install: composer update
-      script:
-        - ../tools/vendor/bin/phpa --exclude=./vendor ./
+    #- stage: Static Code Analysis
+    #  php: 7.2
+    #  name: PHP Assumptions
+    #  before_install:
+    #    - phpenv config-rm xdebug.ini || true
+    #    - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+    #    - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
+    #  install: composer update
+    #  script:
+    #    - ../tools/vendor/bin/phpa --exclude=./vendor ./
     - stage: Static Code Analysis
       php: 7.2
       name: "PHP Codesniffer: PSR2"
@@ -188,10 +188,10 @@ jobs:
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.10 --working-dir=../tools
+        - composer require phpstan/phpstan:^0.11 --working-dir=../tools
       install: composer update
       script:
-        - ../tools/vendor/bin/phpstan analyse --level max src tests
+        - ../tools/vendor/bin/phpstan analyse --level max src test
 # Pre-Tag
     - stage: Pre-Tag
       php: 7.2

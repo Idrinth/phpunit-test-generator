@@ -47,7 +47,7 @@ class Container implements ContainerInterface
             throw new InvalidArgumentException("Can't wire id $identifier");
         }
         $class = new ReflectionClass($identifier);
-        return $class->newInstanceArgs($this->getArgs($class));;
+        return $class->newInstanceArgs($this->getArgs($class));
     }
 
     /**

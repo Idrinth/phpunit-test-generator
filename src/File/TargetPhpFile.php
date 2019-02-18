@@ -3,8 +3,9 @@
 namespace De\Idrinth\TestGenerator\File;
 
 use SplFileInfo;
+use UnexpectedValueException;
 
-class TargetPhpFile 
+class TargetPhpFile
 {
     /**
      * @var string
@@ -65,12 +66,12 @@ class TargetPhpFile
     /**
      * @param string $content
      * @return boolean
-     * @throws RuntimeException
+     * @throws UnexpectedValueException
      */
     public function write($content)
     {
         if (!$this->allowed) {
-            throw new \RuntimeException("Writing to {$this->file} is not allowed.");
+            throw new UnexpectedValueException("Writing to {$this->file} is not allowed.");
         }
         return false !== file_put_contents($this->file, $content);
     }
