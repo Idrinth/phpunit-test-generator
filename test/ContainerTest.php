@@ -14,8 +14,8 @@ class ContainerTest extends TestCaseImplementation
     {
         return array(
             array(
-                'De\Idrinth\TestGenerator\Interfaces\Composer',
-                'De\Idrinth\TestGenerator\Implementations\Composer',
+                'De\Idrinth\TestGenerator\Model\Composer',
+                'De\Idrinth\TestGenerator\Model\Composer',
             )
         );
     }
@@ -27,7 +27,7 @@ class ContainerTest extends TestCaseImplementation
      */
     public function testGet($identifier, $result)
     {
-        $key = 'De\Idrinth\TestGenerator\Interfaces\JsonFile.file';
+        $key = 'De\Idrinth\TestGenerator\File\JsonFile.file';
         $container = Container::create()->addValue($key, dirname(__DIR__).DIRECTORY_SEPARATOR.'composer.json');
         $this->assertTrue($container->has($key));
         $this->assertFalse($container->has($identifier));

@@ -152,16 +152,16 @@ jobs:
       script:
         - vendor/bin/phpunit --testdox test/
 # Static Code Analysis
-    - stage: Static Code Analysis
-      php: 7.2
-      name: PHP Assumptions
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
-      install: composer update
-      script:
-        - ../tools/vendor/bin/phpa --exclude=./vendor ./
+    #- stage: Static Code Analysis
+    #  php: 7.2
+    #  name: PHP Assumptions
+    #  before_install:
+    #    - phpenv config-rm xdebug.ini || true
+    #    - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+    #    - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
+    #  install: composer update
+    #  script:
+    #    - ../tools/vendor/bin/phpa --exclude=./vendor ./
     - stage: Static Code Analysis
       php: 7.2
       name: "PHP Codesniffer: PSR2"
@@ -182,24 +182,13 @@ jobs:
       install: composer update
       script:
         - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
-    - stage: Static Code Analysis
-      php: 7.2
-      name: PHPstan
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.10 --working-dir=../tools
-      install: composer update
-      script:
-        - ../tools/vendor/bin/phpstan analyse --level max src tests
-# Pre-Tag
-    - stage: Pre-Tag
-      php: 7.2
-      name: PHPstan
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
-      install: composer update
-      script:
-        - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
+#    - stage: Static Code Analysis
+#      php: 7.2
+#      name: PHPstan
+#      before_install:
+#        - phpenv config-rm xdebug.ini || true
+#        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+#        - composer require phpstan/phpstan:^0.11 --working-dir=../tools
+#      install: composer update
+#      script:
+#        - ../tools/vendor/bin/phpstan analyse --level max src test

@@ -5,10 +5,10 @@ namespace De\Idrinth\TestGenerator\Test;
 use De\Idrinth\TestGenerator\Controller;
 use De\Idrinth\TestGenerator\Test\Mock\GetCwd;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase as TestCaseImplementation;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 
-class ControllerTest extends TestCaseImplementation
+class ControllerTest extends TestCase
 {
     /**
      * @param int $returnNumber
@@ -16,16 +16,28 @@ class ControllerTest extends TestCaseImplementation
      **/
     protected function getInstance($returnNumber)
     {
-        $item = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassDescriptor')->getMock();
+        $item = $this
+            ->getMockBuilder('De\Idrinth\TestGenerator\Model\ClassDescriptor')
+            ->disableOriginalConstructor()
+            ->getMock();
         $list = $returnNumber?array_fill(0, $returnNumber, $item):array();
-        $composer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\Composer')->getMock();
+        $composer = $this
+            ->getMockBuilder('De\Idrinth\TestGenerator\Model\Composer')
+            ->disableOriginalConstructor()
+            ->getMock();
         $composer->expects($this->once())
             ->method('getProductionNamespacesToFolders')
             ->with()
             ->willReturn(array(__DIR__));
-        $reader = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassReader')->getMock();
+        $reader = $this
+            ->getMockBuilder('De\Idrinth\TestGenerator\Service\ClassReader')
+            ->disableOriginalConstructor()
+            ->getMock();
         $reader->expects($this->exactly(1+$returnNumber))->method('getResults')->with()->willReturn($list);
-        $writer = $this->getMockBuilder('De\Idrinth\TestGenerator\Interfaces\ClassWriter')->getMock();
+        $writer = $this
+            ->getMockBuilder('De\Idrinth\TestGenerator\Service\ClassWriter')
+            ->disableOriginalConstructor()
+            ->getMock();
         $writer->expects($this->exactly($returnNumber))
             ->method('write')
             ->with($item);
